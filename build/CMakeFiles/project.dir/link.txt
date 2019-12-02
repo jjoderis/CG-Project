@@ -1,0 +1,2 @@
+/usr/bin/ar qc libproject.a  CMakeFiles/project.dir/glew.c.o CMakeFiles/project.dir/LoadShaders.cpp.o
+/usr/bin/ranlib libproject.a
