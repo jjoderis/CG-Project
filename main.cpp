@@ -2,8 +2,6 @@
 #include <math.h>
 #include <cstring>
 
-using namespace std;
-
 #include <GL/glew.h>
 
 #include <GLFW/glfw3.h>
@@ -35,8 +33,8 @@ void init(){
   glNamedBufferStorage(*buffer, sizeof(vertices), vertices, 0);
  
 	ShaderInfo shaders[] = {
-		{ GL_VERTEX_SHADER, "media/shaders/triangles.vert" },
-		{ GL_FRAGMENT_SHADER, "media/shaders/triangles.frag" },
+		{ GL_VERTEX_SHADER, "../media/shaders/triangles.vert" },
+		{ GL_FRAGMENT_SHADER, "../media/shaders/triangles.frag" },
 		{ GL_NONE, NULL }
 	};
 	program = LoadShaders(shaders);
