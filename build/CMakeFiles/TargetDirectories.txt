@@ -1,4 +1,0 @@
-/home/janis/OpenGL/CG-Project/build/CMakeFiles/edit_cache.dir
-/home/janis/OpenGL/CG-Project/build/CMakeFiles/project.dir
-/home/janis/OpenGL/CG-Project/build/CMakeFiles/rebuild_cache.dir
-/home/janis/OpenGL/CG-Project/build/CMakeFiles/testApp.dir
