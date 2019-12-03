@@ -7,6 +7,9 @@
 #include <GLFW/glfw3.h>
 
 #include "LoadShaders.h"
+
+#include "include/mathematics/vector/vector.h"
+
 #define BUFFER_OFFSET(a) ((void*)(a))
 
 GLuint* VAO = (GLuint*) malloc(sizeof(GLuint));
