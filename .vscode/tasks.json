@@ -37,17 +37,5 @@
             ],
             "problemMatcher": []
         },
-        {
-            "label": "Run",
-            "type": "shell",
-            "options": {
-                "cwd": "${workspaceRoot}/build"
-            },
-            "command": "./${workspaceFolderBasename}",
-            "dependsOn": [
-                "Make"
-            ],
-            "problemMatcher": []
-        },
     ]
 }
