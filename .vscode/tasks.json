@@ -40,7 +40,10 @@
         {
             "label": "Run",
             "type": "shell",
-            "command": "build/${workspaceFolderBasename}",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "command": "./${workspaceFolderBasename}",
             "dependsOn": [
                 "Make"
             ],
