@@ -33,12 +33,18 @@ ReadShader( const char* filename )
     }
 
     fseek( infile, 0, SEEK_END );
-    int len = ftell( infile );
+    unsigned int len = ftell( infile );
     fseek( infile, 0, SEEK_SET );
 
     GLchar* source = new GLchar[len+1];
 
-    fread( source, 1, len, infile );
+    size_t lenRead = fread( source, 1, len, infile );
+
+    if(!lenRead){
+        std::cerr << "Shader file doesn't seem to contain anything" << '\n';
+        return NULL;
+    }
+
     fclose( infile );
 
     source[len] = 0;

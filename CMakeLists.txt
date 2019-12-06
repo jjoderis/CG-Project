@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 #specify C++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_FLAGS "-Wall -Weffc++ -Wextra -Wsign-conversion -Werror -pedantic-errors")
 
 #Project Name
 project(CG-Project)

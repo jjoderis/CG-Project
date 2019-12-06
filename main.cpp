@@ -34,9 +34,9 @@ void init(){
   glNamedBufferStorage(*buffer, sizeof(vertices), vertices, 0);
  
 	ShaderInfo shaders[] = {
-		{ GL_VERTEX_SHADER, "../media/shaders/triangles.vert" },
-		{ GL_FRAGMENT_SHADER, "../media/shaders/triangles.frag" },
-		{ GL_NONE, NULL }
+		{ GL_VERTEX_SHADER, "../media/shaders/triangles.vert", 0u },
+		{ GL_FRAGMENT_SHADER, "../media/shaders/triangles.frag", 0u },
+		{ GL_NONE, NULL, 0u }
 	};
 	program = LoadShaders(shaders);
 	glUseProgram(program);
@@ -54,7 +54,7 @@ void display(){
   glDrawArrays(GL_TRIANGLES, 0, numVertices);
 }
 
-int main(int argc, char** argv){
+int main(){
   glfwInit();
   
   GLFWwindow* window = glfwCreateWindow(640, 480, "Triangles", NULL, NULL);

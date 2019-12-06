@@ -38,7 +38,7 @@ GLuint LoadShaders(ShaderInfo*);
 //----------------------------------------------------------------------------
 
 #ifdef __cplusplus
-};
+}
 #endif // __cplusplus
 
 #endif // __LOAD_SHADERS_H__
