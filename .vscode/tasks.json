@@ -11,6 +11,19 @@
             },
             "command": "cmake",
             "args": [
+                "-DCMAKE_BUILD_TYPE=Release",
+                ".."
+            ]
+        },
+        {
+            "label": "CMake Debug",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceRoot}/debug"
+            },
+            "command": "cmake",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Debug",
                 ".."
             ]
         },
@@ -34,6 +47,26 @@
             },
             "dependsOn": [
                 "CMake"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Make Debug",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "-C",
+                "./debug"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "dependsOn": [
+                "CMake Debug"
             ],
             "problemMatcher": []
         },

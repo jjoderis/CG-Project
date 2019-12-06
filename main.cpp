@@ -55,9 +55,6 @@ void display(){
 }
 
 int main(int argc, char** argv){
-  Mathematics::Vector<float> v{ 1.0f, 2.0f, 3.0f };
-  std::cout << v << '\n';
-
   glfwInit();
   
   GLFWwindow* window = glfwCreateWindow(640, 480, "Triangles", NULL, NULL);

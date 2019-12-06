@@ -1,28 +1,32 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
+
+#specify C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+#Project Name
 project(CG-Project)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
-
-SOURCE_GROUP( "Header Files" REGULAR_EXPRESSION "$^" )
-SOURCE_GROUP( "Source Files" REGULAR_EXPRESSION "$^" )
-SOURCE_GROUP( "Generated" REGULAR_EXPRESSION "ui_|qrc_|moc_.+cpp$" )
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
 
 FIND_PACKAGE( OpenGL )
 FIND_PACKAGE( glfw3 3.2 REQUIRED )
-SET(INCLUDE_DIR "include")
-SET( GLEW_INCLUDE_DIR "./glew" )
-INCLUDE_DIRECTORIES( ${INCLUDE_DIR} ${GLEW_INCLUDE_DIR} )
-SET( project_INCLUDES
-    ${INCLUDE_DIR}/LoadShaders.h
-    )
-SET(Project_SOURCES glew.c LoadShaders.cpp  )
-add_library(project ${Project_SOURCES})
 
-SET(app_SOURCES main.cpp)
+set( INCLUDE_DIR ${PROJECT_SOURCE_DIR}/includes )
+set( GLEW_DIR ${PROJECT_SOURCE_DIR}/glew )
 
-ADD_EXECUTABLE( CG-Project ${app_SOURCES} )
-TARGET_LINK_LIBRARIES( CG-Project ${OPENGL_LIBRARIES} glfw project )
+set( PROJECT_SOURCES 
+        ${INCLUDE_DIR}/LoadShaders/LoadShaders.cpp    
+)
+
+#add the glew subdirectory
+add_subdirectory( ${GLEW_DIR} )
+
+#add executable
+add_executable(CG-Project main.cpp ${PROJECT_SOURCES})
+
+target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew)
+
+#add the binary tree to the search path for include files
+target_include_directories(CG-Project PUBLIC
+                          ${GLEW_DIR}
+                          ${INCLUDE_DIR}/LoadShaders
+                          )
