@@ -26,6 +26,11 @@ set( PROJECT_SOURCES
     ${INCLUDE_DIR}/LoadShaders/LoadShaders.cpp    
 )
 
+set( PROJECT_INCLUDES 
+    ${INCLUDE_DIR}/LoadShaders
+    ${INCLUDE_DIR}/mathematics
+)
+
 if(NOT BUILD_TESTS)
 
     #add the glew subdirectory
@@ -36,10 +41,9 @@ if(NOT BUILD_TESTS)
 
     target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew)
 
-    #add the binary tree to the search path for include files
     target_include_directories(CG-Project PUBLIC
         ${GLEW_DIR}
-        ${INCLUDE_DIR}/LoadShaders
+        ${PROJECT_INCLUDES}
     )
 
 endif()
@@ -91,5 +95,9 @@ if(BUILD_TESTS)
     add_executable(unitTests ${TEST_FILES})
     target_link_libraries(unitTests gtest_main)
     add_test(NAME example_test COMMAND unitTests)
+
+    target_include_directories(unitTests PUBLIC
+        ${PROJECT_INCLUDES}
+    )
 
 endif()

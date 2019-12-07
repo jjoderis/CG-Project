@@ -3,6 +3,8 @@
 #include <iostream>
 #include <initializer_list>
 #include <cassert>
+#include <math.h>
+#include <util/util.h>
 
 namespace CG
 {
@@ -18,8 +20,35 @@ namespace CG
         template <typename T, int size>
         bool operator== (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
 
-        // template <typename T, int size>
-        // Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2);
+        template <typename T, int size>
+        bool operator!= (const Vector<T, size> &vec1, const Vector<T,size> &vec2);
+
+        template <typename T, int size>
+        Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+        template <typename T, int size>
+        Vector<T, size> operator+(const Vector<T, size> &vec, T val);   
+
+        template <typename T, int size>
+        Vector<T, size> operator+(T val, const Vector<T, size> &vec);   
+
+        template <typename T, int size>
+        Vector<T, size> operator-(const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+        template <typename T, int size>
+        Vector<T, size> operator-(const Vector<T, size> &vec, T val);   
+
+        template <typename T, int size>
+        Vector<T, size> operator-(T val, const Vector<T, size> &vec);
+
+        template <typename T, int size>
+        Vector<T, size> operator*(const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+        template <typename T, int size>
+        Vector<T, size> operator*(const Vector<T, size> &vec, T val);   
+
+        template <typename T, int size>
+        Vector<T, size> operator*(T val, const Vector<T, size> &vec);           
 
         //A basic Vector class template for different types like int, float, etc, and different sizes size
         template <typename T, int size>
@@ -29,6 +58,8 @@ namespace CG
             T m_data[size]; //array of static size with vector elements
 
         public:
+            friend class Vector<T, size + 1>;
+
             //Constructor: creates vector
             Vector(){}
 
@@ -52,8 +83,29 @@ namespace CG
                 }
             }
 
+            //create vector from a vector with one entry less and a given value
+            Vector(const Vector<T, size-1> &vector, T val) {
+
+                for(int i = 0; i < size - 1; ++i){
+                    m_data[i] = vector.m_data[i];
+                }
+                m_data[size-1] = val;
+            }
+
+            //returns the length of the given vector
+            double length() const{
+                return sqrt(this->dot(*this));
+            }
+
             //Delete assignment operation
-            Vector<T, size>& operator= (const Vector<T, size> &vector) = delete;
+            Vector<T, size>& operator= (const Vector<T, size> &vector){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] = vector.m_data[i];
+                }
+
+                return *this;
+            };
 
             //overload typecast to T* to make vector decay to m_data if necessary
             operator T*(){
@@ -66,21 +118,237 @@ namespace CG
             }
 
 
-            // //overload + to return a new vector that is the sum of the two given vectors
-            // friend Vector<T, size> operator+<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
+            //overload + to return a new vector that is the sum of the two given vectors
+            friend Vector<T, size> operator+<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+            //overload += to add the other vector to this one and return reference to this vector
+            Vector<T, size>& operator+= (const Vector<T, size> &other){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] += other.m_data[i];
+                }
+
+                return *this;
+            }
+
+            //overload + to add the given value to all entries of the given vector and return new vector by value
+            friend Vector<T, size> operator+<T, size> (const Vector<T, size> &vec, T val);
+            friend Vector<T, size> operator+<T, size> (T val, const Vector<T, size> &vec);
+
+            //overload += to add a value to every entry of the vector
+            Vector<T, size>& operator+= (T val){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] += val;
+                }
+
+                return *this;
+            }
+
+            //overload - to return a new vector that is the difference of the two given vectors
+            friend Vector<T, size> operator-<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+            //overload -= to subtract the other vector from this one and return reference to this vector
+            Vector<T, size>& operator-= (const Vector<T, size> &other){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] -= other.m_data[i];
+                }
+
+                return *this;
+            }
+
+            //overload - to subtract the given value from all entries of the given vector and return new vector by value
+            friend Vector<T, size> operator-<T, size> (const Vector<T, size> &vec, T val);
+            //overload - to return a new vector that is equal to difference of the given value and each vector entry
+            friend Vector<T, size> operator-<T, size> (T val, const Vector<T, size> &vec);
+
+            //overload -= to subtract a value from every entry of the vector
+            Vector<T, size>& operator-= (T val){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] -= val;
+                }
+
+                return *this;
+            }
+
+            //overload unary - operator to return inverse of given vector
+            Vector<T, size> operator- () const{
+                Vector<T, size> newVec{ *this };
+
+                for(int i = 0; i < size; ++i){
+                    newVec.m_data[i] *= -1;
+                }
+
+                return newVec;    
+            }
+
+            //overload * to do element wise multiplication and return the resulting vector
+            friend Vector<T, size> operator*<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+            //overload * set this vector to result of element wise multiplication with given vector and return reference to it
+            Vector<T, size>& operator*= (const Vector<T, size> &other){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] *= other.m_data[i];
+                }
+
+                return *this;
+            } 
+
+            //overload * to return a vector that is equal to this vector multiplied by a scalar
+            friend Vector<T, size> operator*<T, size> (const Vector<T, size> &vec, T val);
+            friend Vector<T, size> operator*<T, size> (T val, const Vector<T, size> &vec);
+
+            //overload *= to multiply every entry of the vector with a given value
+            Vector<T, size>& operator*= (T val){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] *= val;
+                }
+
+                return *this;
+            }
+
+            //returns the dot product between this vector and the given vector
+            double dot(const Vector<T, size> &other) const{
+                double sum = 0.0;
+                
+                for(int i = 0; i < size; ++i){
+                    sum += m_data[i] * other.m_data[i];
+                }
+
+                return sum;
+            }
+
+            //returns the angle between this and the other vector
+            double angleTo(const Vector<T, size> &other) const{
+                return acos(this->dot(other)/(this->length()*other.length()));
+            }
+
+
+
+
+            //compares two vectors taking possible rounding errors into account
+            bool allClose(const Vector<T, size> &other) const{
+
+                for(int i = 0; i < size; ++i){
+                    if(!CG::Util::isClose(m_data[i], other.m_data[i], 1E-10, 1E-6)){
+                        return false;
+                    }
+                }
+
+                return true;
+            }
 
             //overload == operator; this is strict equality which is not necessarily what we want for floating point values
             friend bool operator==<T, size> (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
+            friend bool operator!=<T, size> (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
 
             //overload << to be able to write vector to console
             friend std::ostream& operator<<<T, size> (std::ostream &out, const Vector<T, size> &vector);
 
         };
 
-        // template <typename T, int size>
-        // Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2){
-            
-        // }
+        template <typename T, int size>
+        Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2){
+            Vector<T, size> newVec;
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] = v1.m_data[i] + v2.m_data[i];
+            }     
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator+ (const Vector<T, size> &vec, T val){
+            Vector<T, size> newVec{ vec };
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] += val;
+            }
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator+ (T val, const Vector<T, size> &vec){
+            Vector<T, size> newVec{ vec };
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] += val;
+            }
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator-(const Vector<T, size> &v1, const Vector<T, size> &v2){
+            Vector<T, size> newVec;
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] = v1.m_data[i] - v2.m_data[i];
+            }     
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator- (const Vector<T, size> &vec, T val){
+            Vector<T, size> newVec{ vec };
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] -= val;
+            }
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator- (T val, const Vector<T, size> &vec){
+            Vector<T, size> newVec;
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] = val - vec.m_data[i];
+            }
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator*(const Vector<T, size> &v1, const Vector<T, size> &v2){
+            Vector<T, size> newVec;
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] = v1.m_data[i] * v2.m_data[i];
+            }     
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator* (const Vector<T, size> &vec, T val){
+            Vector<T, size> newVec{ vec };
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] *= val;
+            }
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator* (T val, const Vector<T, size> &vec){
+            Vector<T, size> newVec{ vec };
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] *= val;
+            }
+
+            return newVec;
+        }
 
         template<typename T, int size>
         bool operator== (const Vector<T, size> &vec1, const Vector<T, size> &vec2){
@@ -92,6 +360,11 @@ namespace CG
             }
 
             return true;
+        }
+
+        template<typename T, int size>
+        bool operator!= (const Vector<T, size> &vec1, const Vector<T, size> &vec2){
+            return !(vec1 == vec2);
         }
 
         template <typename T, int size>
