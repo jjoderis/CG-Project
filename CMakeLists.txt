@@ -11,6 +11,10 @@ option(BUILD_TESTS "BUILD_TESTS" OFF)
 #Project Name
 project(CG-Project)
 
+if(POLICY CMP0072)
+    cmake_policy(SET CMP0072 NEW)
+endif()
+
 FIND_PACKAGE( OpenGL )
 FIND_PACKAGE( glfw3 3.2 REQUIRED )
 
