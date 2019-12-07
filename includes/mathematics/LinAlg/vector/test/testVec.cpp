@@ -1,4 +1,4 @@
-#include "./includes/mathematics/LinAlg/vector/vector.h"
+#include "../vector.h"
 
 #include <gtest/gtest.h>
 
