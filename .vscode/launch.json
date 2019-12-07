@@ -43,6 +43,26 @@
                 }
             ],
             "preLaunchTask": "Make Debug"
+        },
+        {
+            "name": "Test",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceRoot}/test",
+            "program": "${workspaceRoot}/test/unitTests",
+            "args": [],
+            "stopAtEntry": false,
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Automatische Strukturierung und Einrückung für \"gdb\" aktivieren",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Make Tests"
         }
     ]
 }

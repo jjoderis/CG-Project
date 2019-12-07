@@ -2,6 +2,7 @@
 #define MATHEMATICS_VECTOR_H
 #include <iostream>
 #include <initializer_list>
+#include <cassert>
 
 namespace CG
 {
@@ -15,7 +16,10 @@ namespace CG
         std::ostream& operator<< (std::ostream &out, const Vector<T, size> &vector);
 
         template <typename T, int size>
-        Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2);
+        bool operator== (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
+
+        // template <typename T, int size>
+        // Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2);
 
         //A basic Vector class template for different types like int, float, etc, and different sizes size
         template <typename T, int size>
@@ -26,7 +30,7 @@ namespace CG
 
         public:
             //Constructor: creates vector
-            Vector() : {}
+            Vector(){}
 
             //Constructor: creates vector and initializes data with values from initializer list
             Vector(const std::initializer_list<T> &list)
@@ -52,7 +56,7 @@ namespace CG
             Vector<T, size>& operator= (const Vector<T, size> &vector) = delete;
 
             //overload typecast to T* to make vector decay to m_data if necessary
-            operator T*() const{
+            operator T*(){
                 return m_data;
             }
 
@@ -62,16 +66,32 @@ namespace CG
             }
 
 
-            //overload + to return a new vector that is the sum of the two given vectors
-            friend Vector<T, size> operator+<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
+            // //overload + to return a new vector that is the sum of the two given vectors
+            // friend Vector<T, size> operator+<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+            //overload == operator; this is strict equality which is not necessarily what we want for floating point values
+            friend bool operator==<T, size> (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
 
             //overload << to be able to write vector to console
             friend std::ostream& operator<<<T, size> (std::ostream &out, const Vector<T, size> &vector);
+
         };
 
-        template <typename T, int size>
-        Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2){
+        // template <typename T, int size>
+        // Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2){
             
+        // }
+
+        template<typename T, int size>
+        bool operator== (const Vector<T, size> &vec1, const Vector<T, size> &vec2){
+            
+            for(int i = 0; i < size; ++i){
+                if(vec1.m_data[i] != vec2.m_data[i]){
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         template <typename T, int size>
@@ -83,6 +103,8 @@ namespace CG
             }
 
             out << " ]";
+
+            return out;
         }
     }
 }
