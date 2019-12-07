@@ -19,7 +19,7 @@ before_install:
     - eval "${MATRIX_EVAL}"
 
 install:
-  - sudo apt-get install glfw3-dev
+  - sudo apt-get install libglfw3-dev
 
 script:
   - cd build
