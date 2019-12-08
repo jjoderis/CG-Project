@@ -19,14 +19,14 @@ before_install:
     - eval "${MATRIX_EVAL}"
 
 install:
-  - sudo apt-get install libglfw3-dev
-  - sudo apt-get install mesa-utils
-  - sudo apt-get install freeglut3-dev
+#  - sudo apt-get install libglfw3-dev
+#  - sudo apt-get install mesa-utils
+#  - sudo apt-get install freeglut3-dev
 
 script:
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - make
+#  - cmake -DCMAKE_BUILD_TYPE=Release ..
+#  - make
   - cd ../test
   - cmake -DBUILD_TESTS=ON ..
   - make

@@ -31,6 +31,8 @@ set( PROJECT_INCLUDES
     ${INCLUDE_DIR}/mathematics
 )
 
+add_subdirectory( ${INCLUDE_DIR}/mathematics/util )
+
 if(NOT BUILD_TESTS)
 
     #add the glew subdirectory
@@ -88,12 +90,13 @@ if(BUILD_TESTS)
     endif()
 
     set(TEST_FILES
-        ${INCLUDE_DIR}/mathematics/LinAlg/vector/test/testVec.cpp
+        ${INCLUDE_DIR}/mathematics/LinAlg/vector/test/vecTest.cpp
+        ${INCLUDE_DIR}/mathematics/LinAlg/matrix/test/matTest.cpp
     )
 
     # Now simply link against gtest or gtest_main as needed. Eg
     add_executable(unitTests ${TEST_FILES})
-    target_link_libraries(unitTests gtest_main)
+    target_link_libraries(unitTests gtest_main Math_Util)
     add_test(NAME example_test COMMAND unitTests)
 
     target_include_directories(unitTests PUBLIC

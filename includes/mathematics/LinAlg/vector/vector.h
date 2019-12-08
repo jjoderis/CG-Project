@@ -48,7 +48,22 @@ namespace CG
         Vector<T, size> operator*(const Vector<T, size> &vec, T val);   
 
         template <typename T, int size>
-        Vector<T, size> operator*(T val, const Vector<T, size> &vec);           
+        Vector<T, size> operator*(T val, const Vector<T, size> &vec);
+
+        template <typename T, int size>
+        Vector<T, size> operator/(const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+        template <typename T, int size>
+        Vector<T, size> operator/(const Vector<T, size> &vec, T val);   
+
+        template <typename T, int size>
+        Vector<T, size> operator/(T val, const Vector<T, size> &vec); 
+
+        template<typename T, int size>
+        Vector<T, size> orthogonalProject(const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+        template<typename T>
+        Vector<T, 3> cross(const Vector<T, 3> &v1, const Vector<T, 3> &v2);        
 
         //A basic Vector class template for different types like int, float, etc, and different sizes size
         template <typename T, int size>
@@ -211,6 +226,33 @@ namespace CG
                 return *this;
             }
 
+            //overload / to do element wise division and return the resulting vector
+            friend Vector<T, size> operator/<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+            //overload / set this vector to result of element wise division with given vector and return reference to it
+            Vector<T, size>& operator/= (const Vector<T, size> &other){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] /= other.m_data[i];
+                }
+
+                return *this;
+            } 
+
+            //overload / to return a vector that is equal to (this vector divided by a scalar)/(a scalar divided by this vector)
+            friend Vector<T, size> operator/<T, size> (const Vector<T, size> &vec, T val);
+            friend Vector<T, size> operator/<T, size> (T val, const Vector<T, size> &vec);
+
+            //overload *= to multiply every entry of the vector with a given value
+            Vector<T, size>& operator/= (T val){
+
+                for(int i = 0; i < size; ++i){
+                    m_data[i] /= val;
+                }
+
+                return *this;
+            }
+
             //returns the dot product between this vector and the given vector
             double dot(const Vector<T, size> &other) const{
                 double sum = 0.0;
@@ -222,13 +264,17 @@ namespace CG
                 return sum;
             }
 
+            //normalize the vector so it has a length of 1
+            Vector<T, size>& normalize(){
+                *this /= this->length();
+
+                return *this;
+            }
+
             //returns the angle between this and the other vector
             double angleTo(const Vector<T, size> &other) const{
                 return acos(this->dot(other)/(this->length()*other.length()));
             }
-
-
-
 
             //compares two vectors taking possible rounding errors into account
             bool allClose(const Vector<T, size> &other) const{
@@ -241,6 +287,12 @@ namespace CG
 
                 return true;
             }
+
+            //orthogonaly project v1 onto v2
+            friend Vector<T, size> orthogonalProject<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
+
+            //cross product between v1 and v2; only defined for Vectors<T, 3>
+            friend Vector<T, 3> cross<T> (const Vector<T, 3> &v1, const Vector<T, 3> &v2);
 
             //overload == operator; this is strict equality which is not necessarily what we want for floating point values
             friend bool operator==<T, size> (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
@@ -346,6 +398,63 @@ namespace CG
             for(int i = 0; i < size; ++i){
                 newVec.m_data[i] *= val;
             }
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator/(const Vector<T, size> &v1, const Vector<T, size> &v2){
+            Vector<T, size> newVec;
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] = v1.m_data[i] / v2.m_data[i];
+            }     
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator/ (const Vector<T, size> &vec, T val){
+            Vector<T, size> newVec{ vec };
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] /= val;
+            }
+
+            return newVec;
+        }
+
+        template <typename T, int size>
+        Vector<T, size> operator/ (T val, const Vector<T, size> &vec){
+            Vector<T, size> newVec;
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] = val / vec.m_data[i];
+            }
+
+            return newVec;
+        }
+
+        template<typename T, int size>
+        Vector<T, size> orthogonalProject(const Vector<T, size> &v1, const Vector<T, size> &v2){
+            double t = (v1.dot(v2))/(v2.dot(v2));
+
+            Vector<T, size> newVec{ v2 };
+
+            for(int i = 0; i < size; ++i){
+                newVec.m_data[i] *= t;
+            }
+
+            return newVec;
+        }
+
+        template<typename T>
+        Vector<T, 3> cross(const Vector<T, 3> &v1, const Vector<T, 3> &v2){
+            Vector<T, 3> newVec;
+
+            newVec.m_data[0] = v1.m_data[1] * v2.m_data[2] - v1.m_data[2] * v2.m_data[1];
+            newVec.m_data[1] = v1.m_data[2] * v2.m_data[0] - v1.m_data[0] * v2.m_data[2];
+            newVec.m_data[2] = v1.m_data[0] * v2.m_data[1] - v1.m_data[1] * v2.m_data[0];
 
             return newVec;
         }

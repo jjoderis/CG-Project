@@ -6,9 +6,10 @@ TEST(VECTOR_TEST, initializer_list_constructor)
 {
     CG::LinAlg::Vector<float, 3> vec{ 1.0 , 2.0, 3.0};
 
-    EXPECT_EQ(vec[0], 1.0);
-    EXPECT_EQ(vec[1], 2.0);
-    EXPECT_EQ(vec[2], 3.0); 
+    float* vecPtr = vec;
+    EXPECT_EQ(vecPtr[0], 1.0);
+    EXPECT_EQ(vecPtr[1], 2.0);
+    EXPECT_EQ(vecPtr[2], 3.0); 
 }
 
 TEST(VECTOR_TEST, copy_constructor)
@@ -213,6 +214,55 @@ TEST(VECTOR_TEST, mult_assign_T)
     EXPECT_EQ(vec, twos);
 }
 
+TEST(VECTOR_TEST, div_overload)
+{
+    CG::LinAlg::Vector<int, 2> vec{ 4, 9 };
+
+    CG::LinAlg::Vector<int, 2> ones{ 1, 1 };
+
+    EXPECT_EQ(vec / vec, ones);
+}
+
+TEST(VECTOR_TEST, div_assign_overload)
+{
+    CG::LinAlg::Vector<int, 2> vec{ 2, 3 };
+
+    CG::LinAlg::Vector<int, 2> ones{ 1, 1 };
+
+    vec /= vec;
+
+    EXPECT_EQ(vec, ones);
+}
+
+TEST(VECTOR_TEST, div_T_right)
+{
+    CG::LinAlg::Vector<int, 2> vec{ 3, 9 };
+
+    CG::LinAlg::Vector<int, 2> quot{ 1, 3 };
+
+    EXPECT_EQ(vec / 3, quot);
+}
+
+TEST(VECTOR_TEST, div_T_left)
+{
+    CG::LinAlg::Vector<int, 2> vec{ 9, 3 };
+
+    CG::LinAlg::Vector<int, 2> quot{ 1, 3 };
+
+    EXPECT_EQ(9 / vec, quot);
+}
+
+TEST(VECTOR_TEST, div_assign_T)
+{
+    CG::LinAlg::Vector<int, 2> vec{ 10, 20 };
+
+    CG::LinAlg::Vector<int, 2> quot{ 2, 4 };
+
+    vec /= 5;
+
+    EXPECT_EQ(vec, quot);
+}
+
 TEST(VECTOR_TEST, dot_product)
 {
     CG::LinAlg::Vector<int, 3> vec1{ 1, 0, 0 };
@@ -253,4 +303,33 @@ TEST(VECTOR_TEST, allClose)
 
     ASSERT_NE(roundErr, vec2);
     ASSERT_TRUE(vec2.allClose(roundErr));
+}
+
+TEST(VECTOR_TEST, normalize)
+{
+    CG::LinAlg::Vector<float, 3> vec{ 2.3, 5.6, 1.7 };
+
+    vec.normalize();
+    ASSERT_FLOAT_EQ(vec.length(), 1.0);
+}
+
+TEST(VECTOR_TEST, orthogonal_projection)
+{
+    CG::LinAlg::Vector<float, 2> a{ 1, 2 };
+    CG::LinAlg::Vector<float, 2> b{ 3, 4 };
+
+    CG::LinAlg::Vector<float, 2> proj = orthogonalProject(a, b);
+    CG::LinAlg::Vector<float, 2> expected{ 1.32, 1.76 };
+
+    ASSERT_TRUE(proj.allClose(expected));
+}
+
+TEST(VECTOR_TEST, cross_product)
+{
+    CG::LinAlg::Vector<int, 3> u{ 1, 0, 0 };
+    CG::LinAlg::Vector<int, 3> v{ 0, 1, 0 };
+
+    CG::LinAlg::Vector<int, 3> expected{ 0, 0, 1 };
+
+    ASSERT_EQ(cross(u, v), expected);
 }
