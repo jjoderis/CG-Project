@@ -107,11 +107,6 @@ namespace CG
                 m_data[size-1] = val;
             }
 
-            //returns the length of the given vector
-            double length() const{
-                return sqrt(this->dot(*this));
-            }
-
             //Delete assignment operation
             Vector<T, size>& operator= (const Vector<T, size> &vector){
 
@@ -121,6 +116,11 @@ namespace CG
 
                 return *this;
             };
+
+            //returns the length of the given vector
+            double length() const{
+                return sqrt(this->dot(*this));
+            }
 
             //overload typecast to T* to make vector decay to m_data if necessary
             operator T*(){
