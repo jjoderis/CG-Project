@@ -31,6 +31,15 @@ TEST(VECTOR_TEST, smaller_vector_constructor)
     EXPECT_EQ(vec4, res);
 }
 
+TEST(VECTOR_TEST, at_function)
+{
+    CG::LinAlg::Vector<int, 3> vec3{ 1, 2, 3 };
+
+    EXPECT_EQ(vec3.at(0), 1);
+    EXPECT_EQ(vec3.at(1), 2);
+    EXPECT_EQ(vec3.at(2), 3);
+}
+
 TEST(VECTOR_TEST, assignment_overload)
 {
     CG::LinAlg::Vector<float, 2> vec{ 0.0, 0.0 };

@@ -128,7 +128,7 @@ namespace CG
             }
 
             //overload subscript operator to access elements in m_data
-            T& operator[] (int index){
+            T& at (int index){
                 return m_data[index];
             }
 
@@ -243,7 +243,7 @@ namespace CG
             friend Vector<T, size> operator/<T, size> (const Vector<T, size> &vec, T val);
             friend Vector<T, size> operator/<T, size> (T val, const Vector<T, size> &vec);
 
-            //overload *= to multiply every entry of the vector with a given value
+            //overload /= to divide every entry of the vector by a given value
             Vector<T, size>& operator/= (T val){
 
                 for(int i = 0; i < size; ++i){
