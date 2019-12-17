@@ -2,6 +2,14 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
+
+TEST(MATRIX_TEST, instantiate_many_matrices)
+{
+    CG::LinAlg::Matrix<double, 100, 100> matrices[3000];
+
+    std::cout << sizeof(matrices) << '\n';
+}
+
 TEST(MATRIX_TEST, initializer_list_constructor)
 {
     CG::LinAlg::Matrix<float, 2, 2> mat{ {1.0, 2.0}, {3.0, 4.0} };

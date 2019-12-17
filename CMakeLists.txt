@@ -29,6 +29,7 @@ set( PROJECT_SOURCES
 set( PROJECT_INCLUDES 
     ${INCLUDE_DIR}/LoadShaders
     ${INCLUDE_DIR}/mathematics
+    ${INCLUDE_DIR}/framework
 )
 
 add_subdirectory( ${INCLUDE_DIR}/mathematics/util )
@@ -92,6 +93,7 @@ if(BUILD_TESTS)
     set(TEST_FILES
         ${INCLUDE_DIR}/mathematics/LinAlg/vector/test/vecTest.cpp
         ${INCLUDE_DIR}/mathematics/LinAlg/matrix/test/matTest.cpp
+        ${INCLUDE_DIR}/framework/core/test/faceTest.cpp
     )
 
     # Now simply link against gtest or gtest_main as needed. Eg

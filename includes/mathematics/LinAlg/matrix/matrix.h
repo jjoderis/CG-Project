@@ -63,14 +63,16 @@ namespace CG
         class Matrix
         {
         protected:
-            T m_data[rows*cols]; //array with all matrix elements in column major order
+            //T m_data[rows*cols]; //array with all matrix elements in column major order; PROBLEM: memory allocated on stack; make dynamic
+            T* m_data = nullptr;
 
         public:
             //Constructor: creates matrix but doesn't initialize any values
-            Matrix() {}
+            Matrix() : m_data{ new T[rows*cols] } {}
 
             //Constructor: creates Matrix and initializes with values from initializer lists
-            Matrix(const std::initializer_list<std::initializer_list<T>> &list){
+            Matrix(const std::initializer_list<std::initializer_list<T>> &list) : Matrix()
+            {
 
                 assert(list.size() == rows);
 
@@ -88,14 +90,22 @@ namespace CG
             }
 
             //Copy Constructor: create Matrix as copy of another Matrix
-            Matrix(const Matrix &other){
+            Matrix(const Matrix &other) : Matrix()
+            {
                 for(int i = 0; i < rows*cols; ++i){
                     m_data[i] = other.m_data[i];
                 }
             }
 
+            //destructor: delete dynamically allocated memory
+            ~Matrix()
+            {
+                delete [] m_data;
+            }
+
             //overload assignment operator to set the entries of this matrix to the ones of the other matrix
-            Matrix<T, rows, cols>& operator= (const Matrix<T, rows, cols> &other){
+            Matrix<T, rows, cols>& operator= (const Matrix<T, rows, cols> &other)
+            {
                 for(int i = 0; i < rows*cols; ++i){
                     m_data[i] = other.m_data[i];
                 }
@@ -496,7 +506,19 @@ namespace CG
 
             return out;
         }
+
+        //typedef some matrices we want to use regularly
+        template<typename T>
+        using Matrix2 = Matrix<T, 2, 2>;
+
+        template<typename T>
+        using Matrix3 = Matrix<T, 3, 3>;
+
+        template<typename T>
+        using Matrix4 = Matrix<T, 4, 4>;
     }
 }
+
+
 
 #endif

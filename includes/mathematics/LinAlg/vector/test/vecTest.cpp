@@ -2,6 +2,13 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
+TEST(VECTOR_TEST, instantiate_many_vectors)
+{
+    CG::LinAlg::Vector<double, 100000> vectors[1000];
+
+    std::cout << sizeof(vectors) << '\n';
+}
+
 TEST(VECTOR_TEST, initializer_list_constructor)
 {
     CG::LinAlg::Vector<float, 3> vec{ 1.0 , 2.0, 3.0};
@@ -341,4 +348,12 @@ TEST(VECTOR_TEST, cross_product)
     CG::LinAlg::Vector<int, 3> expected{ 0, 0, 1 };
 
     ASSERT_EQ(cross(u, v), expected);
+}
+
+TEST(VECTOR_TEST, typedef)
+{
+    CG::LinAlg::Vector3<int> vector3{1, 1, 1};
+
+    CG::LinAlg::Vector<int, 3> vec{1, 1, 1};
+    EXPECT_EQ(vector3, vec);
 }

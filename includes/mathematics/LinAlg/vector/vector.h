@@ -70,16 +70,17 @@ namespace CG
         class Vector
         {
         protected:
-            T m_data[size]; //array of static size with vector elements
+            //T m_data[size]; //array of static size with vector elements; PROBLEM: memory allocated on stack use dynamic allocation instead
+            T* m_data = nullptr;
 
         public:
             friend class Vector<T, size + 1>;
 
             //Constructor: creates vector
-            Vector(){}
+            Vector() : m_data{ new T[size] } {}
 
             //Constructor: creates vector and initializes data with values from initializer list
-            Vector(const std::initializer_list<T> &list)
+            Vector(const std::initializer_list<T> &list) : Vector()
             {
                 assert(list.size() == size);
 
@@ -92,14 +93,16 @@ namespace CG
             }
 
             //Copy Constructor: creates a Vector as a copy of another vector
-            Vector(const Vector &vector) {
+            Vector(const Vector &vector) : Vector() 
+            {
                 for(int i = 0; i < size; ++i){
                     m_data[i] = vector.m_data[i];
                 }
             }
 
             //create vector from a vector with one entry less and a given value
-            Vector(const Vector<T, size-1> &vector, T val) {
+            Vector(const Vector<T, size-1> &vector, T val) : Vector()
+            {
 
                 for(int i = 0; i < size - 1; ++i){
                     m_data[i] = vector.m_data[i];
@@ -107,7 +110,12 @@ namespace CG
                 m_data[size-1] = val;
             }
 
-            //Delete assignment operation
+            //destructor: free dynamic allocated memory
+            ~Vector() 
+            {
+                delete [] m_data;
+            }
+
             Vector<T, size>& operator= (const Vector<T, size> &vector){
 
                 for(int i = 0; i < size; ++i){
@@ -488,6 +496,16 @@ namespace CG
 
             return out;
         }
+
+        //typedef some vectors we want to use regularly
+        template <typename T>
+        using Vector2 = Vector<T, 2>;
+
+        template <typename T>
+        using Vector3 = Vector<T, 3>;
+
+        template <typename T>
+        using Vector4 = Vector<T, 4>;
     }
 }
 
