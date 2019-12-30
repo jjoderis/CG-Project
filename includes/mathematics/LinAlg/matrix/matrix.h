@@ -1,6 +1,7 @@
 #ifndef MATHEMATICS_MATRIX_H
 #define MATHEMATICS_MATRIX_H
 #include <iostream>
+#include <vector>
 #include <initializer_list>
 #include <cassert>
 #include <math.h>
@@ -64,11 +65,14 @@ namespace CG
         {
         protected:
             //T m_data[rows*cols]; //array with all matrix elements in column major order; PROBLEM: memory allocated on stack; make dynamic
-            T* m_data = nullptr;
+            std::vector<T> m_data;
 
         public:
             //Constructor: creates matrix but doesn't initialize any values
-            Matrix() : m_data{ new T[rows*cols] } {}
+            Matrix()
+            {
+                m_data.resize(rows*cols);
+            }
 
             //Constructor: creates Matrix and initializes with values from initializer lists
             Matrix(const std::initializer_list<std::initializer_list<T>> &list) : Matrix()
@@ -98,10 +102,7 @@ namespace CG
             }
 
             //destructor: delete dynamically allocated memory
-            ~Matrix()
-            {
-                delete [] m_data;
-            }
+            ~Matrix() {}
 
             //overload assignment operator to set the entries of this matrix to the ones of the other matrix
             Matrix<T, rows, cols>& operator= (const Matrix<T, rows, cols> &other)
@@ -115,7 +116,7 @@ namespace CG
 
             //overload T* typecast to make matrix decay to m_data if necessary
             operator T*(){
-                return m_data;
+                return m_data.data();
             }
 
             //function to access an element at a certain matrix position; behaves as if matrix was in row major order

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 #specify C++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wsign-conversion -Werror -pedantic-errors")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic-errors")
 
 #set option to build tests or the project from command line
 option(BUILD_TESTS "BUILD_TESTS" OFF)

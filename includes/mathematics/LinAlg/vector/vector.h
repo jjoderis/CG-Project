@@ -5,6 +5,7 @@
 #include <cassert>
 #include <math.h>
 #include <util/util.h>
+#include <vector>
 
 namespace CG
 {
@@ -70,26 +71,23 @@ namespace CG
         class Vector
         {
         protected:
-            //T m_data[size]; //array of static size with vector elements; PROBLEM: memory allocated on stack use dynamic allocation instead
-            T* m_data = nullptr;
+            std::vector<T> m_data;
 
         public:
             friend class Vector<T, size + 1>;
 
             //Constructor: creates vector
-            Vector() : m_data{ new T[size] } {}
+            Vector() 
+            {
+                m_data.resize(size);
+            }
 
             //Constructor: creates vector and initializes data with values from initializer list
-            Vector(const std::initializer_list<T> &list) : Vector()
+            Vector(const std::initializer_list<T> &list)
             {
                 assert(list.size() == size);
 
-                int count = 0;
-                for (const T &element : list)
-                {
-                    m_data[count] = element;
-                    ++count;
-                }
+                m_data = list;
             }
 
             //Copy Constructor: creates a Vector as a copy of another vector
@@ -111,10 +109,7 @@ namespace CG
             }
 
             //destructor: free dynamic allocated memory
-            ~Vector() 
-            {
-                delete [] m_data;
-            }
+            ~Vector() {}
 
             Vector<T, size>& operator= (const Vector<T, size> &vector){
 
@@ -132,7 +127,7 @@ namespace CG
 
             //overload typecast to T* to make vector decay to m_data if necessary
             operator T*(){
-                return m_data;
+                return m_data.data();
             }
 
             //overload subscript operator to access elements in m_data
