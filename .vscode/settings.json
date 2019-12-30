@@ -53,5 +53,6 @@
         "unordered_set": "cpp",
         "set": "cpp",
         "iomanip": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }

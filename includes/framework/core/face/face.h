@@ -1,5 +1,5 @@
-#ifndef CG_FRAMEWORK_CORE_FACE_H
-#define CG_FRAMEWORK_CORE_FACE_H
+#ifndef CG_FRAMEWORK_CORE_FACE_FACE_H
+#define CG_FRAMEWORK_CORE_FACE_FACE_H
 
 #include <iostream>
 

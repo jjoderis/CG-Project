@@ -11,6 +11,7 @@ option(BUILD_TESTS "BUILD_TESTS" OFF)
 #Project Name
 project(CG-Project)
 
+#needed for GLEW in Travis
 if(POLICY CMP0072)
     cmake_policy(SET CMP0072 NEW)
 endif()
@@ -93,7 +94,7 @@ if(BUILD_TESTS)
     set(TEST_FILES
         ${INCLUDE_DIR}/mathematics/LinAlg/vector/test/vecTest.cpp
         ${INCLUDE_DIR}/mathematics/LinAlg/matrix/test/matTest.cpp
-        ${INCLUDE_DIR}/framework/core/test/faceTest.cpp
+        ${INCLUDE_DIR}/framework/core/face/test/faceTest.cpp
     )
 
     # Now simply link against gtest or gtest_main as needed. Eg
