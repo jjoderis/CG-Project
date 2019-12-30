@@ -34,6 +34,7 @@ set( PROJECT_INCLUDES
 )
 
 add_subdirectory( ${INCLUDE_DIR}/mathematics/util )
+add_subdirectory( ${INCLUDE_DIR}/framework )
 
 if(NOT BUILD_TESTS)
 
@@ -95,11 +96,12 @@ if(BUILD_TESTS)
         ${INCLUDE_DIR}/mathematics/LinAlg/vector/test/vecTest.cpp
         ${INCLUDE_DIR}/mathematics/LinAlg/matrix/test/matTest.cpp
         ${INCLUDE_DIR}/framework/core/face/test/faceTest.cpp
+        ${INCLUDE_DIR}/framework/core/geometry/test/geometryTest.cpp
     )
 
     # Now simply link against gtest or gtest_main as needed. Eg
     add_executable(unitTests ${TEST_FILES})
-    target_link_libraries(unitTests gtest_main Math_Util)
+    target_link_libraries(unitTests gtest_main Math_Util CG_Framework)
     add_test(NAME example_test COMMAND unitTests)
 
     target_include_directories(unitTests PUBLIC

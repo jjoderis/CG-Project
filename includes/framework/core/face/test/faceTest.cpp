@@ -33,6 +33,14 @@ TEST(FACE_TEST, assignment_overload)
     EXPECT_EQ(faceCopy.c, 3);
 }
 
+TEST(FACE_TEST, equality_overload)
+{
+    CG::Face3 f1{1, 2, 3};
+    CG::Face3 f2{1, 2, 3};
+
+    EXPECT_EQ(f1, f2);
+}
+
 TEST(FACE_TEST, outstream_overload)
 {
     CG::Face3 face{1, 2, 3};

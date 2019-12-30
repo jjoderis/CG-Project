@@ -10,28 +10,23 @@ namespace CG {
         unsigned int a;
         unsigned int b;
         unsigned int c;
+
+        Face3() {}
         
-        Face3(unsigned int a, unsigned int b, unsigned int c) : a(a), b(b), c(c) {}
+        Face3(unsigned int a, unsigned int b, unsigned int c);
 
-        Face3(const Face3 &other) : a(other.a), b(other.b), c(other.c) {}
+        Face3(const Face3 &other);
 
-        Face3& operator= (const Face3 &other){
-            a = other.a;
-            b = other.b;
-            c = other.c;
+        Face3& operator= (const Face3 &other);
 
-            return *this;
-        }
+        friend bool operator== (const Face3 &f1, const Face3 &f2);
 
         friend std::ostream& operator<< (std::ostream &out, const Face3 &face);
     };
 
-    std::ostream& operator<< (std::ostream &out, const Face3 &face){
-        out << "[ a: " << face.a << ", b: " << face.b << ", c: " << face.c << " ]";
+    bool operator== (const Face3 &f1, const Face3 &f2);
 
-        return out;
-    }
-
+    std::ostream& operator<< (std::ostream &out, const Face3 &face);
 }
 
 #endif
