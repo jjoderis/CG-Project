@@ -4,54 +4,42 @@
 
 #include <GL/glew.h>
 
+#include <core/geometry/geometry.h>
 #include <GLFW/glfw3.h>
 
 #include "LoadShaders.h"
 
+
 #define BUFFER_OFFSET(a) ((void*)(a))
 
-GLuint* VAO = (GLuint*) malloc(sizeof(GLuint));
-GLuint* buffer = (GLuint*) malloc(sizeof(GLuint));
-GLuint program;
-
-int numVertices = 3;
-
-float counter = 0.0;
+CG::Geometry geometry;
+float counter = 0.0f;
 
 void init(){
-	static const GLfloat vertices[3][2] =
-	{
-		{ -0.50, -0.50 },
-		{  0.50, -0.50 },
-		{  0.00,  0.50 }
-	};
-
-  glCreateVertexArrays(1, VAO);
-  glBindVertexArray(*VAO);
-
-  glCreateBuffers(1, buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, *buffer);
-  glNamedBufferStorage(*buffer, sizeof(vertices), vertices, 0);
- 
+  geometry = CG::Geometry{
+    {
+      -0.50, -0.50,
+        0.50, -0.50,
+        0.00,  0.50
+    },
+    {}
+  };
 	ShaderInfo shaders[] = {
 		{ GL_VERTEX_SHADER, "../media/shaders/triangles.vert", 0u },
 		{ GL_FRAGMENT_SHADER, "../media/shaders/triangles.frag", 0u },
 		{ GL_NONE, NULL, 0u }
 	};
-	program = LoadShaders(shaders);
+	GLuint program = LoadShaders(shaders);
 	glUseProgram(program);
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
-  glEnableVertexAttribArray(0);
 }
 
 void display(){
 	static const float black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	glClearBufferfv(GL_COLOR, 0, black);
 
-  glBindVertexArray(*VAO);
+  geometry.bind();
 
-  glDrawArrays(GL_TRIANGLES, 0, numVertices);
+  glDrawArrays(GL_TRIANGLES, 0, geometry.getNumVertices() * 2);
 }
 
 int main(){
@@ -76,9 +64,6 @@ int main(){
   }
 
   glfwDestroyWindow(window);
-  
-  free(VAO);
-  free(buffer);
 
   glfwTerminate();
 }

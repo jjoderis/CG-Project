@@ -44,7 +44,7 @@ if(NOT BUILD_TESTS)
     #add executable
     add_executable(CG-Project main.cpp ${PROJECT_SOURCES})
 
-    target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew)
+    target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew Math_Util CG_Framework)
 
     target_include_directories(CG-Project PUBLIC
         ${GLEW_DIR}
@@ -96,7 +96,6 @@ if(BUILD_TESTS)
         ${INCLUDE_DIR}/mathematics/LinAlg/vector/test/vecTest.cpp
         ${INCLUDE_DIR}/mathematics/LinAlg/matrix/test/matTest.cpp
         ${INCLUDE_DIR}/framework/core/face/test/faceTest.cpp
-        ${INCLUDE_DIR}/framework/core/geometry/test/geometryTest.cpp
     )
 
     # Now simply link against gtest or gtest_main as needed. Eg

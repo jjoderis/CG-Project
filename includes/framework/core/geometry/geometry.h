@@ -5,6 +5,7 @@
 #include <core/face/face.h>
 #include <LinAlg/vector/vector.h>
 #include <initializer_list>
+#include <GL/glew.h>
 
 namespace CG {
 
@@ -13,7 +14,14 @@ namespace CG {
         std::vector<CG::LinAlg::Vector3<float>> m_vertices;
         std::vector<Face3> m_faces;
 
+        GLuint VAO{ 0 };
+        GLuint Buffer{ 0 };
+
+        void updateOpenGL();
+
     public:
+        Geometry();
+
         Geometry(const std::initializer_list<float> &vertexData, const std::initializer_list<int> &faceData);
 
         Geometry(const std::initializer_list<CG::LinAlg::Vector3<float>> &vertices, const std::initializer_list<CG::Face3> &faces);
@@ -22,13 +30,19 @@ namespace CG {
 
         Geometry(const Geometry &other);
 
-        std::vector<CG::LinAlg::Vector3<float>>& getVertices(){
-            return m_vertices;
-        }
+        ~Geometry();
 
-        std::vector<Face3>& getFaces(){
-            return m_faces;
-        }
+        void setVertices(const std::vector<CG::LinAlg::Vector3<float>> &vertices);
+
+        void setFaces(const std::vector<Face3> &faces);
+
+        std::vector<CG::LinAlg::Vector3<float>>& getVertices();
+        int getNumVertices() const;
+
+        std::vector<Face3>& getFaces();
+        int getNumFaces() const;
+
+        void bind() const;
 
         friend bool operator== (const Geometry &g1, const Geometry &g2);
     };
