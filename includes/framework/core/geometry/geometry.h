@@ -7,16 +7,17 @@
 #include <initializer_list>
 #include <GL/glew.h>
 
+#define BUFFER_OFFSET(a) ((void*)(a))
+
 namespace CG {
 
     class Geometry {
     protected:
-        std::vector<CG::LinAlg::Vector3<float>> m_vertices;
+        std::vector<CG::LinAlg::Vector3<GLfloat>> m_vertices;
         std::vector<Face3> m_faces;
 
-        GLuint VAO{ 0 };
-        GLuint Buffer{ 0 };
-
+        GLuint m_VAO{ 0 };
+        GLuint m_VBO{ 0 };
         void updateOpenGL();
 
     public:
@@ -29,6 +30,8 @@ namespace CG {
         Geometry(const std::vector<CG::LinAlg::Vector3<float>> &vertices, const std::vector<Face3> &faces);
 
         Geometry(const Geometry &other);
+
+        Geometry& operator= (const Geometry &other);
 
         ~Geometry();
 

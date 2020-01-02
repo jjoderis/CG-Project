@@ -2,7 +2,7 @@
 
 CG::Geometry::Geometry() {}
 
-CG::Geometry::Geometry(const std::initializer_list<float> &vertexData, const std::initializer_list<int> &faceData)
+CG::Geometry::Geometry(const std::initializer_list<GLfloat> &vertexData, const std::initializer_list<int> &faceData)
 {
     assert(vertexData.size() % 3 == 0);
     assert(faceData.size() % 3 == 0);
@@ -11,7 +11,7 @@ CG::Geometry::Geometry(const std::initializer_list<float> &vertexData, const std
     m_faces.resize(faceData.size() / 3);
 
     int i = 0;
-    for (const float &element : vertexData)
+    for (const GLfloat &element : vertexData)
     {
         m_vertices[i/3].at(i%3) = element;
         ++i;
@@ -38,42 +38,60 @@ CG::Geometry::Geometry(const std::initializer_list<float> &vertexData, const std
     updateOpenGL();
 }
 
-CG::Geometry::Geometry(const std::initializer_list<CG::LinAlg::Vector3<float>> &vertices, const std::initializer_list<CG::Face3> &faces)
+CG::Geometry::Geometry(const std::initializer_list<CG::LinAlg::Vector3<GLfloat>> &vertices, const std::initializer_list<CG::Face3> &faces)
     : m_vertices{ vertices }, m_faces{ faces }
 {
     updateOpenGL();
 }
 
-CG::Geometry::Geometry(const std::vector<CG::LinAlg::Vector3<float>> &vertices, const std::vector<Face3> &faces) 
+CG::Geometry::Geometry(const std::vector<CG::LinAlg::Vector3<GLfloat>> &vertices, const std::vector<Face3> &faces) 
     : m_vertices{ vertices }, m_faces{ faces }
 {
     updateOpenGL();
 }
 
-CG::Geometry::Geometry(const CG::Geometry &other) : m_vertices{ other.m_vertices }, m_faces{ other.m_faces } {}
+CG::Geometry::Geometry(const CG::Geometry &other) : m_vertices{ other.m_vertices }, m_faces{ other.m_faces } {
+    updateOpenGL();
+}
+
+CG::Geometry& CG::Geometry::operator= (const CG::Geometry &other){
+    //handle self assignment
+    if(this == &other){
+        return *this;
+    }
+
+    this->m_vertices = other.m_vertices;
+    this->m_faces = other.m_faces;
+
+    updateOpenGL();
+
+    return *this;
+}
 
 void CG::Geometry::updateOpenGL() {
-    glCreateBuffers(1, &Buffer);
-    std::vector<float> tmp;
+    glCreateBuffers(1, &m_VBO);
+    std::vector<GLfloat> tmp;
     tmp.resize(3*m_vertices.size());
     for(unsigned int i = 0; i < 3*m_vertices.size(); ++i){
         tmp[i] = m_vertices[i/3][i%3];
     }
-    glNamedBufferStorage(Buffer, sizeof(float) * tmp.size(), tmp.data(), 0);
+    glNamedBufferStorage(m_VBO, sizeof(GLfloat) * tmp.size(), tmp.data(), 0);
 
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, Buffer);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glGenVertexArrays(1, &m_VAO);
+    glBindVertexArray(m_VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
     glEnableVertexAttribArray(0);
 }
 
 CG::Geometry::~Geometry() {
-    glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &m_VAO);
+    glDeleteBuffers(1, &m_VBO);
 }
 
-void CG::Geometry::setVertices(const std::vector<CG::LinAlg::Vector3<float>> &vertices){
+void CG::Geometry::setVertices(const std::vector<CG::LinAlg::Vector3<GLfloat>> &vertices){
     m_vertices = vertices;
 }
 
@@ -81,7 +99,7 @@ void CG::Geometry::setFaces(const std::vector<CG::Face3> &faces){
     m_faces = faces;
 }
 
-std::vector<CG::LinAlg::Vector3<float>>& CG::Geometry::getVertices(){
+std::vector<CG::LinAlg::Vector3<GLfloat>>& CG::Geometry::getVertices(){
     return m_vertices;
 }
 
@@ -98,7 +116,7 @@ int CG::Geometry::getNumFaces() const{
 }
 
 void CG::Geometry::bind() const {
-    glBindVertexArray(VAO);
+    glEnableVertexAttribArray(m_VAO);
 }
 
 bool CG::operator== (const Geometry &g1, const Geometry &g2){

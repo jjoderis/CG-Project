@@ -2,28 +2,30 @@
 #include <math.h>
 #include <cstring>
 
+#include <core/geometry/geometry.h>
+
 #include <GL/glew.h>
 
-#include <core/geometry/geometry.h>
 #include <GLFW/glfw3.h>
 
 #include "LoadShaders.h"
 
-
-#define BUFFER_OFFSET(a) ((void*)(a))
-
 CG::Geometry geometry;
 float counter = 0.0f;
+
+GLuint VAO;
+GLuint Buffer;
 
 void init(){
   geometry = CG::Geometry{
     {
-      -0.50, -0.50,
-        0.50, -0.50,
-        0.00,  0.50
+      -0.50, -0.50, 0.00,
+        0.50, -0.50, 0.00,
+        0.00,  0.50, 0.00
     },
     {}
   };
+
 	ShaderInfo shaders[] = {
 		{ GL_VERTEX_SHADER, "../media/shaders/triangles.vert", 0u },
 		{ GL_FRAGMENT_SHADER, "../media/shaders/triangles.frag", 0u },
@@ -39,7 +41,7 @@ void display(){
 
   geometry.bind();
 
-  glDrawArrays(GL_TRIANGLES, 0, geometry.getNumVertices() * 2);
+  glDrawArrays(GL_TRIANGLES, 0, geometry.getNumVertices());
 }
 
 int main(){
