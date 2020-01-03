@@ -39,8 +39,18 @@ CG::Geometry::Geometry(const std::initializer_list<GLfloat> &vertexData, const s
 }
 
 CG::Geometry::Geometry(const std::initializer_list<CG::LinAlg::Vector3<GLfloat>> &vertices, const std::initializer_list<CG::Face3> &faces)
-    : m_vertices{ vertices }, m_faces{ faces }
 {
+    m_vertices.resize(vertices.size());
+    m_faces.resize(faces.size());
+
+    for(const CG::LinAlg::Vector3<GLfloat> vert : vertices){
+        m_vertices.emplace_back(vert);
+    }
+
+    for(const CG::Face3 face : faces){
+        m_faces.emplace_back(face);
+    }
+
     updateOpenGL();
 }
 
@@ -68,12 +78,17 @@ CG::Geometry& CG::Geometry::operator= (const CG::Geometry &other){
     return *this;
 }
 
+CG::Geometry::~Geometry() {
+    glDeleteVertexArrays(1, &m_VAO);
+    glDeleteBuffers(1, &m_VBO);
+}
+
 void CG::Geometry::updateOpenGL() {
     glCreateBuffers(1, &m_VBO);
     std::vector<GLfloat> tmp;
     tmp.resize(3*m_vertices.size());
     for(unsigned int i = 0; i < 3*m_vertices.size(); ++i){
-        tmp[i] = m_vertices[i/3][i%3];
+        tmp[i] = m_vertices[i/3].at(i%3);
     }
     glNamedBufferStorage(m_VBO, sizeof(GLfloat) * tmp.size(), tmp.data(), 0);
 
@@ -84,11 +99,6 @@ void CG::Geometry::updateOpenGL() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
     glEnableVertexAttribArray(0);
-}
-
-CG::Geometry::~Geometry() {
-    glDeleteVertexArrays(1, &m_VAO);
-    glDeleteBuffers(1, &m_VBO);
 }
 
 void CG::Geometry::setVertices(const std::vector<CG::LinAlg::Vector3<GLfloat>> &vertices){
@@ -116,6 +126,7 @@ int CG::Geometry::getNumFaces() const{
 }
 
 void CG::Geometry::bind() const {
+    glBindVertexArray(m_VAO);
     glEnableVertexAttribArray(m_VAO);
 }
 

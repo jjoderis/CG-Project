@@ -13,7 +13,7 @@ TEST(VECTOR_TEST, initializer_list_constructor)
 {
     CG::LinAlg::Vector<float, 3> vec{ 1.0 , 2.0, 3.0};
 
-    float* vecPtr = vec;
+    float* vecPtr = vec.data();
     EXPECT_EQ(vecPtr[0], 1.0);
     EXPECT_EQ(vecPtr[1], 2.0);
     EXPECT_EQ(vecPtr[2], 3.0); 
@@ -61,7 +61,7 @@ TEST(VECTOR_TEST, decay_to_array)
 {
     CG::LinAlg::Vector<float, 3> vec{ 1.0 , 2.0, 3.0};
 
-    float* vecDataPtr = vec;
+    float* vecDataPtr = vec.data();
 
     EXPECT_EQ(*vecDataPtr, 1.0);
     EXPECT_EQ(*(vecDataPtr + 1), 2.0);  

@@ -125,10 +125,10 @@ namespace CG
                 return sqrt(this->dot(*this));
             }
 
-            //overload typecast to T* to make vector decay to m_data if necessary
-            operator T*(){
+            //return pointer to data of internal vector
+            T* data(){
                 return m_data.data();
-            }
+            }         
 
             //overload subscript operator to access elements in m_data
             T& at (int index){

@@ -3,6 +3,8 @@
 #include <cstring>
 
 #include <core/geometry/geometry.h>
+#include <core/material/material.h>
+#include <core/Mesh/mesh.h>
 
 #include <GL/glew.h>
 
@@ -10,44 +12,54 @@
 
 #include "LoadShaders.h"
 
-CG::Geometry geometry;
+std::vector<CG::Mesh> meshes;
 float counter = 0.0f;
 
-GLuint VAO;
-GLuint Buffer;
-
 void init(){
-  geometry = CG::Geometry{
-    {
-      -0.50, -0.50, 0.00,
-        0.50, -0.50, 0.00,
-        0.00,  0.50, 0.00
-    },
-    {}
-  };
+  std::shared_ptr<CG::Geometry> geoPtr1 = std::make_shared<CG::Geometry>(
+    CG::Geometry{
+      {
+        -0.90, -0.90, 0.00,
+         0.85, -0.90, 0.00,
+        -0.90,  0.85, 0.00
+      },
+      {}
+    }
+  );
 
-	ShaderInfo shaders[] = {
-		{ GL_VERTEX_SHADER, "../media/shaders/triangles.vert", 0u },
-		{ GL_FRAGMENT_SHADER, "../media/shaders/triangles.frag", 0u },
-		{ GL_NONE, NULL, 0u }
-	};
-	GLuint program = LoadShaders(shaders);
-	glUseProgram(program);
+  std::shared_ptr<CG::Geometry> geoPtr2 = std::make_shared<CG::Geometry>(
+    CG::Geometry{
+      {
+        CG::LinAlg::Vector3<GLfloat>{0.90, -0.85, 0.00},
+        CG::LinAlg::Vector3<GLfloat>{0.90,  0.90, 0.00},
+        CG::LinAlg::Vector3<GLfloat>{-0.85,  0.90, 0.00}
+      },
+      {}
+    }
+  );
+  std::shared_ptr<CG::Material> matPtr = std::make_shared<CG::Material>(
+    CG::Material{}
+  );
+
+  matPtr->setColor(1.0, 0.0, 0.0, 1.0);
+
+  meshes.emplace_back(CG::Mesh(geoPtr1, matPtr));
+  meshes.emplace_back(CG::Mesh(geoPtr2, matPtr));
 }
 
 void display(){
 	static const float black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	glClearBufferfv(GL_COLOR, 0, black);
 
-  geometry.bind();
-
-  glDrawArrays(GL_TRIANGLES, 0, geometry.getNumVertices());
+  for(CG::Mesh &mesh : meshes){
+    mesh.render();
+  }
 }
 
 int main(){
   glfwInit();
   
-  GLFWwindow* window = glfwCreateWindow(640, 480, "Triangles", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(640, 480, "CG-Project", NULL, NULL);
 
   glfwMakeContextCurrent(window);
 

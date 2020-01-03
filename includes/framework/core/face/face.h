@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace CG {
-
+    //A face denotes the indices of a triangle that are supposed to form a polygon
     class Face3 {
     public:
         unsigned int a;
