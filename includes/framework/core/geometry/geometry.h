@@ -1,11 +1,12 @@
 #ifndef CG_FRAMEWORK_CORE_GEOMETRY_GEOMETRY_H
 #define CG_FRAMEWORK_CORE_GEOMETRY_GEOMETRY_H
 
+#include <GL/glew.h>
 #include <vector>
 #include <core/face/face.h>
+#include <core/color/color.h>
 #include <LinAlg/vector/vector.h>
 #include <initializer_list>
-#include <GL/glew.h>
 
 #define BUFFER_OFFSET(a) ((void*)(a))
 
@@ -15,6 +16,8 @@ namespace CG {
     protected:
         //points in 3D space that are the base of the geometry
         std::vector<CG::LinAlg::Vector3<GLfloat>> m_vertices;
+        //optional color data of the given points
+        std::vector<CG::RGBA_Color> m_vertColors;
         //faces that define how points are grouped to polygons
         std::vector<Face3> m_faces;
 
@@ -53,6 +56,11 @@ namespace CG {
 
         //overwrites internal faces data with copy of given faces data 
         void setFaces(const std::vector<Face3> &faces);
+        void clearFaces();
+
+        //sets color for each vertex; given vector has to be of the same size as vertex data vector
+        void setVertexColors(const std::vector<CG::RGBA_Color> &colors);
+        void clearColors();
 
         //returns reference to vertices
         std::vector<CG::LinAlg::Vector3<float>>& getVertices();
@@ -62,8 +70,8 @@ namespace CG {
         std::vector<Face3>& getFaces();
         int getNumFaces() const;
 
-        //binds VAO to be able to render its content
-        void bind() const;
+        //binds VAO and calls correct draw function based on existance of index data
+        void draw() const;
 
         friend bool operator== (const Geometry &g1, const Geometry &g2);
     };

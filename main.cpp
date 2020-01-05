@@ -5,6 +5,7 @@
 #include <core/geometry/geometry.h>
 #include <core/material/material.h>
 #include <core/Mesh/mesh.h>
+#include <core/scene/scene.h>
 
 #include <GL/glew.h>
 
@@ -12,10 +13,9 @@
 
 #include "LoadShaders.h"
 
-std::vector<CG::Mesh> meshes;
 float counter = 0.0f;
 
-void init(){
+void init(std::shared_ptr<CG::Scene> scene){
   std::shared_ptr<CG::Geometry> geoPtr1 = std::make_shared<CG::Geometry>(
     CG::Geometry{
       {
@@ -32,28 +32,71 @@ void init(){
       {
         CG::LinAlg::Vector3<GLfloat>{0.90, -0.85, 0.00},
         CG::LinAlg::Vector3<GLfloat>{0.90,  0.90, 0.00},
-        CG::LinAlg::Vector3<GLfloat>{-0.85,  0.90, 0.00}
+        CG::LinAlg::Vector3<GLfloat>{-0.85,  0.90, 0.00},
+        CG::LinAlg::Vector3<GLfloat>{0.025, 0.025, 0.0}
       },
-      {}
+      {
+        CG::Face3{0, 1, 3},
+        CG::Face3{1, 2, 3}
+      }
     }
   );
-  std::shared_ptr<CG::Material> matPtr = std::make_shared<CG::Material>(
-    CG::Material{}
+  std::shared_ptr<CG::Material> mat1Ptr = std::make_shared<CG::Material>();
+
+  mat1Ptr->setColor( 1.0, 0.0, 0.0 );
+
+  std::shared_ptr<CG::Material> mat2Ptr = std::make_shared<CG::Material>(
+    CG::Material{
+      R"(
+        #version 450 core
+
+        layout (location = 0) in vec4 vPosition;
+        layout (location = 1) in vec4 vColor;
+
+        out vec4 vs_fs_color;
+
+        void main(){
+          vs_fs_color = vColor;
+          gl_Position = vPosition;
+        }
+      )",
+      R"(
+        #version 450 core
+
+        uniform vec4 baseColor;
+
+        in vec4 vs_fs_color;
+
+        layout (location = 0) out vec4 fColor;
+
+        void main(){
+          fColor = vs_fs_color;
+        }
+      )"
+    }
   );
 
-  matPtr->setColor(1.0, 0.0, 0.0, 1.0);
+  geoPtr2->setVertexColors(std::vector<CG::RGBA_Color>{ 
+    CG::RGBA_Color{ 1.0, 0.0, 0.0, 1.0 },
+    CG::RGBA_Color{ 0.0, 1.0, 0.0, 1.0 },
+    CG::RGBA_Color{ 0.0, 0.0, 1.0, 1.0 },
+    CG::RGBA_Color{ 1.0, 0.0, 1.0, 0.0 }
+  });
 
-  meshes.emplace_back(CG::Mesh(geoPtr1, matPtr));
-  meshes.emplace_back(CG::Mesh(geoPtr2, matPtr));
+  std::shared_ptr<CG::Mesh> mesh1Ptr = std::make_shared<CG::Mesh>(CG::Mesh(geoPtr1, mat1Ptr));
+  std::shared_ptr<CG::Mesh> mesh2Ptr = std::make_shared<CG::Mesh>(CG::Mesh(geoPtr2, mat2Ptr));
+
+  scene->addChild(mesh1Ptr);
+  mesh1Ptr->setParent(scene);
+  scene->addChild(mesh2Ptr);
+  mesh2Ptr->setParent(scene);
 }
 
-void display(){
+void display(std::shared_ptr<CG::Scene> scene){
 	static const float black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	glClearBufferfv(GL_COLOR, 0, black);
 
-  for(CG::Mesh &mesh : meshes){
-    mesh.render();
-  }
+  scene->render();
 }
 
 int main(){
@@ -68,10 +111,12 @@ int main(){
 
 	fprintf(stdout, "OpenGL Version is: %s\n", glGetString(GL_VERSION));
 
-  init();
+  std::shared_ptr<CG::Scene> scene  = std::make_shared<CG::Scene>();
+
+  init(scene);
 
   while(!glfwWindowShouldClose(window)){
-	  display();
+	  display(scene);
 	  glfwSwapBuffers(window);
 	  glfwPollEvents();
     counter += 0.01;

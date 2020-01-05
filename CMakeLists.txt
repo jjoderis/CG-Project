@@ -33,13 +33,13 @@ set( PROJECT_INCLUDES
     ${INCLUDE_DIR}/framework
 )
 
-add_subdirectory( ${INCLUDE_DIR}/mathematics/util )
+#add the glew subdirectory
+add_subdirectory( ${GLEW_DIR} )
+
+add_subdirectory( ${INCLUDE_DIR}/mathematics )
 add_subdirectory( ${INCLUDE_DIR}/framework )
 
 if(NOT BUILD_TESTS)
-
-    #add the glew subdirectory
-    add_subdirectory( ${GLEW_DIR} )
 
     #add executable
     add_executable(CG-Project main.cpp ${PROJECT_SOURCES})
@@ -91,12 +91,6 @@ if(BUILD_TESTS)
     if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
     endif()
-
-    set(TEST_FILES
-        ${INCLUDE_DIR}/mathematics/LinAlg/vector/test/vecTest.cpp
-        ${INCLUDE_DIR}/mathematics/LinAlg/matrix/test/matTest.cpp
-        ${INCLUDE_DIR}/framework/core/face/test/faceTest.cpp
-    )
 
     # Now simply link against gtest or gtest_main as needed. Eg
     add_executable(unitTests ${TEST_FILES})

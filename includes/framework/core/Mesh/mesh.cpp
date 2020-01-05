@@ -63,7 +63,6 @@ void CG::Mesh::render() const{
         return;
     }
 
-    m_geometry->bind();
     m_material->use();
-    glDrawArrays(GL_TRIANGLES, 0, m_geometry->getNumVertices());
+    m_geometry->draw();
 }

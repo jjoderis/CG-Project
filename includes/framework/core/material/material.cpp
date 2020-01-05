@@ -148,7 +148,6 @@ void CG::Material::setFragmentShader(const char* shaderData){
 }
 
 void CG::Material::getUniformLocs(){
-    std::cout << glGetUniformLocation(m_program, "baseColor") << '\n';
     uniformLocs.baseColor = glGetUniformLocation(m_program, "baseColor");
 }
 
@@ -169,6 +168,6 @@ void CG::Material::setColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a){
 }
 
 void CG::Material::use(){
-    glUniform4fv(0, 1, m_color.data());
     glUseProgram(m_program);
+    glUniform4fv(uniformLocs.baseColor, 1, m_color.data());
 }

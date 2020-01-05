@@ -62,7 +62,8 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Make Tests"
+            "preLaunchTask": "Make Tests",
+            "postDebugTask": "MemCheck Tests"
         }
     ]
 }

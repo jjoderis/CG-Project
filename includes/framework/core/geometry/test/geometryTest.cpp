@@ -1,7 +1,14 @@
 #include <iostream>
 #include <gtest/gtest.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include "../geometry.h"
 #include <vector>
+
+void SetUp(){
+    glfwInit();
+    glewInit();
+}
 
 TEST(GEOMETRY_TEST, test_fundamental_init_list_constructor){
     CG::Geometry geometry{
