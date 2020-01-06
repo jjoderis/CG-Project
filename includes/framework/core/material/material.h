@@ -9,6 +9,7 @@
 namespace CG{
     typedef struct {
         GLint baseColor;
+        GLint worldMatrix;
     } uniformLocations;
 
     //A class that handles OpenGL shader information

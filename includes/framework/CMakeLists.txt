@@ -5,6 +5,7 @@ include_directories(
 )
 
 add_library(CG_Framework
+    core/math/math.cpp
     core/face/face.cpp
     core/geometry/geometry.cpp
     core/shader/shader.cpp

@@ -5,7 +5,7 @@
 #include <vector>
 #include <core/face/face.h>
 #include <core/color/color.h>
-#include <LinAlg/vector/vector.h>
+#include <core/math/math.h>
 #include <initializer_list>
 
 #define BUFFER_OFFSET(a) ((void*)(a))
@@ -15,7 +15,7 @@ namespace CG {
     class Geometry {
     protected:
         //points in 3D space that are the base of the geometry
-        std::vector<CG::LinAlg::Vector3<GLfloat>> m_vertices;
+        std::vector<CG::Vector3> m_vertices;
         //optional color data of the given points
         std::vector<CG::RGBA_Color> m_vertColors;
         //faces that define how points are grouped to polygons
@@ -37,10 +37,10 @@ namespace CG {
         Geometry(const std::initializer_list<float> &vertexData, const std::initializer_list<int> &faceData);
 
         //stores copies of given vertices and faces; sets up OpenGL information
-        Geometry(const std::initializer_list<CG::LinAlg::Vector3<float>> &vertices, const std::initializer_list<CG::Face3> &faces);
+        Geometry(const std::initializer_list<CG::Vector3> &vertices, const std::initializer_list<CG::Face3> &faces);
 
         //copies vertices and faces data; sets up OpenGl information
-        Geometry(const std::vector<CG::LinAlg::Vector3<float>> &vertices, const std::vector<Face3> &faces);
+        Geometry(const std::vector<CG::Vector3> &vertices, const std::vector<Face3> &faces);
 
         //Copy constructor; copies vertices and faces from another geometry; doesn't copy OpenGL information
         Geometry(const Geometry &other);
@@ -52,7 +52,7 @@ namespace CG {
         ~Geometry();
 
         //overwrites internal vertex data with copy of given vertex data
-        void setVertices(const std::vector<CG::LinAlg::Vector3<float>> &vertices);
+        void setVertices(const std::vector<CG::Vector3> &vertices);
 
         //overwrites internal faces data with copy of given faces data 
         void setFaces(const std::vector<Face3> &faces);
@@ -63,7 +63,7 @@ namespace CG {
         void clearColors();
 
         //returns reference to vertices
-        std::vector<CG::LinAlg::Vector3<float>>& getVertices();
+        std::vector<CG::Vector3>& getVertices();
         int getNumVertices() const;
 
         //returns reference to faces

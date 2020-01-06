@@ -149,6 +149,7 @@ void CG::Material::setFragmentShader(const char* shaderData){
 
 void CG::Material::getUniformLocs(){
     uniformLocs.baseColor = glGetUniformLocation(m_program, "baseColor");
+    uniformLocs.worldMatrix = glGetUniformLocation(m_program, "worldMatrix");
 }
 
 void CG::Material::setColor(CG::RGB_Color color){

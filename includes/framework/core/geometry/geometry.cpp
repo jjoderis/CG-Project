@@ -38,13 +38,13 @@ CG::Geometry::Geometry(const std::initializer_list<GLfloat> &vertexData, const s
     updateOpenGL();
 }
 
-CG::Geometry::Geometry(const std::initializer_list<CG::LinAlg::Vector3<GLfloat>> &vertices, const std::initializer_list<CG::Face3> &faces)
+CG::Geometry::Geometry(const std::initializer_list<CG::Vector3> &vertices, const std::initializer_list<CG::Face3> &faces)
 {
     m_vertices.resize(vertices.size());
     m_faces.resize(faces.size());
 
     int i = 0;
-    for(const CG::LinAlg::Vector3<GLfloat> &vert : vertices){
+    for(const CG::Vector3 &vert : vertices){
         m_vertices[i] = vert;
         ++i;
     }
@@ -58,7 +58,7 @@ CG::Geometry::Geometry(const std::initializer_list<CG::LinAlg::Vector3<GLfloat>>
     updateOpenGL();
 }
 
-CG::Geometry::Geometry(const std::vector<CG::LinAlg::Vector3<GLfloat>> &vertices, const std::vector<Face3> &faces) 
+CG::Geometry::Geometry(const std::vector<CG::Vector3> &vertices, const std::vector<Face3> &faces) 
     : m_vertices{ vertices }, m_faces{ faces }
 {
     updateOpenGL();
@@ -99,7 +99,7 @@ void CG::Geometry::updateOpenGL() {
     glNamedBufferStorage(m_VBO, sizeof(GLfloat) * (3 * m_vertices.size() + 4 * m_vertColors.size()), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
     int i = 0;
-    for(CG::LinAlg::Vector3<GLfloat> &vertex : m_vertices){
+    for(CG::Vector3 &vertex : m_vertices){
         glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat), 3 * sizeof(GLfloat), vertex.data());
         ++i;
     }
@@ -134,7 +134,7 @@ void CG::Geometry::updateOpenGL() {
     }
 }
 
-void CG::Geometry::setVertices(const std::vector<CG::LinAlg::Vector3<GLfloat>> &vertices){
+void CG::Geometry::setVertices(const std::vector<CG::Vector3> &vertices){
     if(m_vertices.size() != m_vertColors.size()){
         m_vertColors.clear();
     }
@@ -165,7 +165,7 @@ void CG::Geometry::clearColors(){
     updateOpenGL();
 }
 
-std::vector<CG::LinAlg::Vector3<GLfloat>>& CG::Geometry::getVertices(){
+std::vector<CG::Vector3>& CG::Geometry::getVertices(){
     return m_vertices;
 }
 

@@ -57,12 +57,15 @@ std::shared_ptr<CG::Material>& CG::Mesh::getMaterial(){
     return m_material;
 }
 
-void CG::Mesh::render() const{
+void CG::Mesh::render(){
 
     if(!m_geometry || !m_material){
         return;
     }
 
     m_material->use();
+    
+    glUniformMatrix4fv(m_material->uniformLocs.worldMatrix, 1, GL_FALSE, m_worldMatrix.data());
+
     m_geometry->draw();
 }

@@ -33,7 +33,7 @@ namespace CG{
         std::shared_ptr<CG::Material>& getMaterial();
 
         //uses geometry and material to render object
-        virtual void render() const;
+        virtual void render();
     };
 }
 
