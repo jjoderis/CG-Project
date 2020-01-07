@@ -5,7 +5,8 @@ include_directories(
 )
 
 add_library(CG_Framework
-    core/math/math.cpp
+    ./math/math.cpp
+    ./math/quaternion/quaternion.cpp
     core/face/face.cpp
     core/geometry/geometry.cpp
     core/shader/shader.cpp
@@ -13,6 +14,7 @@ add_library(CG_Framework
     core/object3D/object3D.cpp
     core/Mesh/mesh.cpp
     core/scene/scene.cpp
+    core/camera/camera.cpp
 )
 
 set(TEST_FILES

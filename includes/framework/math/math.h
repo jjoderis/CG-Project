@@ -1,10 +1,13 @@
-#ifndef CG_FRAMEWORK_CORE_MATH_MATH_H
-#define CG_FRAMEWORK_CORE_MATH_MATH_H
+#ifndef CG_FRAMEWORK_MATH_MATH_H
+#define CG_FRAMEWORK_MATH_MATH_H
 
 #include <GL/glew.h>
 #include <LinAlg/vector/vector.h>
 #include <LinAlg/matrix/matrix.h>
 
+//Helper functions
+float degToRad(float deg);
+float radToDeg(float rad);
 namespace CG{
 
     using Vector2 = LinAlg::Vector<GLfloat, 2>;
@@ -24,9 +27,14 @@ namespace CG{
     using Matrix4 = LinAlg::Matrix<GLfloat, 4, 4>;
 
     Matrix4 createIdentityMatrix();
-    Matrix4 createTranslationMatrix(Vector3 &translation);
-    Matrix4 createRotationMatrix();
-    Matrix4 createScalingMatrix(Vector3 &scaling);
+    Matrix4 createTranslationMatrix(const Vector3 &translation);
+    Matrix4 createRotationMatrixX(GLfloat xRot);
+    Matrix4 createRotationMatrixY(GLfloat yRot);
+    Matrix4 createRotationMatrixZ(GLfloat zRot);
+    Matrix4 createScalingMatrix(const Vector3 &scaling);
+
+    //sheared denotes index of coordinate to be shear (e.g. 0 = x); shearing denotes axis which does shearing
+    Matrix4 createShearingMatrix(int sheared, int shearing, float amount);
 }
 
 #endif

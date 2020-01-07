@@ -62,7 +62,6 @@ namespace LinAlg
     class Matrix
     {
     protected:
-        //T m_data[rows*cols]; //array with all matrix elements in column major order; PROBLEM: memory allocated on stack; make dynamic
         std::vector<T> m_data;
 
     public:
@@ -120,6 +119,16 @@ namespace LinAlg
         //function to access an element at a certain matrix position; behaves as if matrix was in row major order
         T& at(int row, int col){
             return m_data[rows*col+row];
+        }
+
+        //returns value at position by value; needed for const matrices in dot function
+        T valAt(int row, int col) const{
+            return m_data[rows*col+row];
+        }
+
+        //sets value at position row, col to val
+        void set(int row, int col, T val){
+            m_data[rows*col+row] = val;
         }
         
         //converts this matrix to the identity matrix
@@ -295,16 +304,16 @@ namespace LinAlg
 
     //computes matrix matrix multiplication and returns the resulting matrix
     template <typename T, int rowM1, int colM1rowM2, int colM2>
-    Matrix<T, rowM1, colM2> dot(Matrix<T, rowM1, colM1rowM2> &m1, Matrix<T, colM1rowM2, colM2> &m2){
+    Matrix<T, rowM1, colM2> dot(const Matrix<T, rowM1, colM1rowM2> &m1, const Matrix<T, colM1rowM2, colM2> &m2){
         Matrix<T, rowM1, colM2> res;
 
         for(int col{ 0 }; col < colM2; ++col){
             for(int row{ 0 }; row < rowM1; ++row){
                 T sum{ 0 };
                 for(int i{ 0 }; i < colM1rowM2; ++i){
-                    sum += m1.at(row, i) * m2.at(i, col);
+                    sum += m1.valAt(row, i) * m2.valAt(i, col);
                 }
-                res.at(row, col) = sum;
+                res.set(row, col, sum);
             }
         }
 
@@ -313,15 +322,15 @@ namespace LinAlg
 
     //computes matrix vector multiplication and returns resulting vector
     template <typename T, int rows, int cols>
-    Vector<T, rows> dot(Matrix<T, rows, cols> &mat, Vector<T, cols> &vec){
+    Vector<T, rows> dot(const Matrix<T, rows, cols> &mat, const Vector<T, cols> &vec){
         Vector<T, rows> res;
 
         for(int row{ 0 }; row < rows; ++row){
             T sum{ 0 };
             for(int i{ 0 }; i < cols; ++i){
-                sum += mat.at(row, i) * vec.at(i);
+                sum += mat.valAt(row, i) * vec.valAt(i);
             }
-            res.at(row) = sum;
+            res.set(row, sum);
         }
 
         return res;

@@ -5,7 +5,7 @@
 #include <vector>
 #include <core/face/face.h>
 #include <core/color/color.h>
-#include <core/math/math.h>
+#include <math/math.h>
 #include <initializer_list>
 
 #define BUFFER_OFFSET(a) ((void*)(a))

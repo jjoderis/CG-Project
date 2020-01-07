@@ -56,7 +56,7 @@ namespace LinAlg
     Vector<T, size> operator/(const Vector<T, size> &vec, T val);   
 
     template <typename T, int size>
-    Vector<T, size> operator/(T val, const Vector<T, size> &vec); 
+    Vector<T, size> operator/(T val, const Vector<T, size> &vec);
 
     template<typename T, int size>
     Vector<T, size> orthogonalProject(const Vector<T, size> &v1, const Vector<T, size> &v2);
@@ -73,6 +73,7 @@ namespace LinAlg
 
     public:
         friend class Vector<T, size + 1>;
+        friend class Vector<T, size - 1>;
 
         //Constructor: creates vector
         Vector() 
@@ -106,6 +107,14 @@ namespace LinAlg
             m_data[size-1] = val;
         }
 
+        //create vector from a vector with one entry more
+        Vector(const Vector<T, size+1> &vector) : Vector()
+        {
+            for(int i = 0; i < size; ++i){
+                m_data[i] = vector.m_data[i];
+            }
+        }
+
         //destructor: free dynamic allocated memory
         ~Vector() {}
 
@@ -128,9 +137,19 @@ namespace LinAlg
             return m_data.data();
         }         
 
-        //overload subscript operator to access elements in m_data
+        //return value at index by reference
         T& at (int index){
             return m_data[index];
+        }
+
+        //return value at reference by value; used for const vector in dot function
+        T valAt(int index) const{
+            return m_data[index];
+        }
+
+        //sets value at index to val
+        void set(int index, T val){
+            m_data[index] = val;
         }
 
 
@@ -434,6 +453,11 @@ namespace LinAlg
         }
 
         return newVec;
+    }
+
+    template<typename T, int size>
+    Vector<T, size> normalize(const Vector<T, size> &vec){
+        return Vector<T, size>{vec} / (float)vec.length();
     }
 
     template<typename T, int size>
