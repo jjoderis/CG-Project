@@ -135,7 +135,11 @@ namespace LinAlg
         //return pointer to data of internal vector
         T* data(){
             return m_data.data();
-        }         
+        }
+
+        const T* data() const{
+            return m_data.data();
+        }     
 
         //return value at index by reference
         T& at (int index){
@@ -143,7 +147,7 @@ namespace LinAlg
         }
 
         //return value at reference by value; used for const vector in dot function
-        T valAt(int index) const{
+        const T& at(int index) const{
             return m_data[index];
         }
 

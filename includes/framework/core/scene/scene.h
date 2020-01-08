@@ -2,21 +2,27 @@
 #define CG_FRAMEWORK_CORE_SCENE_SCENE_H
 
 #include <core/object3D/object3D.h>
-#include <core/camera/camera.h>
+#include <core/Mesh/mesh.h>
+#include <core/color/color.h>
 
 namespace CG{
     //a scene that holds the whole rendering context (all objects, the camera, etc)
-    class Scene : public CG::Object3D{
+    class Scene : public Object3D{
     private:
-        CG::Camera m_camera;
+        RGBA_Color m_background{ 0.0, 0.0, 0.0, 1.0 };
+
+        std::vector<std::shared_ptr<CG::Mesh>> m_children;
 
     public:
         Scene();
-        Scene(const Camera &camera);
+        Scene(const RGBA_Color &background);
 
-        void setCamera(const Camera &camera);
-        Camera& getCamera();
-        void render();
+        void setBackground(const RGBA_Color &background);
+        const RGBA_Color& getBackground() const;
+
+        void addChild(std::shared_ptr<Mesh> newChild);
+        void removeChild(Mesh *objPtr);
+        const std::vector<std::shared_ptr<Mesh>>& getChildren() const;
     };
 }
 

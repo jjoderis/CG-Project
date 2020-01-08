@@ -35,6 +35,8 @@ CG::Geometry::Geometry(const std::initializer_list<GLfloat> &vertexData, const s
         ++i;
     }
 
+    calculateVertexNormals();
+
     updateOpenGL();
 }
 
@@ -55,16 +57,22 @@ CG::Geometry::Geometry(const std::initializer_list<CG::Vector3> &vertices, const
         ++i;
     }
 
+    calculateVertexNormals();
+
     updateOpenGL();
 }
 
 CG::Geometry::Geometry(const std::vector<CG::Vector3> &vertices, const std::vector<Face3> &faces) 
     : m_vertices{ vertices }, m_faces{ faces }
 {
+    calculateVertexNormals();
+
     updateOpenGL();
 }
 
-CG::Geometry::Geometry(const CG::Geometry &other) : m_vertices{ other.m_vertices }, m_faces{ other.m_faces } {
+CG::Geometry::Geometry(const CG::Geometry &other)
+    : m_vertices{ other.m_vertices }, m_vertNormals{ other.m_vertNormals }, m_faces{ other.m_faces }, m_faceNormals{ other.m_faceNormals }
+{
     updateOpenGL();
 }
 
@@ -95,19 +103,19 @@ void CG::Geometry::updateOpenGL() {
 
     //create and populate vertex buffer
     glCreateBuffers(1, &m_VBO);
+    //allocate buffer space for vertices normals and optionally colors
+    glNamedBufferStorage(m_VBO, sizeof(GLfloat) * (2 * 3 * m_vertices.size() + 4 * m_vertColors.size()), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
-    glNamedBufferStorage(m_VBO, sizeof(GLfloat) * (3 * m_vertices.size() + 4 * m_vertColors.size()), nullptr, GL_DYNAMIC_STORAGE_BIT);
-
-    int i = 0;
-    for(CG::Vector3 &vertex : m_vertices){
-        glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat), 3 * sizeof(GLfloat), vertex.data());
-        ++i;
+    long unsigned int numVertices{ m_vertices.size() };
+    for(unsigned int i = 0; i < numVertices; ++i){
+        glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat), 3 * sizeof(GLfloat), m_vertices[i].data());
+        glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat) + 3 * sizeof(GLfloat) * m_vertices.size(), 3 * sizeof(GLfloat), m_vertNormals[i].data());
     }
 
-    i = 0;
+    int i = 0;
     if(m_vertColors.size()){
         for(CG::RGBA_Color &color : m_vertColors){
-            glNamedBufferSubData(m_VBO, 4 * i * sizeof(GLfloat) + 3 * sizeof(GLfloat) * m_vertices.size(), 4 * sizeof(GLfloat), color.data());
+            glNamedBufferSubData(m_VBO, 4 * i * sizeof(GLfloat) + 2 * 3 * sizeof(GLfloat) * m_vertices.size(), 4 * sizeof(GLfloat), color.data());
             ++i;
         }
     }
@@ -125,12 +133,14 @@ void CG::Geometry::updateOpenGL() {
 
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(3 * sizeof(GLfloat) * m_vertices.size()));
 
     glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 
     if(m_vertColors.size()){
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(3 * sizeof(GLfloat) * m_vertices.size()));
-        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(2 * 3 * sizeof(GLfloat) * m_vertices.size()));
+        glEnableVertexAttribArray(2);
     }
 }
 
@@ -140,11 +150,17 @@ void CG::Geometry::setVertices(const std::vector<CG::Vector3> &vertices){
     }
 
     m_vertices = vertices;
+
+    calculateVertexNormals();
+
     updateOpenGL();
 }
 
 void CG::Geometry::setFaces(const std::vector<CG::Face3> &faces){
     m_faces = faces;
+
+    calculateVertexNormals();
+
     updateOpenGL();
 }
 
@@ -181,15 +197,44 @@ int CG::Geometry::getNumFaces() const{
     return m_faces.size();
 }
 
-void CG::Geometry::draw() const {
-    glBindVertexArray(m_VAO);
-    if(m_faces.size()){
-        glDrawElements(GL_TRIANGLES, 3 * m_faces.size(), GL_UNSIGNED_INT, NULL);
-    }else{
-        glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
-    }
+int CG::Geometry::getVAO() const{
+    return m_VAO;
 }
 
 bool CG::operator== (const Geometry &g1, const Geometry &g2){
     return ((g1.m_vertices == g2.m_vertices) && (g1.m_faces == g2.m_faces));
+}
+
+void CG::Geometry::calculateFaceNormals(){
+
+    int numFaces = m_faces.size();
+    m_faceNormals.resize(numFaces);
+    for(int i = 0; i < numFaces; ++i){
+        Vector3 ab{m_vertices[m_faces[i].b] - m_vertices[m_faces[i].a]};
+        Vector3 ac{m_vertices[m_faces[i].c] - m_vertices[m_faces[i].a]};
+        m_faceNormals[i] = cross(ab, ac).normalize();
+    }
+
+}
+
+void CG::Geometry::calculateVertexNormals(){
+    calculateFaceNormals();
+
+    std::vector<int> occurences(m_vertices.size());
+    m_vertNormals.resize(m_vertices.size());
+
+    long unsigned int numFaces{ m_faces.size() };
+    for(unsigned int i = 0; i < numFaces; ++i){
+        m_vertNormals[m_faces[i].a] += m_faceNormals[i];
+        occurences[m_faces[i].a] += 1;
+        m_vertNormals[m_faces[i].b] += m_faceNormals[i];
+        occurences[m_faces[i].b] += 1;
+        m_vertNormals[m_faces[i].c] += m_faceNormals[i];
+        occurences[m_faces[i].c] += 1;
+    }
+
+    long unsigned int numVertices{ m_vertices.size() };
+    for(unsigned int i = 0; i < numVertices; ++i){
+        m_vertNormals[i] /= occurences[i];
+    } 
 }

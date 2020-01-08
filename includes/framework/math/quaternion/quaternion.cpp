@@ -67,7 +67,7 @@ CG::Quaternion CG::Quaternion::conjugate() const{
 }
 
 GLfloat CG::Quaternion::norm() const{
-    return sqrt(pow(m_imaginary.valAt(0) , 2) + pow(m_imaginary.valAt(1) , 2) + pow(m_imaginary.valAt(2) , 2) + pow(m_real, 2));
+    return sqrt(pow(m_imaginary.at(0) , 2) + pow(m_imaginary.at(1) , 2) + pow(m_imaginary.at(2) , 2) + pow(m_real, 2));
 }
 
 void CG::Quaternion::normalize(){
@@ -106,7 +106,7 @@ CG::Quaternion CG::operator+ (const Quaternion &q1, const Quaternion &q2){
 
 std::ostream& CG::operator<< (std::ostream &out, const Quaternion &q){
     
-    out << q.m_imaginary.valAt(0) << "i + " << q.m_imaginary.valAt(1) << "j + " << q.m_imaginary.valAt(2) << "k + " << q.m_real << '\n';
+    out << q.m_imaginary.at(0) << "i + " << q.m_imaginary.at(1) << "j + " << q.m_imaginary.at(2) << "k + " << q.m_real << '\n';
 
     return out;
 }

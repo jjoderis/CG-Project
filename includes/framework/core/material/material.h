@@ -9,7 +9,9 @@
 namespace CG{
     typedef struct {
         GLint baseColor;
-        GLint worldMatrix;
+        GLint modelViewMatrix;
+        GLint projectionMatrix;
+        GLint normalMatrix;
     } uniformLocations;
 
     //A class that handles OpenGL shader information
@@ -63,14 +65,14 @@ namespace CG{
         //queries locations of uniform variables in the program and stores them
         void getUniformLocs();
 
+        int getProgram() const;
+
         //sets new color
         void setColor(RGB_Color color);
         void setColor(GLfloat r, GLfloat g, GLfloat b);
         void setColor(RGBA_Color color);
         void setColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
-
-        //uses shader program for rendering
-        void use();
+        RGBA_Color& getColor();
     };
 }
 

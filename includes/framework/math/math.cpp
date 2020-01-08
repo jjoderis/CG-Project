@@ -11,18 +11,18 @@ CG::Matrix4 CG::createIdentityMatrix(){
 
 CG::Matrix4 CG::createTranslationMatrix(const CG::Vector3 &translation){
     return Matrix4{
-        { 1.0, 0.0, 0.0, translation.valAt(0) },
-        { 0.0, 1.0, 0.0, translation.valAt(1) },
-        { 0.0, 0.0, 1.0, translation.valAt(2) },
+        { 1.0, 0.0, 0.0, translation.at(0) },
+        { 0.0, 1.0, 0.0, translation.at(1) },
+        { 0.0, 0.0, 1.0, translation.at(2) },
         { 0.0, 0.0, 0.0, 1.0 }
     };
 }
 
 CG::Matrix4 CG::createScalingMatrix(const Vector3 &scaling){
     return Matrix4{
-        { scaling.valAt(0), 0.0, 0.0, 0.0 },
-        { 0.0, scaling.valAt(1), 0.0, 0.0 },
-        { 0.0, 0.0, scaling.valAt(2), 0.0 },
+        { scaling.at(0), 0.0, 0.0, 0.0 },
+        { 0.0, scaling.at(1), 0.0, 0.0 },
+        { 0.0, 0.0, scaling.at(2), 0.0 },
         { 0.0, 0.0, 0.0, 1.0}
     };
 }

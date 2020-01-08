@@ -116,13 +116,17 @@ namespace LinAlg
             return m_data.data();
         }
 
+        const T* data() const{
+            return m_data.data();
+        }
+
         //function to access an element at a certain matrix position; behaves as if matrix was in row major order
         T& at(int row, int col){
             return m_data[rows*col+row];
         }
 
         //returns value at position by value; needed for const matrices in dot function
-        T valAt(int row, int col) const{
+        const T& at(int row, int col) const{
             return m_data[rows*col+row];
         }
 
@@ -311,7 +315,7 @@ namespace LinAlg
             for(int row{ 0 }; row < rowM1; ++row){
                 T sum{ 0 };
                 for(int i{ 0 }; i < colM1rowM2; ++i){
-                    sum += m1.valAt(row, i) * m2.valAt(i, col);
+                    sum += m1.at(row, i) * m2.at(i, col);
                 }
                 res.set(row, col, sum);
             }
@@ -328,7 +332,7 @@ namespace LinAlg
         for(int row{ 0 }; row < rows; ++row){
             T sum{ 0 };
             for(int i{ 0 }; i < cols; ++i){
-                sum += mat.valAt(row, i) * vec.valAt(i);
+                sum += mat.at(row, i) * vec.at(i);
             }
             res.set(row, sum);
         }

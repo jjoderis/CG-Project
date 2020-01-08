@@ -15,11 +15,15 @@ namespace CG {
     class Geometry {
     protected:
         //points in 3D space that are the base of the geometry
-        std::vector<CG::Vector3> m_vertices;
+        std::vector<Vector3> m_vertices;
+        //normals for all vertices
+        std::vector<Vector3> m_vertNormals;
         //optional color data of the given points
-        std::vector<CG::RGBA_Color> m_vertColors;
+        std::vector<RGBA_Color> m_vertColors;
         //faces that define how points are grouped to polygons
         std::vector<Face3> m_faces;
+        //normals for all faces
+        std::vector<Vector3> m_faceNormals;
 
         //contains information where and how the relevant data is stored
         GLuint m_VAO{ 0 };
@@ -29,6 +33,9 @@ namespace CG {
         GLuint m_EBO{ 0 };
         //updates OpenGL Objects to contain all necessary data
         void updateOpenGL();
+
+        void calculateFaceNormals();
+        void calculateVertexNormals();
 
     public:
         Geometry();
@@ -70,8 +77,7 @@ namespace CG {
         std::vector<Face3>& getFaces();
         int getNumFaces() const;
 
-        //binds VAO and calls correct draw function based on existance of index data
-        void draw() const;
+        int getVAO() const;
 
         friend bool operator== (const Geometry &g1, const Geometry &g2);
     };

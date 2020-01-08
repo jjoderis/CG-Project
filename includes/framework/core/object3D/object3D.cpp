@@ -1,6 +1,6 @@
 #include "object3D.h"
 
-CG::Object3D::Object3D() : m_shear{ createIdentityMatrix() }, m_worldMatrix{ createIdentityMatrix() } {}
+CG::Object3D::Object3D(){}
 
 CG::Object3D::Object3D(const Object3D & other) : Object3D() {
     *this = other;
@@ -15,10 +15,8 @@ CG::Object3D& CG::Object3D::operator= (const CG::Object3D &other){
     m_position = other.m_position;
     m_scale = other.m_scale;
     m_rotation = other.m_rotation;
-    m_shear = other.m_shear;
     m_worldMatrix = other.m_worldMatrix;
-    m_parent = other.m_parent;
-    m_children = other.m_children;
+    m_worldMatrixInverse = other.m_worldMatrixInverse;
 
     updateMatrixWorld();
 
@@ -41,16 +39,7 @@ void CG::Object3D::updateMatrixWorld(){
     CG::Matrix4 scaleMatInv{ createScalingMatrix(Vector3{1.0f/m_scale.at(0), 1.0f/m_scale.at(1), 1.0f/m_scale.at(2)}) };
 
     m_worldMatrixInverse = dot(scaleMatInv, rotMatInv);
-    m_worldMatrixInverse = dot(m_worldMatrixInverse, rotMatInv);
-
-    if(m_parent.lock()){
-        m_worldMatrix = dot(m_parent.lock()->m_worldMatrix, m_worldMatrix);
-        m_worldMatrixInverse = dot(m_worldMatrix, m_parent.lock()->m_worldMatrix);
-    }
-
-    for(unsigned int i = 0; i < m_children.size(); ++i){
-        m_children[i]->updateMatrixWorld();
-    }
+    m_worldMatrixInverse = dot(m_worldMatrixInverse, transmatInv);
 }
 
 void CG::Object3D::setPosition(const CG::Vector3 &position){
@@ -127,14 +116,6 @@ void CG::Object3D::resetRotation(){
     m_rotation = CG::Quaternion{ 0.0, 0.0, 0.0, 1.0 };
 }
 
-void CG::Object3D::shear(int sheared, int shearing, float amount){
-    Matrix4 shearMat = createShearingMatrix(sheared, shearing, amount);
-    m_shear = dot(shearMat, m_shear);
-}
-void CG::Object3D::resetShearing(){
-    m_shear = createIdentityMatrix();
-}
-
 CG::Vector3& CG::Object3D::getPosition(){
     return m_position;
 }
@@ -147,36 +128,9 @@ CG::Quaternion& CG::Object3D::getRotation(){
     return m_rotation;
 }
 
-void CG::Object3D::render(){
-    for(const std::shared_ptr<CG::Object3D> &child : m_children){
-        child->render();
-    }
+const CG::Matrix4& CG::Object3D::getMatrixWorld() const{
+    return m_worldMatrix;
 }
-
-void CG::Object3D::addChild(std::shared_ptr<CG::Object3D> newChild){
-    m_children.emplace_back(newChild);
-}
-
-void CG::Object3D::removeChild(CG::Object3D *objPtr){
-    for(unsigned int i = 0; i < m_children.size(); ++i){
-        if(m_children[i].get() == objPtr){
-            m_children.erase(m_children.begin() + i);
-            break;
-        }
-    }
-}
-
-const std::vector<std::shared_ptr<CG::Object3D>>& CG::Object3D::getChildren(){
-    return m_children;
-}
-
-void CG::Object3D::setParent(std::shared_ptr<CG::Object3D> obj){
-    if(m_parent.lock()){
-        m_parent.lock()->removeChild(this);
-    }
-    m_parent = obj;
-}
-
-const std::shared_ptr<CG::Object3D> CG::Object3D::getParent(){
-    return m_parent.lock();
+const CG::Matrix4& CG::Object3D::getMatrixWorldInverse() const{
+    return m_worldMatrixInverse;
 }

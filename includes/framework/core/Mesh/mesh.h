@@ -2,16 +2,17 @@
 #define CG_FRAMEWORK_CORE_MESH_MESH_H
 
 #include <core/object3D/object3D.h>
-
 namespace CG{
     //a class that defines a renderable object in 3D space
     class Mesh : public Object3D{
-
     protected:
         //the objects geometry
         std::shared_ptr<CG::Geometry> m_geometry;
         //the objects material
         std::shared_ptr<CG::Material> m_material;
+
+        std::weak_ptr<Mesh> m_parent; //use weak ptr to aleviate cyclic dependency issues
+        std::vector<std::shared_ptr<Mesh>> m_children;
 
     public:
         Mesh();
@@ -22,18 +23,24 @@ namespace CG{
 
         Mesh(const Mesh &other);
 
-        virtual Mesh& operator= (const Mesh &other);
+        Mesh& operator= (const Mesh &other);
+
+        void updateMatrixWorld();
 
         void setGeometry(const CG::Geometry &geometry);
         void setGeometry(const std::shared_ptr<CG::Geometry> &geometry);
-        std::shared_ptr<CG::Geometry>& getGeometry();
+        std::shared_ptr<CG::Geometry> getGeometry() const;
 
         void setMaterial(const CG::Material &material);
         void setMaterial(const std::shared_ptr<CG::Material> &material);
-        std::shared_ptr<CG::Material>& getMaterial();
+        std::shared_ptr<CG::Material> getMaterial() const;
 
-        //uses geometry and material to render object
-        virtual void render();
+        void addChild(std::shared_ptr<Mesh> newChild);
+        void removeChild(Mesh *objPtr);
+        const std::vector<std::shared_ptr<Mesh>>& getChildren() const;
+
+        void setParent(std::shared_ptr<Mesh> obj);
+        const std::shared_ptr<Mesh> getParent();
     };
 }
 

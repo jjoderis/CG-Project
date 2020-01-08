@@ -149,7 +149,13 @@ void CG::Material::setFragmentShader(const char* shaderData){
 
 void CG::Material::getUniformLocs(){
     uniformLocs.baseColor = glGetUniformLocation(m_program, "baseColor");
-    uniformLocs.worldMatrix = glGetUniformLocation(m_program, "worldMatrix");
+    uniformLocs.modelViewMatrix = glGetUniformLocation(m_program, "modelViewMatrix");
+    uniformLocs.projectionMatrix = glGetUniformLocation(m_program, "projectionMatrix");
+    uniformLocs.normalMatrix = glGetUniformLocation(m_program, "normalMatrix");
+}
+
+int CG::Material::getProgram() const{
+    return m_program;
 }
 
 void CG::Material::setColor(CG::RGB_Color color){
@@ -168,7 +174,6 @@ void CG::Material::setColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a){
     m_color = CG::RGBA_Color{ r, g, b, a };
 }
 
-void CG::Material::use(){
-    glUseProgram(m_program);
-    glUniform4fv(uniformLocs.baseColor, 1, m_color.data());
+CG::RGBA_Color& CG::Material::getColor(){
+    return m_color;
 }

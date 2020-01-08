@@ -15,6 +15,7 @@ add_library(CG_Framework
     core/Mesh/mesh.cpp
     core/scene/scene.cpp
     core/camera/camera.cpp
+    core/renderer/renderer.cpp
 )
 
 set(TEST_FILES

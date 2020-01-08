@@ -6,29 +6,30 @@ CG::Camera::Camera(){
     updateProjectionMatrix();
 }
 
-CG::Camera::Camera(GLfloat near, GLfloat far, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top)
+CG::Camera::Camera(GLfloat near, GLfloat far, GLfloat fov, GLfloat aspectRatio)
     : Camera()
 {
     m_near = near;
     m_far = far;
-    m_left = left;
-    m_right = right;
-    m_bottom = bottom;
-    m_top = top;
+    m_fov = fov;
+    m_aspectRatio = aspectRatio;
     updateProjectionMatrix();
 }
 
-CG::Camera::Camera(const Camera &other){
+CG::Camera::Camera(const Camera &other) 
+    : Object3D(other), m_near{ other.m_near }, m_far{ other.m_far }, m_fov{ other.m_fov }, m_aspectRatio{ other.m_aspectRatio }
+{
     m_projectionMatrix = other.m_projectionMatrix;
     updateMatrixWorld();
 }
 
 void CG::Camera::updateProjectionMatrix(){
+    GLfloat c{ 1.0f/tan(m_fov/2) };
     m_projectionMatrix = Matrix4{
-        { 2*m_near/(m_right-m_left), 0.0, -((m_right+m_left)/(m_right-m_left)), 0.0},
-        { 0.0, 2*m_near/(m_top-m_bottom), -((m_top+m_bottom)/(m_top-m_bottom)), 0.0},
-        { 0.0, 0.0, ((m_far+m_near)/(m_far-m_near)), -((2*m_far*m_near)/(m_far*m_near))},
-        { 0.0, 0.0, 1.0, 0.0 }
+        { c/m_aspectRatio, 0.0, 0.0, 0.0},
+        { 0.0, c, 0.0, 0.0},
+        { 0.0, 0.0, -((m_far+m_near)/(m_far-m_near)), -((2*m_far*m_near)/(m_far*m_near))},
+        { 0.0, 0.0, -1.0, 0.0 }
     };
 }
 
@@ -61,4 +62,34 @@ void CG::Camera::lookAt(CG::Vector3 position){
 
 void CG::Camera::lookAt(float x, float y, float z){
     lookAt(Vector3{x, y, z});
+}
+
+void CG::Camera::setNear(GLfloat near){
+    m_near = near;
+}
+void CG::Camera::setFar(GLfloat far){
+    m_far = far;
+}
+void CG::Camera::setFOV(GLfloat fov){
+    m_fov = fov;
+}
+void CG::Camera::setAspectRatio(GLfloat aspectRatio){
+    m_aspectRatio = aspectRatio;
+}
+
+GLfloat CG::Camera::getNear(){
+    return m_near;
+}
+GLfloat CG::Camera::getFar(){
+    return m_far;
+}
+GLfloat CG::Camera::getFOV(){
+    return m_fov;
+}
+GLfloat CG::Camera::getAspectRatio(){
+    return m_aspectRatio;
+}
+
+const CG::Matrix4& CG::Camera::getProjectionMatrix() const{
+    return m_projectionMatrix;
 }
