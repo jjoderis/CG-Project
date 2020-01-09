@@ -111,6 +111,13 @@ std::ostream& CG::operator<< (std::ostream &out, const Quaternion &q){
     return out;
 }
 
+CG::Quaternion CG::slerp (const Quaternion &q1, const Quaternion &q2, GLfloat fraction){
+    GLfloat phi = q1.m_imaginary.at(0) * q2.m_imaginary.at(0) + q1.m_imaginary.at(1) * q2.m_imaginary.at(1) + q1.m_imaginary.at(1) * q2.m_imaginary.at(1)
+                + q1.m_imaginary.at(2) * q2.m_imaginary.at(2) + q1.m_real + q2.m_real;
+
+    return (sin(phi * (1 - fraction)) / sin(phi)) * q1 + (sin(phi * fraction) / sin(phi)) * q2;
+}
+
 CG::Matrix4 CG::createRotationMatrix(Quaternion &q){
     Vector3 i = q.getImaginary();
     GLfloat r = q.getReal();

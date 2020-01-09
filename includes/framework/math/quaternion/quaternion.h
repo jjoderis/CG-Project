@@ -40,6 +40,8 @@ namespace CG{
         friend Quaternion operator* (GLfloat s, const Quaternion);
         friend Quaternion operator+ (const Quaternion &q1, const Quaternion &q2);
 
+        friend Quaternion slerp (const Quaternion &q1, const Quaternion &q2, GLfloat fraction);
+
         friend std::ostream& operator<< (std::ostream &out, const Quaternion &q);
     };
 
@@ -49,6 +51,9 @@ namespace CG{
     Quaternion operator+ (const Quaternion &q1, const Quaternion &q2);
 
     std::ostream& operator<< (std::ostream &out, const Quaternion &q);
+
+    //computes an interpolated quaternion that is q1 for fraction = 0 and q2 for fraction = 1
+    Quaternion slerp (const Quaternion &q1, const Quaternion &q2, GLfloat fraction);
 
     //creates a rotation matrix using a unit quaternion
     Matrix4 createRotationMatrix(Quaternion &q);

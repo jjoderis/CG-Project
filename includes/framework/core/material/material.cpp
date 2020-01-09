@@ -28,8 +28,11 @@ CG::Material::Material()
 
             layout (location = 0) in vec4 vPosition;
 
+            uniform mat4 modelViewMatrix;
+            uniform mat4 projectionMatrix;
+
             void main(){
-                gl_Position = vPosition;
+                gl_Position = projectionMatrix * modelViewMatrix * vPosition;
             }
         )",
         R"(

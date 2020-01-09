@@ -25,6 +25,8 @@ namespace CG {
         //normals for all faces
         std::vector<Vector3> m_faceNormals;
 
+        Vector3 m_center{ 0.0, 0.0, 0.0 };
+
         //contains information where and how the relevant data is stored
         GLuint m_VAO{ 0 };
         //contains the vertexData relevant to OpenGL

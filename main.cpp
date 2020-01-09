@@ -8,6 +8,7 @@
 #include <core/scene/scene.h>
 #include <core/camera/camera.h>
 #include <core/renderer/renderer.h>
+#include <core/geometry/sphereGeometry/sphereGeometry.h>
 
 #include <GL/glew.h>
 
@@ -19,77 +20,59 @@ float counter = 0.0f;
 
 void init(CG::Scene &scene){
 
-  std::shared_ptr<CG::Geometry> geoPtr = std::make_shared<CG::Geometry>(
-    CG::Geometry{
-      {
-        0.00, 0.25, -2.0,
-        -0.25, -0.25, -2.0,
-        0.25, -0.25, -2.0
-      },
-      { 1, 2, 0 }
-    }
-  );
+  std::shared_ptr<CG::SphereGeometry> geoPtr = std::make_shared<CG::SphereGeometry>(CG::SphereGeometry{ 1.0, 100, 1});
+  std::shared_ptr<CG::Material> matPtr = std::make_shared<CG::Material>();
+  // std::shared_ptr<CG::Material> matPtr = std::make_shared<CG::Material>(
+  //   CG::Material{
+  //     R"(
+  //       #version 450 core
 
-  std::vector<CG::RGBA_Color> vertColors{ 
-    { 1.0, 0.0, 0.0, 1.0 },
-    { 0.0, 1.0, 0.0, 1.0 },
-    { 0.0, 0.0, 1.0, 1.0 }
-  };
-  geoPtr->setVertexColors(vertColors);
+  //       layout (location = 0) in vec4 vPosition;
+  //       layout (location = 1) in vec4 vNormal;
 
-  std::shared_ptr<CG::Material> matPtr = std::make_shared<CG::Material>(
-    CG::Material{
-      R"(
-        #version 450 core
+  //       uniform mat4 modelViewMatrix;
+  //       uniform mat4 projectionMatrix;
+  //       uniform mat4 normalMatrix;
 
-        layout (location = 0) in vec4 vPosition;
-        layout (location = 1) in vec4 vNormal;
-        layout (location = 2) in vec4 vColor;
+  //       out vec4 iColor;
+  //       out vec4 iNormal;
+  //       out mat4 iModelView;
+  //       out vec4 iPosition;
 
-        uniform mat4 modelViewMatrix;
-        uniform mat4 projectionMatrix;
-        uniform mat4 normalMatrix;
+  //       void main(){
+  //         iNormal = normalMatrix * vNormal;
+  //         iPosition = projectionMatrix * modelViewMatrix * vPosition;
+  //         gl_Position = iPosition;
+  //       }
+  //     )",
+  //     R"(
+  //       #version 450 core
 
-        out vec4 iColor;
-        out vec4 iNormal;
-        out mat4 iModelView;
-        out vec4 iPosition;
+  //       uniform vec4 baseColor;
 
-        void main(){
-          iColor = vColor;
-          iNormal = normalMatrix * vNormal;
-          iPosition = projectionMatrix * modelViewMatrix * vPosition;
-          gl_Position = iPosition;
-        }
-      )",
-      R"(
-        #version 450 core
+  //       in vec4 iColor;
+  //       in vec4 iNormal;
+  //       in mat4 iModelView;
+  //       in vec4 iPosition;
 
-        uniform vec4 baseColor;
+  //       layout (location = 0) out vec4 fColor;
 
-        in vec4 iColor;
-        in vec4 iNormal;
-        in mat4 iModelView;
-        in vec4 iPosition;
+  //       void main(){
+  //         vec4 lightVector = iPosition - vec4(0.0, 0.0, 0.0, 0.0);
+  //         vec4 reflected = normalize(reflect(lightVector, iNormal));
+  //         vec4 cameraVector = normalize(-iPosition);
+  //         float phong = dot(reflected, cameraVector);
+  //         if(phong>0.0){
+  //           phong = pow(phong, 100.0*0.4);
+  //         }else{
+  //           phong = 0.0;
+  //         }
 
-        layout (location = 0) out vec4 fColor;
-
-        void main(){
-          vec4 lightVector = iPosition - vec4(0.0, 0.0, 0.0, 0.0);
-          vec4 reflected = normalize(reflect(lightVector, iNormal));
-          vec4 cameraVector = normalize(-iPosition);
-          float phong = dot(reflected, cameraVector);
-          if(phong>0.0){
-            phong = pow(phong, 2.0*0.4);
-          }else{
-            phong = 0.0;
-          }
-
-          fColor = phong * vec4(1.0, 1.0, 1.0, 1.0)+ iColor;
-        }
-      )"
-    }
-  );
+  //         fColor = phong * vec4(1.0, 1.0, 1.0, 1.0)+ vec4(1.0, 0.0, 0.0, 1.0);
+  //       }
+  //     )"
+  //   }
+  // );
 
   scene.addChild(std::shared_ptr<CG::Mesh>(new CG::Mesh{geoPtr, matPtr}));
 }
@@ -110,12 +93,11 @@ int main(){
   CG::Camera camera{ 1, 10, 45, 640.0f/480.0f };
   CG::Renderer renderer{};
 
-  camera.setPosition(0.5, 0.0, 0.0);
-  camera.updateMatrixWorld();
-
   init(scene);
 
   while(!glfwWindowShouldClose(window)){
+    scene.getChildren()[0]->rotateX(degToRad(2));
+    scene.getChildren()[0]->updateMatrixWorld();
 	  renderer.render(scene, camera);
 	  glfwSwapBuffers(window);
 	  glfwPollEvents();

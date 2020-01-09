@@ -101,45 +101,55 @@ void CG::Geometry::updateOpenGL() {
     glDeleteBuffers(1, &m_VBO);
     glDeleteBuffers(1, &m_EBO);
 
+    long unsigned int numVertices{ m_vertices.size() };
     //create and populate vertex buffer
     glCreateBuffers(1, &m_VBO);
     //allocate buffer space for vertices normals and optionally colors
-    glNamedBufferStorage(m_VBO, sizeof(GLfloat) * (2 * 3 * m_vertices.size() + 4 * m_vertColors.size()), nullptr, GL_DYNAMIC_STORAGE_BIT);
+    glNamedBufferStorage(m_VBO, sizeof(GLfloat) * (2 * 3 * numVertices + 4 * m_vertColors.size()), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
-    long unsigned int numVertices{ m_vertices.size() };
     for(unsigned int i = 0; i < numVertices; ++i){
         glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat), 3 * sizeof(GLfloat), m_vertices[i].data());
-        glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat) + 3 * sizeof(GLfloat) * m_vertices.size(), 3 * sizeof(GLfloat), m_vertNormals[i].data());
+        glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat) + 3 * sizeof(GLfloat) * numVertices, 3 * sizeof(GLfloat), m_vertNormals[i].data());
     }
 
     int i = 0;
     if(m_vertColors.size()){
         for(CG::RGBA_Color &color : m_vertColors){
-            glNamedBufferSubData(m_VBO, 4 * i * sizeof(GLfloat) + 2 * 3 * sizeof(GLfloat) * m_vertices.size(), 4 * sizeof(GLfloat), color.data());
+            glNamedBufferSubData(m_VBO, 4 * i * sizeof(GLfloat) + 2 * 3 * sizeof(GLfloat) * numVertices, 4 * sizeof(GLfloat), color.data());
             ++i;
         }
     }
+
+    std::vector<GLfloat> indices(2 * 3 * numVertices);
 
     glGenVertexArrays(1, &m_VAO);
     glBindVertexArray(m_VAO);
 
     //create and populate index buffer if needed
     if(m_faces.size()){
-        unsigned int indices[]{ m_faces[0].a, m_faces[0].b, m_faces[0].c, m_faces[1].a, m_faces[1].b, m_faces[1].c };
+        long unsigned int numFaces = m_faces.size();
+        std::vector<unsigned int> indices(3 * numFaces);
+
+        for(unsigned int i = 0; i < numFaces; ++i){
+            indices[3*i] = m_faces[i].a;
+            indices[3*i+1] = m_faces[i].b;
+            indices[3*i+2] = m_faces[i].c;
+        }
+
         glCreateBuffers(1, &m_EBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int) * m_faces.size(), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int) * numFaces, indices.data(), GL_STATIC_DRAW);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(3 * sizeof(GLfloat) * m_vertices.size()));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(3 * sizeof(GLfloat) * numVertices));
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
     if(m_vertColors.size()){
-        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(2 * 3 * sizeof(GLfloat) * m_vertices.size()));
+        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(2 * 3 * sizeof(GLfloat) * numVertices));
         glEnableVertexAttribArray(2);
     }
 }
@@ -236,5 +246,6 @@ void CG::Geometry::calculateVertexNormals(){
     long unsigned int numVertices{ m_vertices.size() };
     for(unsigned int i = 0; i < numVertices; ++i){
         m_vertNormals[i] /= occurences[i];
+        m_vertNormals[i].normalize();
     } 
 }
