@@ -9,14 +9,14 @@ namespace CG{
 
     Matrix4 m_projectionMatrix;
 
-    GLfloat m_near{ 1 };
-    GLfloat m_far{ 10 };
-    GLfloat m_fov{ 0.707 };
-    GLfloat m_aspectRatio{ 16 / 9 };
+    float m_near{ 1 };
+    float m_far{ 10 };
+    float m_fov{ 0.707 };
+    float m_aspectRatio{ 16 / 9 };
 
     public:
         Camera();
-        Camera(GLfloat near, GLfloat far, GLfloat fov, GLfloat aspectRatio);
+        Camera(float near, float far, float fov, float aspectRatio);
         Camera(const Camera &other);
 
         void updateProjectionMatrix();
@@ -24,15 +24,15 @@ namespace CG{
         void lookAt(const Vector3 position);
         void lookAt(float x, float y, float z);
 
-        void setNear(GLfloat near);
-        void setFar(GLfloat far);
-        void setFOV(GLfloat fov);
-        void setAspectRatio(GLfloat aspectRatio);
+        void setNear(float near);
+        void setFar(float far);
+        void setFOV(float fov);
+        void setAspectRatio(float aspectRatio);
 
-        GLfloat getNear();
-        GLfloat getFar();
-        GLfloat getFOV();
-        GLfloat getAspectRatio();
+        float getNear();
+        float getFar();
+        float getFOV();
+        float getAspectRatio();
 
         const Matrix4& getProjectionMatrix() const;
     };

@@ -27,7 +27,7 @@ CG::Matrix4 CG::createScalingMatrix(const Vector3 &scaling){
     };
 }
 
-CG::Matrix4 CG::createRotationMatrixX(GLfloat xRot){
+CG::Matrix4 CG::createRotationMatrixX(float xRot){
     return Matrix4{
         { 1.0, 0.0, 0.0, 0.0 },
         { 0.0, cos(xRot), -sin(xRot), 0.0 },
@@ -35,7 +35,7 @@ CG::Matrix4 CG::createRotationMatrixX(GLfloat xRot){
         { 0.0, 0.0, 0.0, 1.0 }
     };
 }
-CG::Matrix4 CG::createRotationMatrixY(GLfloat yRot){
+CG::Matrix4 CG::createRotationMatrixY(float yRot){
     return Matrix4{
         { cos(yRot), 0.0, sin(yRot), 0.0 },
         { 0.0, 1.0, 0.0, 0.0 },
@@ -43,7 +43,7 @@ CG::Matrix4 CG::createRotationMatrixY(GLfloat yRot){
         { 0.0, 0.0, 0.0, 1.0 }
     };
 }
-CG::Matrix4 CG::createRotationMatrixZ(GLfloat zRot){
+CG::Matrix4 CG::createRotationMatrixZ(float zRot){
     return Matrix4{
         { cos(zRot), -sin(zRot), 0.0, 0.0 },
         { sin(zRot), cos(zRot), 0.0, 0.0},

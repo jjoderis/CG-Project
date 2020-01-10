@@ -9,14 +9,17 @@ add_library(CG_Framework
     ./math/quaternion/quaternion.cpp
     core/face/face.cpp
     core/geometry/geometry.cpp
-    core/shader/shader.cpp
     core/material/material.cpp
     core/object3D/object3D.cpp
-    core/Mesh/mesh.cpp
+    core/mesh/mesh.cpp
     core/scene/scene.cpp
     core/camera/camera.cpp
-    core/renderer/renderer.cpp
     core/geometry/sphereGeometry/sphereGeometry.cpp
+    OpenGL/shader/shader.cpp
+    OpenGL/material/OpenGLMaterial.cpp
+    OpenGL/geometry/OpenGLGeometry.cpp
+    OpenGL/geometry/sphereGeometry/OpenGLSphereGeometry.cpp
+    OpenGL/renderer/renderer.cpp
 )
 
 set(TEST_FILES

@@ -2,8 +2,8 @@
 #include <memory>
 
 void CG::Renderer::renderMesh(const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix) const{
-    std::shared_ptr<Material> material{mesh->getMaterial()};
-    std::shared_ptr<Geometry> geometry{mesh->getGeometry()};
+    std::shared_ptr<OpenGLMaterial> material{ std::dynamic_pointer_cast<OpenGLMaterial>(mesh->getMaterial()) };
+    std::shared_ptr<OpenGLGeometry> geometry{ std::dynamic_pointer_cast<OpenGLGeometry>(mesh->getGeometry()) };
     
     Matrix4 modelViewMatrix{dot(viewMatrix, mesh->getMatrixWorld())};
     //transpose inverse of modelView Matrix N = ((mV)^-1)^T = ((V * M)^-1)^T = (M^-1 * V^-1)^T

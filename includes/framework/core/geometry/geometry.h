@@ -1,14 +1,11 @@
 #ifndef CG_FRAMEWORK_CORE_GEOMETRY_GEOMETRY_H
 #define CG_FRAMEWORK_CORE_GEOMETRY_GEOMETRY_H
 
-#include <GL/glew.h>
 #include <vector>
 #include <core/face/face.h>
 #include <core/color/color.h>
 #include <math/math.h>
 #include <initializer_list>
-
-#define BUFFER_OFFSET(a) ((void*)(a))
 
 namespace CG {
     //A class that handles the vertices and faces of 3D objects; sets up OpenGL Objects that are then used for rendering
@@ -26,15 +23,6 @@ namespace CG {
         std::vector<Vector3> m_faceNormals;
 
         Vector3 m_center{ 0.0, 0.0, 0.0 };
-
-        //contains information where and how the relevant data is stored
-        GLuint m_VAO{ 0 };
-        //contains the vertexData relevant to OpenGL
-        GLuint m_VBO{ 0 };
-        //contains the faceData relevant to OpenGL
-        GLuint m_EBO{ 0 };
-        //updates OpenGL Objects to contain all necessary data
-        void updateOpenGL();
 
         void calculateFaceNormals();
         void calculateVertexNormals();
@@ -57,19 +45,18 @@ namespace CG {
         //copies vertices and faces from another geometry; doesn't copy OpenGL information
         Geometry& operator= (const Geometry &other);
 
-        //deletes OpenGL Objects
         ~Geometry();
 
         //overwrites internal vertex data with copy of given vertex data
-        void setVertices(const std::vector<CG::Vector3> &vertices);
+        virtual void setVertices(const std::vector<CG::Vector3> &vertices);
 
         //overwrites internal faces data with copy of given faces data 
-        void setFaces(const std::vector<Face3> &faces);
-        void clearFaces();
+        virtual void setFaces(const std::vector<Face3> &faces);
+        virtual void clearFaces();
 
         //sets color for each vertex; given vector has to be of the same size as vertex data vector
-        void setVertexColors(const std::vector<CG::RGBA_Color> &colors);
-        void clearColors();
+        virtual void setVertexColors(const std::vector<CG::RGBA_Color> &colors);
+        virtual void clearColors();
 
         //returns reference to vertices
         std::vector<CG::Vector3>& getVertices();
@@ -78,8 +65,6 @@ namespace CG {
         //returns reference to faces
         std::vector<Face3>& getFaces();
         int getNumFaces() const;
-
-        int getVAO() const;
 
         friend bool operator== (const Geometry &g1, const Geometry &g2);
     };

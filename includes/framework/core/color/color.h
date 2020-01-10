@@ -5,8 +5,8 @@
 
 namespace CG{
     //Creating typedefs to use vectors as the basis for colors in our application
-    using RGB_Color = LinAlg::Vector<GLfloat, 3>;
-    using RGBA_Color = LinAlg::Vector<GLfloat, 4>;
+    using RGB_Color = LinAlg::Vector<float, 3>;
+    using RGBA_Color = LinAlg::Vector<float, 4>;
 }
 
 #endif

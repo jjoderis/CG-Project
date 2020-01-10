@@ -1,6 +1,6 @@
 #include "sphereGeometry.h"
 
-CG::SphereGeometry::SphereGeometry(GLfloat radius, unsigned int widthSegs, unsigned int heightSegs) : m_radius{ radius }{
+CG::SphereGeometry::SphereGeometry(float radius, unsigned int widthSegs, unsigned int heightSegs) : m_radius{ radius }{
     widthSegs = (widthSegs > 4) ? widthSegs : 4;
     heightSegs = (heightSegs > 0) ? heightSegs : 1; 
 
@@ -45,5 +45,4 @@ CG::SphereGeometry::SphereGeometry(GLfloat radius, unsigned int widthSegs, unsig
     }
     
     calculateFaceNormals();
-    updateOpenGL();
 }

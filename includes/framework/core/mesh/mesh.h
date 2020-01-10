@@ -1,7 +1,11 @@
 #ifndef CG_FRAMEWORK_CORE_MESH_MESH_H
 #define CG_FRAMEWORK_CORE_MESH_MESH_H
 
+#include <memory>
 #include <core/object3D/object3D.h>
+#include <core/geometry/geometry.h>
+#include <core/material/material.h>
+
 namespace CG{
     //a class that defines a renderable object in 3D space
     class Mesh : public Object3D{

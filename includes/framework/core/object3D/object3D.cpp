@@ -45,7 +45,7 @@ void CG::Object3D::updateMatrixWorld(){
 void CG::Object3D::setPosition(const CG::Vector3 &position){
     m_position = position;
 }
-void CG::Object3D::setPosition(GLfloat x, GLfloat y, GLfloat z){
+void CG::Object3D::setPosition(float x, float y, float z){
     m_position.at(0) = x;
     m_position.at(1) = y;
     m_position.at(2) = z;
@@ -54,7 +54,7 @@ void CG::Object3D::setPosition(GLfloat x, GLfloat y, GLfloat z){
 void CG::Object3D::translate(const CG::Vector3 &transVec){
     m_position += transVec;
 }
-void CG::Object3D::translate(GLfloat x, GLfloat y, GLfloat z){
+void CG::Object3D::translate(float x, float y, float z){
     m_position.at(0) += x;
     m_position.at(1) += y;
     m_position.at(2) += z;
@@ -63,7 +63,7 @@ void CG::Object3D::translate(GLfloat x, GLfloat y, GLfloat z){
 void CG::Object3D::setScale(const CG::Vector3 &scales){
     m_scale = scales;
 }
-void CG::Object3D::setScale(GLfloat xFac, GLfloat yFac, GLfloat zFac){
+void CG::Object3D::setScale(float xFac, float yFac, float zFac){
     m_scale.at(0) = xFac;
     m_scale.at(1) = yFac;
     m_scale.at(2) = zFac;
@@ -71,12 +71,12 @@ void CG::Object3D::setScale(GLfloat xFac, GLfloat yFac, GLfloat zFac){
 void CG::Object3D::scale(const CG::Vector3 &scales){
     m_scale *= scales;
 }
-void CG::Object3D::scale(GLfloat xFac, GLfloat yFac, GLfloat zFac){
+void CG::Object3D::scale(float xFac, float yFac, float zFac){
     m_scale.at(0) *= xFac;
     m_scale.at(1) *= yFac;
     m_scale.at(2) *= zFac;
 }
-void CG::Object3D::scale(GLfloat scale){
+void CG::Object3D::scale(float scale){
     m_scale *= scale;
 }
 
@@ -86,29 +86,29 @@ void CG::Object3D::setRotation(const CG::Quaternion &rotation){
     m_rotation.normalize();
 }
 
-void CG::Object3D::setRotation(const CG::Vector3 &axis, GLfloat amount){
+void CG::Object3D::setRotation(const CG::Vector3 &axis, float amount){
     m_rotation = Quaternion{sin(amount/2)*normalize(axis), cos(amount/2)};
 }
 
-void CG::Object3D::setRotation(GLfloat axisX, GLfloat axisY, GLfloat axisZ, GLfloat amount){
+void CG::Object3D::setRotation(float axisX, float axisY, float axisZ, float amount){
     setRotation(Vector3{ axisX, axisY, axisZ }, amount);
 }
 
-void CG::Object3D::rotate(const CG::Vector3 &axis, GLfloat amount){
+void CG::Object3D::rotate(const CG::Vector3 &axis, float amount){
     m_rotation *= Quaternion{sin(amount/2)*normalize(axis), cos(amount/2)};
 }
 
-void CG::Object3D::rotate(GLfloat axisX, GLfloat axisY, GLfloat axisZ, GLfloat amount){
+void CG::Object3D::rotate(float axisX, float axisY, float axisZ, float amount){
     rotate(Vector3{ axisX, axisY, axisZ }, amount);
 }
 
-void CG::Object3D::rotateX(GLfloat amount){
+void CG::Object3D::rotateX(float amount){
     rotate(Vector3{ 1.0f, 0.0f, 0.0f }, amount);
 }
-void CG::Object3D::rotateY(GLfloat amount){
+void CG::Object3D::rotateY(float amount){
     rotate(Vector3{ 0.0f, 1.0f, 0.0f }, amount);
 }
-void CG::Object3D::rotateZ(GLfloat amount){
+void CG::Object3D::rotateZ(float amount){
     rotate(Vector3{ 0.0f, 0.0f, 1.0f }, amount);
 }
 

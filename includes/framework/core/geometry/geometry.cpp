@@ -2,7 +2,7 @@
 
 CG::Geometry::Geometry() {}
 
-CG::Geometry::Geometry(const std::initializer_list<GLfloat> &vertexData, const std::initializer_list<int> &faceData)
+CG::Geometry::Geometry(const std::initializer_list<float> &vertexData, const std::initializer_list<int> &faceData)
 {
     assert(vertexData.size() % 3 == 0);
     assert(faceData.size() % 3 == 0);
@@ -11,7 +11,7 @@ CG::Geometry::Geometry(const std::initializer_list<GLfloat> &vertexData, const s
     m_faces.resize(faceData.size() / 3);
 
     int i = 0;
-    for (const GLfloat &element : vertexData)
+    for (const float &element : vertexData)
     {
         m_vertices[i/3].at(i%3) = element;
         ++i;
@@ -36,8 +36,6 @@ CG::Geometry::Geometry(const std::initializer_list<GLfloat> &vertexData, const s
     }
 
     calculateVertexNormals();
-
-    updateOpenGL();
 }
 
 CG::Geometry::Geometry(const std::initializer_list<CG::Vector3> &vertices, const std::initializer_list<CG::Face3> &faces)
@@ -58,22 +56,17 @@ CG::Geometry::Geometry(const std::initializer_list<CG::Vector3> &vertices, const
     }
 
     calculateVertexNormals();
-
-    updateOpenGL();
 }
 
 CG::Geometry::Geometry(const std::vector<CG::Vector3> &vertices, const std::vector<Face3> &faces) 
     : m_vertices{ vertices }, m_faces{ faces }
 {
     calculateVertexNormals();
-
-    updateOpenGL();
 }
 
 CG::Geometry::Geometry(const CG::Geometry &other)
-    : m_vertices{ other.m_vertices }, m_vertNormals{ other.m_vertNormals }, m_faces{ other.m_faces }, m_faceNormals{ other.m_faceNormals }
 {
-    updateOpenGL();
+    *this = other;
 }
 
 CG::Geometry& CG::Geometry::operator= (const CG::Geometry &other){
@@ -82,77 +75,15 @@ CG::Geometry& CG::Geometry::operator= (const CG::Geometry &other){
         return *this;
     }
 
-    this->m_vertices = other.m_vertices;
-    this->m_faces = other.m_faces;
-
-    updateOpenGL();
+    m_vertices = other.m_vertices;
+    m_vertNormals = other.m_vertNormals;
+    m_faces = other.m_faces;
+    m_faceNormals = other.m_faceNormals;
 
     return *this;
 }
 
-CG::Geometry::~Geometry() {
-    glDeleteVertexArrays(1, &m_VAO);
-    glDeleteBuffers(1, &m_VBO);
-    glDeleteBuffers(1, &m_EBO);
-}
-
-void CG::Geometry::updateOpenGL() {
-    glDeleteVertexArrays(1, &m_VAO);
-    glDeleteBuffers(1, &m_VBO);
-    glDeleteBuffers(1, &m_EBO);
-
-    long unsigned int numVertices{ m_vertices.size() };
-    //create and populate vertex buffer
-    glCreateBuffers(1, &m_VBO);
-    //allocate buffer space for vertices normals and optionally colors
-    glNamedBufferStorage(m_VBO, sizeof(GLfloat) * (2 * 3 * numVertices + 4 * m_vertColors.size()), nullptr, GL_DYNAMIC_STORAGE_BIT);
-
-    for(unsigned int i = 0; i < numVertices; ++i){
-        glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat), 3 * sizeof(GLfloat), m_vertices[i].data());
-        glNamedBufferSubData(m_VBO, 3 * i * sizeof(GLfloat) + 3 * sizeof(GLfloat) * numVertices, 3 * sizeof(GLfloat), m_vertNormals[i].data());
-    }
-
-    int i = 0;
-    if(m_vertColors.size()){
-        for(CG::RGBA_Color &color : m_vertColors){
-            glNamedBufferSubData(m_VBO, 4 * i * sizeof(GLfloat) + 2 * 3 * sizeof(GLfloat) * numVertices, 4 * sizeof(GLfloat), color.data());
-            ++i;
-        }
-    }
-
-    std::vector<GLfloat> indices(2 * 3 * numVertices);
-
-    glGenVertexArrays(1, &m_VAO);
-    glBindVertexArray(m_VAO);
-
-    //create and populate index buffer if needed
-    if(m_faces.size()){
-        long unsigned int numFaces = m_faces.size();
-        std::vector<unsigned int> indices(3 * numFaces);
-
-        for(unsigned int i = 0; i < numFaces; ++i){
-            indices[3*i] = m_faces[i].a;
-            indices[3*i+1] = m_faces[i].b;
-            indices[3*i+2] = m_faces[i].c;
-        }
-
-        glCreateBuffers(1, &m_EBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int) * numFaces, indices.data(), GL_STATIC_DRAW);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(3 * sizeof(GLfloat) * numVertices));
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    if(m_vertColors.size()){
-        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(2 * 3 * sizeof(GLfloat) * numVertices));
-        glEnableVertexAttribArray(2);
-    }
-}
+CG::Geometry::~Geometry() {}
 
 void CG::Geometry::setVertices(const std::vector<CG::Vector3> &vertices){
     if(m_vertices.size() != m_vertColors.size()){
@@ -162,33 +93,26 @@ void CG::Geometry::setVertices(const std::vector<CG::Vector3> &vertices){
     m_vertices = vertices;
 
     calculateVertexNormals();
-
-    updateOpenGL();
 }
 
 void CG::Geometry::setFaces(const std::vector<CG::Face3> &faces){
     m_faces = faces;
 
     calculateVertexNormals();
-
-    updateOpenGL();
 }
 
 void CG::Geometry::clearFaces(){
     m_faces.clear();
-    updateOpenGL();
 }
 
 void CG::Geometry::setVertexColors(const std::vector<CG::RGBA_Color> &colors){
     if(colors.size() == m_vertices.size()){
         m_vertColors = colors;
-        updateOpenGL();
     }
 }
 
 void CG::Geometry::clearColors(){
     m_vertColors.clear();
-    updateOpenGL();
 }
 
 std::vector<CG::Vector3>& CG::Geometry::getVertices(){
@@ -205,10 +129,6 @@ std::vector<CG::Face3>& CG::Geometry::getFaces(){
 
 int CG::Geometry::getNumFaces() const{
     return m_faces.size();
-}
-
-int CG::Geometry::getVAO() const{
-    return m_VAO;
 }
 
 bool CG::operator== (const Geometry &g1, const Geometry &g2){

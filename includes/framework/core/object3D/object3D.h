@@ -1,12 +1,8 @@
 #ifndef CG_FRAMEWORK_CORE_OBJECT3D_OBJECT3D
 #define CG_FRAMEWORK_CORE_OBJECT3D_OBJECT3D
 
-#include <GL/glew.h>
-#include <memory>
 #include <math/math.h>
 #include <math/quaternion/quaternion.h>
-#include <core/geometry/geometry.h>
-#include <core/material/material.h>
 
 namespace CG{
     //base class for an Object in 3D space (Mesh, Camera, etc.)
@@ -40,24 +36,24 @@ namespace CG{
         void updateMatrixWorld();
 
         void setPosition(const Vector3 &position);
-        void setPosition(GLfloat x, GLfloat y, GLfloat z);
+        void setPosition(float x, float y, float z);
         void translate(const Vector3 &transVec);
-        void translate(GLfloat x, GLfloat y, GLfloat z);
+        void translate(float x, float y, float z);
 
         void setScale(const Vector3 &scales);
-        void setScale(GLfloat xFac, GLfloat yFac, GLfloat zFac);
+        void setScale(float xFac, float yFac, float zFac);
         void scale(const Vector3 &scales);
-        void scale(GLfloat xFac, GLfloat yFac, GLfloat zFac);
-        void scale(GLfloat scale);
+        void scale(float xFac, float yFac, float zFac);
+        void scale(float scale);
 
         void setRotation(const Quaternion &rotation);
-        void setRotation(const Vector3 &axis, GLfloat amount);
-        void setRotation(GLfloat axisX, GLfloat axisY, GLfloat axisZ, GLfloat amount);
-        void rotate(const Vector3 &axis, GLfloat amount);
-        void rotate(GLfloat axisX, GLfloat axisY, GLfloat axisZ, GLfloat amount);
-        void rotateX(GLfloat amount);
-        void rotateY(GLfloat amount);
-        void rotateZ(GLfloat amount);
+        void setRotation(const Vector3 &axis, float amount);
+        void setRotation(float axisX, float axisY, float axisZ, float amount);
+        void rotate(const Vector3 &axis, float amount);
+        void rotate(float axisX, float axisY, float axisZ, float amount);
+        void rotateX(float amount);
+        void rotateY(float amount);
+        void rotateZ(float amount);
         void resetRotation();
         
         //returns a reference to the objects position

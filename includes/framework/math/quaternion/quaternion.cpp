@@ -2,9 +2,9 @@
 
 CG::Quaternion::Quaternion() {}
 
-CG::Quaternion::Quaternion(const Vector3 &imaginary, GLfloat real) : m_imaginary{ imaginary }, m_real{ real } {}
+CG::Quaternion::Quaternion(const Vector3 &imaginary, float real) : m_imaginary{ imaginary }, m_real{ real } {}
 
-CG::Quaternion::Quaternion(GLfloat qx, GLfloat qy, GLfloat qz, GLfloat qw)
+CG::Quaternion::Quaternion(float qx, float qy, float qz, float qw)
     : m_imaginary{ qx, qy, qz }, m_real{qw} {}
 
 CG::Quaternion::Quaternion(const Quaternion &other) : m_imaginary{ other.m_imaginary }, m_real{ other.m_real } {}
@@ -21,17 +21,17 @@ CG::Quaternion& CG::Quaternion::operator= (const Quaternion &other){
     return *this;
 }
 
-void CG::Quaternion::setReal(GLfloat val){
+void CG::Quaternion::setReal(float val){
     m_real = val;
 }
 void CG::Quaternion::setImaginary(Vector3 &vec){
     m_imaginary = vec;
 }
-void CG::Quaternion::setImaginary(GLfloat qx, GLfloat qy, GLfloat qz){
+void CG::Quaternion::setImaginary(float qx, float qy, float qz){
     m_imaginary = Vector3{ qx, qy, qz };
 }
 
-GLfloat CG::Quaternion::getReal() const{
+float CG::Quaternion::getReal() const{
     return m_real;
 }
 CG::Vector3& CG::Quaternion::getImaginary(){
@@ -39,7 +39,7 @@ CG::Vector3& CG::Quaternion::getImaginary(){
 }
 
 CG::Quaternion& CG::Quaternion::operator*= (const Quaternion &other){
-    GLfloat newReal = m_real * other.m_real - m_imaginary.dot(other.m_imaginary);
+    float newReal = m_real * other.m_real - m_imaginary.dot(other.m_imaginary);
     Vector3 newImaginary = cross(m_imaginary, other.m_imaginary) + other.m_real * m_imaginary + m_real * other.m_imaginary;
 
     m_real = newReal;
@@ -48,7 +48,7 @@ CG::Quaternion& CG::Quaternion::operator*= (const Quaternion &other){
     return *this;
 }
 
-CG::Quaternion& CG::Quaternion::operator*= (GLfloat s){
+CG::Quaternion& CG::Quaternion::operator*= (float s){
     m_imaginary *= s;
     m_real *= s;
 
@@ -66,7 +66,7 @@ CG::Quaternion CG::Quaternion::conjugate() const{
     return Quaternion{ -m_imaginary, m_real };
 }
 
-GLfloat CG::Quaternion::norm() const{
+float CG::Quaternion::norm() const{
     return sqrt(pow(m_imaginary.at(0) , 2) + pow(m_imaginary.at(1) , 2) + pow(m_imaginary.at(2) , 2) + pow(m_real, 2));
 }
 
@@ -93,10 +93,10 @@ CG::Quaternion CG::operator* (const Quaternion &q1, const Quaternion &q2){
     };
 }
 
-CG::Quaternion CG::operator* (const Quaternion q, GLfloat s){
+CG::Quaternion CG::operator* (const Quaternion q, float s){
     return Quaternion{ s *  q.m_imaginary, s * q.m_real };
 }
-CG::Quaternion CG::operator* (GLfloat s, const Quaternion q){
+CG::Quaternion CG::operator* (float s, const Quaternion q){
     return Quaternion{ s *  q.m_imaginary, s * q.m_real };
 }
 
@@ -111,8 +111,8 @@ std::ostream& CG::operator<< (std::ostream &out, const Quaternion &q){
     return out;
 }
 
-CG::Quaternion CG::slerp (const Quaternion &q1, const Quaternion &q2, GLfloat fraction){
-    GLfloat phi = q1.m_imaginary.at(0) * q2.m_imaginary.at(0) + q1.m_imaginary.at(1) * q2.m_imaginary.at(1) + q1.m_imaginary.at(1) * q2.m_imaginary.at(1)
+CG::Quaternion CG::slerp (const Quaternion &q1, const Quaternion &q2, float fraction){
+    float phi = q1.m_imaginary.at(0) * q2.m_imaginary.at(0) + q1.m_imaginary.at(1) * q2.m_imaginary.at(1) + q1.m_imaginary.at(1) * q2.m_imaginary.at(1)
                 + q1.m_imaginary.at(2) * q2.m_imaginary.at(2) + q1.m_real + q2.m_real;
 
     return (sin(phi * (1 - fraction)) / sin(phi)) * q1 + (sin(phi * fraction) / sin(phi)) * q2;
@@ -120,7 +120,7 @@ CG::Quaternion CG::slerp (const Quaternion &q1, const Quaternion &q2, GLfloat fr
 
 CG::Matrix4 CG::createRotationMatrix(Quaternion &q){
     Vector3 i = q.getImaginary();
-    GLfloat r = q.getReal();
+    float r = q.getReal();
     return Matrix4{
         { 1.0f- 2.0f*((float)pow(i.at(1), 2)+(float)pow(i.at(2), 2)), 2.0f*(i.at(0)*i.at(1)-r*i.at(2)), 2.0f*(i.at(0)*i.at(2)+r*i.at(1)), 0.0f},
         { 2.0f*(i.at(0)*i.at(1)+r*i.at(2)), 1.0f- 2.0f*((float)pow(i.at(0), 2)+(float)pow(i.at(2), 2)), 2.0f*(i.at(1)*i.at(2)-r*i.at(0)), 0.0f},

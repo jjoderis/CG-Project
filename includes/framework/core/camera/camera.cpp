@@ -6,7 +6,7 @@ CG::Camera::Camera(){
     updateProjectionMatrix();
 }
 
-CG::Camera::Camera(GLfloat near, GLfloat far, GLfloat fov, GLfloat aspectRatio)
+CG::Camera::Camera(float near, float far, float fov, float aspectRatio)
     : Camera()
 {
     m_near = near;
@@ -24,7 +24,7 @@ CG::Camera::Camera(const Camera &other)
 }
 
 void CG::Camera::updateProjectionMatrix(){
-    GLfloat c{ 1.0f/tan(m_fov/2) };
+    float c{ 1.0f/tan(m_fov/2) };
     m_projectionMatrix = Matrix4{
         { c/m_aspectRatio, 0.0, 0.0, 0.0},
         { 0.0, c, 0.0, 0.0},
@@ -50,10 +50,10 @@ void CG::Camera::lookAt(CG::Vector3 position){
         { 0.0, 0.0, 0.0, 1.0 }
     };
 
-    GLfloat qw = 0.5f * sqrt(baseChange.trace());
-    GLfloat qx = (baseChange.at(2, 1) - baseChange.at(1, 2)) / (4.0f * qw);
-    GLfloat qy = (baseChange.at(0, 2) - baseChange.at(2, 0)) / (4.0f * qw);
-    GLfloat qz = (baseChange.at(1, 0) - baseChange.at(0, 1)) / (4.0f * qw);
+    float qw = 0.5f * sqrt(baseChange.trace());
+    float qx = (baseChange.at(2, 1) - baseChange.at(1, 2)) / (4.0f * qw);
+    float qy = (baseChange.at(0, 2) - baseChange.at(2, 0)) / (4.0f * qw);
+    float qz = (baseChange.at(1, 0) - baseChange.at(0, 1)) / (4.0f * qw);
 
     m_rotation = CG::Quaternion{ qx, qy, qz, qw };
 
@@ -64,29 +64,29 @@ void CG::Camera::lookAt(float x, float y, float z){
     lookAt(Vector3{x, y, z});
 }
 
-void CG::Camera::setNear(GLfloat near){
+void CG::Camera::setNear(float near){
     m_near = near;
 }
-void CG::Camera::setFar(GLfloat far){
+void CG::Camera::setFar(float far){
     m_far = far;
 }
-void CG::Camera::setFOV(GLfloat fov){
+void CG::Camera::setFOV(float fov){
     m_fov = fov;
 }
-void CG::Camera::setAspectRatio(GLfloat aspectRatio){
+void CG::Camera::setAspectRatio(float aspectRatio){
     m_aspectRatio = aspectRatio;
 }
 
-GLfloat CG::Camera::getNear(){
+float CG::Camera::getNear(){
     return m_near;
 }
-GLfloat CG::Camera::getFar(){
+float CG::Camera::getFar(){
     return m_far;
 }
-GLfloat CG::Camera::getFOV(){
+float CG::Camera::getFOV(){
     return m_fov;
 }
-GLfloat CG::Camera::getAspectRatio(){
+float CG::Camera::getAspectRatio(){
     return m_aspectRatio;
 }
 

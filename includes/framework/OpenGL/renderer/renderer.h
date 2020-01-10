@@ -4,6 +4,9 @@
 #include <GL/glew.h>
 #include <core/scene/scene.h>
 #include <core/camera/camera.h>
+#include <OpenGL/material/OpenGLMaterial.h>
+#include <OpenGL/geometry/OpenGLGeometry.h>
+#include <memory>
 
 namespace CG{
     //A class used to render a given scene

@@ -5,12 +5,12 @@
 
 namespace CG{
     // a special geometry in form of a sphere; might be useful when using sphere specific intersection alogrithms etc. vs a undefined geometry
-    class SphereGeometry : public Geometry{
+    class SphereGeometry : virtual public Geometry{
     protected:
-        GLfloat m_radius{ 1.0f };
+        float m_radius{ 1.0f };
 
     public:
-        SphereGeometry(GLfloat radius, unsigned int widthSegs, unsigned int heightSegs);
+        SphereGeometry(float radius, unsigned int widthSegs, unsigned int heightSegs);
     };
 
 }
