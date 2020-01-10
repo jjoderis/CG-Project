@@ -19,7 +19,6 @@ float counter = 0.0f;
 
 void init(CG::Scene &scene){
 
-  // std::shared_ptr<CG::SphereGeometry> geoPtr = std::make_shared<CG::SphereGeometry>(CG::SphereGeometry{ 1.0, 4, 1});
   std::shared_ptr<CG::OpenGLSphereGeometry> geoPtr = std::make_shared<CG::OpenGLSphereGeometry>(CG::OpenGLSphereGeometry{1.0, 4, 1}); 
   
   std::shared_ptr<CG::OpenGLMaterial> matPtr = std::make_shared<CG::OpenGLMaterial>(CG::OpenGLMaterial{
@@ -40,7 +39,7 @@ void init(CG::Scene &scene){
 
         void main(){
           iNormal = normalMatrix * vNormal;
-          iPosition = vPosition;
+          iPosition = projectionMatrix * modelViewMatrix * vPosition;
           gl_Position = iPosition;
         }
       )",
@@ -88,8 +87,12 @@ int main(){
 	fprintf(stdout, "OpenGL Version is: %s\n", glGetString(GL_VERSION));
 
   CG::Scene scene{};
-  CG::Camera camera{ 1, 10, 45, 640.0f/480.0f };
+  CG::Camera camera{ 1.0, 10, 45, 640.0f/480.0f };
   CG::Renderer renderer{};
+
+  camera.translate(5.0, 0.0, 0.0);
+
+  camera.updateMatrixWorld();
 
   init(scene);
 
