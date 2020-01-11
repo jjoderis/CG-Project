@@ -2,6 +2,7 @@
 #define CG_FRAMEWORK_OPENGL_MATERIAL_OPENGLMATERIAL_H
 
 #include <GL/glew.h>
+#include <core/color/color.h>
 #include <OpenGL/shader/shader.h>
 #include <core/material/material.h>
 #include <vector>
@@ -28,6 +29,8 @@ namespace CG{
 
         //creates material with basic shader
         OpenGLMaterial();
+
+        OpenGLMaterial(const CG::RGBA_Color &color);
 
         //creates a material with the given vertex and fragment shader
         OpenGLMaterial(const char* vertexShaderData, const char* fragmentShaderData);

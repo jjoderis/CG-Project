@@ -21,6 +21,10 @@ CG::OpenGLMaterial::OpenGLMaterial(const char* vertexShaderData, const char* fra
     getUniformLocs();
 }
 
+CG::OpenGLMaterial::OpenGLMaterial(const CG::RGBA_Color &color) : OpenGLMaterial(){
+    setColor(color);
+}
+
 CG::OpenGLMaterial::OpenGLMaterial()
     : OpenGLMaterial(
         R"(

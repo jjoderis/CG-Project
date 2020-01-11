@@ -23,12 +23,7 @@ set( INCLUDE_DIR ${PROJECT_SOURCE_DIR}/includes )
 set( GLEW_DIR ${PROJECT_SOURCE_DIR}/glew )
 set( TEST_DIR ${PROJECT_SOURCE_DIR}/test )
 
-set( PROJECT_SOURCES 
-    ${INCLUDE_DIR}/LoadShaders/LoadShaders.cpp    
-)
-
 set( PROJECT_INCLUDES 
-    ${INCLUDE_DIR}/LoadShaders
     ${INCLUDE_DIR}/mathematics
     ${INCLUDE_DIR}/framework
 )
@@ -42,7 +37,7 @@ add_subdirectory( ${INCLUDE_DIR}/framework )
 if(NOT BUILD_TESTS)
 
     #add executable
-    add_executable(CG-Project main.cpp ${PROJECT_SOURCES})
+    add_executable(CG-Project main.cpp)
 
     target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew Math_Util CG_Framework)
 
