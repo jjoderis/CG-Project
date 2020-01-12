@@ -17,6 +17,8 @@ namespace CG{
     void renderMesh(const CG::Mesh *mesh, const CG::Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const CG::Matrix4 &projectionMatrix) const;
     
     public:
+        Renderer();
+
         //renders the given scene using the given camera
         void render(const Scene &scene, const Camera &camera) const;
     };

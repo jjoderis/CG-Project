@@ -1,6 +1,10 @@
 #include "renderer.h"
 #include <memory>
 
+CG::Renderer::Renderer(){
+    glEnable(GL_DEPTH_TEST);
+}
+
 void CG::Renderer::renderMesh(const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix) const{
     std::shared_ptr<OpenGLMaterial> material{ std::dynamic_pointer_cast<OpenGLMaterial>(mesh->getMaterial()) };
     std::shared_ptr<OpenGLGeometry> geometry{ std::dynamic_pointer_cast<OpenGLGeometry>(mesh->getGeometry()) };
@@ -31,6 +35,7 @@ void CG::Renderer::renderMesh(const Mesh *mesh, const Matrix4 &viewMatrix, const
 
 void CG::Renderer::render(const Scene &scene, const Camera &camera) const{
     glClearBufferfv(GL_COLOR, 0, scene.getBackground().data());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     Matrix4 viewMatrix = camera.getMatrixWorldInverse();
     Matrix4 viewMatrixInverse = camera.getMatrixWorld();

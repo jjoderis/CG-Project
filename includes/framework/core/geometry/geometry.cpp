@@ -119,12 +119,20 @@ std::vector<CG::Vector3>& CG::Geometry::getVertices(){
     return m_vertices;
 }
 
+std::vector<CG::Vector3>& CG::Geometry::getVertexNormals(){
+    return m_vertNormals;
+}
+
 int CG::Geometry::getNumVertices() const{
     return m_vertices.size();
 }
 
 std::vector<CG::Face3>& CG::Geometry::getFaces(){
     return m_faces;
+}
+
+std::vector<CG::Vector3>& CG::Geometry::getFaceNormals(){
+    return m_faceNormals;
 }
 
 int CG::Geometry::getNumFaces() const{

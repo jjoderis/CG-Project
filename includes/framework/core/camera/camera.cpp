@@ -71,7 +71,9 @@ void CG::Camera::setFar(float far){
     m_far = far;
 }
 void CG::Camera::setFOV(float fov){
-    m_fov = fov;
+    if(fov > 45){
+        m_fov = fov;
+    }
 }
 void CG::Camera::setAspectRatio(float aspectRatio){
     m_aspectRatio = aspectRatio;

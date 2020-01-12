@@ -60,10 +60,12 @@ namespace CG {
 
         //returns reference to vertices
         std::vector<CG::Vector3>& getVertices();
+        std::vector<CG::Vector3>& getVertexNormals();
         int getNumVertices() const;
 
         //returns reference to faces
         std::vector<Face3>& getFaces();
+        std::vector<Vector3>& getFaceNormals();
         int getNumFaces() const;
 
         friend bool operator== (const Geometry &g1, const Geometry &g2);
