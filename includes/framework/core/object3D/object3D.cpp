@@ -134,3 +134,16 @@ const CG::Matrix4& CG::Object3D::getMatrixWorld() const{
 const CG::Matrix4& CG::Object3D::getMatrixWorldInverse() const{
     return m_worldMatrixInverse;
 }
+
+void CG::Object3D::animate(){
+    m_animationPtr(*this);
+}
+
+void CG::Object3D::setAnimation(void (*animationPtr)(Object3D&)){
+    m_animationPtr = animationPtr;
+    isAnimated = true;
+}
+void CG::Object3D::deleteAnimation(){
+    m_animationPtr = nullptr;
+    isAnimated = false;
+}

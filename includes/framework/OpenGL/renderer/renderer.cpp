@@ -42,6 +42,10 @@ void CG::Renderer::render(const Scene &scene, const Camera &camera) const{
     Matrix4 projectionMatrix = camera.getProjectionMatrix(); 
 
     for(const std::shared_ptr<Mesh> &mesh : scene.getChildren()){
+        if(mesh->isAnimated){
+            mesh->animate();
+        }
+
         renderMesh(mesh.get(), viewMatrix, viewMatrixInverse, projectionMatrix);
     }
 }

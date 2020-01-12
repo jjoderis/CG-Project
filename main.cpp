@@ -27,7 +27,7 @@ CG::Camera camera{ 1.0, 100, 45, WINDOW_WIDTH/WINDOW_HEIGHT };
 
 void init(){
 
-  std::shared_ptr<CG::OpenGLSphereGeometry> geoPtr = std::make_shared<CG::OpenGLSphereGeometry>(CG::OpenGLSphereGeometry{1.0, 100, 100});
+  std::shared_ptr<CG::OpenGLSphereGeometry> geoPtr = std::make_shared<CG::OpenGLSphereGeometry>(CG::OpenGLSphereGeometry{1.0, 4, 1});
   
   std::shared_ptr<CG::OpenGLMaterial> redPtr = std::make_shared<CG::OpenGLMaterial>(CG::OpenGLMaterial{
     R"(
@@ -82,14 +82,19 @@ void init(){
   redPtr->setColor(1.0, 0.0, 0.0);
   bluePtr->setColor(0.0, 0.0, 1.0);
 
-
-
   std::shared_ptr<CG::Mesh> redSphere(new CG::Mesh{geoPtr, redPtr});
   redSphere->translate(2.0, 0.0, -2.0);
   redSphere->updateMatrixWorld();
   std::shared_ptr<CG::Mesh> blueSphere(new CG::Mesh{geoPtr, bluePtr});
   blueSphere->translate(-2.0, 0.0, -2.0);
   blueSphere->updateMatrixWorld();
+
+  void (*animation)(CG::Object3D&) = [](CG::Object3D &obj) {
+    obj.rotateY(degToRad(10));
+    obj.updateMatrixWorld();
+  };
+
+  redSphere->setAnimation(animation);
 
   scene.addChild(redSphere);
   scene.addChild(blueSphere);
@@ -120,7 +125,6 @@ int main(){
 
   init();
 
-  //CG::Mesh *sphere{ scene.getChildren()[0].get() };
 
   glfwSetKeyCallback(window, handleKeyboardInput);
   glfwSetCursorPosCallback(window, handleMouseMovement);
@@ -128,8 +132,6 @@ int main(){
   glfwSetScrollCallback(window, handleScrolling);
 
   while(!glfwWindowShouldClose(window)){
-    // sphere->setPosition(2.0f, sin(degToRad(100*counter)), -2.0);
-    // sphere->updateMatrixWorld();
 	  renderer.render(scene, camera);
 	  glfwSwapBuffers(window);
 	  glfwPollEvents();

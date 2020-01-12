@@ -23,9 +23,11 @@ namespace CG{
         Matrix4 m_worldMatrix{ createIdentityMatrix() };
         Matrix4 m_worldMatrixInverse{ createIdentityMatrix() };
 
-        //matrix that can be used to transform normal vectors to world coordinates
+        void (*m_animationPtr)(Object3D&);
 
     public:
+        bool isAnimated;
+
         Object3D();
 
         //Copy constructor
@@ -66,6 +68,10 @@ namespace CG{
         const Matrix4& getMatrixWorld() const;
         const Matrix4& getMatrixWorldInverse() const;
 
+        void animate();
+
+        void setAnimation(void (*animationPtr)(Object3D&));
+        void deleteAnimation();
     };
 }
 
