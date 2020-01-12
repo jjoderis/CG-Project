@@ -6,6 +6,8 @@ CG::Object3D::Object3D(const Object3D & other) : Object3D() {
     *this = other;
 }
 
+CG::Object3D::~Object3D(){}
+
 CG::Object3D& CG::Object3D::operator= (const CG::Object3D &other){
 
     if(&other == this){
@@ -17,6 +19,9 @@ CG::Object3D& CG::Object3D::operator= (const CG::Object3D &other){
     m_rotation = other.m_rotation;
     m_worldMatrix = other.m_worldMatrix;
     m_worldMatrixInverse = other.m_worldMatrixInverse;
+    m_velocity = other.m_velocity;
+    m_animationPtr = other.m_animationPtr;
+    isAnimated = other.isAnimated;
 
     updateMatrixWorld();
 
@@ -133,6 +138,13 @@ const CG::Matrix4& CG::Object3D::getMatrixWorld() const{
 }
 const CG::Matrix4& CG::Object3D::getMatrixWorldInverse() const{
     return m_worldMatrixInverse;
+}
+
+void CG::Object3D::setVelocity(const Vector3 &velocity){
+    m_velocity = velocity;
+}
+const CG::Vector3& CG::Object3D::getVelocity(){
+    return m_velocity;
 }
 
 void CG::Object3D::animate(){

@@ -11,6 +11,8 @@ namespace CG{
 
     public:
         SphereGeometry(float radius, unsigned int widthSegs, unsigned int heightSegs);
+
+        float getRadius();
     };
 
 }

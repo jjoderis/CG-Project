@@ -300,6 +300,10 @@ namespace LinAlg
             return acos(this->dot(other)/(this->length()*other.length()));
         }
 
+        Vector<T, size> reflect(const Vector<T, size> &normal) const{
+            return *this - 2 * ((T)this->dot(normal)) * normal; 
+        }
+
         //compares two vectors taking possible rounding errors into account
         bool allClose(const Vector<T, size> &other) const{
 

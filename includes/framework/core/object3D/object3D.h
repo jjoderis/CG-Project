@@ -19,6 +19,9 @@ namespace CG{
         //quaternion representing the rotation of the object
         Quaternion m_rotation{ 0.0, 0.0, 0.0, 1.0 };
 
+        //an objects velocity: speed in regard to direction
+        Vector3 m_velocity{ 0.0, 0.0, 0.0 };
+
         //matrix that can be used to transform the model coordinates to world coordinates
         Matrix4 m_worldMatrix{ createIdentityMatrix() };
         Matrix4 m_worldMatrixInverse{ createIdentityMatrix() };
@@ -26,9 +29,11 @@ namespace CG{
         void (*m_animationPtr)(Object3D&);
 
     public:
-        bool isAnimated;
+        bool isAnimated{ false };
 
         Object3D();
+
+        virtual ~Object3D();
 
         //Copy constructor
         Object3D(const Object3D &other);
@@ -67,6 +72,9 @@ namespace CG{
 
         const Matrix4& getMatrixWorld() const;
         const Matrix4& getMatrixWorldInverse() const;
+
+        void setVelocity(const Vector3 &velocity);
+        const Vector3& getVelocity();
 
         void animate();
 

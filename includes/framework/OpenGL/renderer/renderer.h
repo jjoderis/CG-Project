@@ -12,7 +12,7 @@ namespace CG{
     //A class used to render a given scene
     class Renderer{
 
-    GLenum m_drawMode{ GL_TRIANGLES };
+    GLenum m_drawMode{ GL_LINES };
 
     void renderMesh(const CG::Mesh *mesh, const CG::Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const CG::Matrix4 &projectionMatrix) const;
     

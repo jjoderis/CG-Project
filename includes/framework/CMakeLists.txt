@@ -15,10 +15,12 @@ add_library(CG_Framework
     core/scene/scene.cpp
     core/camera/camera.cpp
     core/geometry/sphereGeometry/sphereGeometry.cpp
+    core/geometry/boxGeometry/boxGeometry.cpp
     OpenGL/shader/shader.cpp
     OpenGL/material/OpenGLMaterial.cpp
     OpenGL/geometry/OpenGLGeometry.cpp
     OpenGL/geometry/sphereGeometry/OpenGLSphereGeometry.cpp
+    OpenGL/geometry/boxGeometry/OpenGLBoxGeometry.cpp
     OpenGL/renderer/renderer.cpp
 )
 

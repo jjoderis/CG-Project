@@ -46,3 +46,7 @@ CG::SphereGeometry::SphereGeometry(float radius, unsigned int widthSegs, unsigne
     
     calculateFaceNormals();
 }
+
+float CG::SphereGeometry::getRadius(){
+    return m_radius;
+}

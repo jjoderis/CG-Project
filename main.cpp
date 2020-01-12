@@ -8,6 +8,7 @@
 #include <OpenGL/renderer/renderer.h>
 #include <OpenGL/material/OpenGLMaterial.h>
 #include <OpenGL/geometry/sphereGeometry/OpenGLSphereGeometry.h>
+#include <OpenGL/geometry/boxGeometry/OpenGLBoxGeometry.h>
 
 #include <GL/glew.h>
 
@@ -27,7 +28,7 @@ CG::Camera camera{ 1.0, 100, 45, WINDOW_WIDTH/WINDOW_HEIGHT };
 
 void init(){
 
-  std::shared_ptr<CG::OpenGLSphereGeometry> geoPtr = std::make_shared<CG::OpenGLSphereGeometry>(CG::OpenGLSphereGeometry{1.0, 4, 1});
+  std::shared_ptr<CG::OpenGLSphereGeometry> geoPtr = std::make_shared<CG::OpenGLSphereGeometry>(CG::OpenGLSphereGeometry{1.0, 30, 30});
   
   std::shared_ptr<CG::OpenGLMaterial> redPtr = std::make_shared<CG::OpenGLMaterial>(CG::OpenGLMaterial{
     R"(
@@ -77,27 +78,47 @@ void init(){
     )"
   });
 
-  std::shared_ptr<CG::OpenGLMaterial> bluePtr = std::make_shared<CG::OpenGLMaterial>(*(redPtr.get()));
-
   redPtr->setColor(1.0, 0.0, 0.0);
-  bluePtr->setColor(0.0, 0.0, 1.0);
 
   std::shared_ptr<CG::Mesh> redSphere(new CG::Mesh{geoPtr, redPtr});
-  redSphere->translate(2.0, 0.0, -2.0);
-  redSphere->updateMatrixWorld();
-  std::shared_ptr<CG::Mesh> blueSphere(new CG::Mesh{geoPtr, bluePtr});
-  blueSphere->translate(-2.0, 0.0, -2.0);
-  blueSphere->updateMatrixWorld();
 
   void (*animation)(CG::Object3D&) = [](CG::Object3D &obj) {
-    obj.rotateY(degToRad(10));
+    float radius{ std::dynamic_pointer_cast<CG::SphereGeometry>(dynamic_cast<CG::Mesh&>(obj).getGeometry())->getRadius() };
+    CG::Matrix4 worldMatrix{obj.getMatrixWorld()};
+    CG::Vector3 worldPos{ dot(worldMatrix, CG::Vector4{ obj.getPosition(), 1.0} ) };
+
+    for(int i = 0; i < 3; ++i){
+      if(worldPos.at(i) + radius >= 10.0){
+        CG::Vector3 normal{0.0, 0.0, 0.0};
+        normal.set(i, 1.0);
+
+        obj.setVelocity(obj.getVelocity().reflect(normal));
+      }
+    }
+
+    for(int i = 0; i < 3; ++i){
+      if(worldPos.at(i) - radius <= -10.0){
+        CG::Vector3 normal{0.0, 0.0, 0.0};
+        normal.set(i, -1.0);
+
+        obj.setVelocity(obj.getVelocity().reflect(normal));
+      }
+    }
+
+    obj.translate(obj.getVelocity());
     obj.updateMatrixWorld();
   };
 
+  redSphere->setVelocity(CG::Vector3{0.01, 0.02, 0.0});
+
   redSphere->setAnimation(animation);
 
+  std::shared_ptr<CG::OpenGLBoxGeometry> boxPtr = std::make_shared<CG::OpenGLBoxGeometry>(CG::OpenGLBoxGeometry{ 10.0, 10.0, 10.0 });
+  std::shared_ptr<CG::OpenGLMaterial> yellowPtr = std::make_shared<CG::OpenGLMaterial>(CG::OpenGLMaterial{CG::RGBA_Color{1.0, 1.0, 0.0, 1.0}});
+  std::shared_ptr<CG::Mesh> yellowCube{new CG::Mesh{boxPtr, yellowPtr}};
+
   scene.addChild(redSphere);
-  scene.addChild(blueSphere);
+  scene.addChild(yellowCube);
 }
 
 int main(){
@@ -110,7 +131,7 @@ int main(){
   GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "CG-Project", NULL, NULL);
 
   glfwMakeContextCurrent(window);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   glewInit();
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
