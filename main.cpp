@@ -137,19 +137,23 @@ void handleKeyboardInput(GLFWwindow *window, int key, int scancode, int action, 
   if(action == GLFW_RELEASE){
     return;
   }
+  
+  CG::Matrix4 cameraToWorld{ CG::createRotationMatrix(camera.getRotation()) };
+  CG::Vector3 cameraX{ dot(cameraToWorld, CG::Vector4{1.0, 0.0, 0.0, 1.0}) };
+  CG::Vector3 cameraZ{ dot(cameraToWorld, CG::Vector4{0.0, 0.0, 1.0, 1.0}) };
 
   switch(key){
     case GLFW_KEY_W:
-      camera.translate(0.0, 0.0, -speed);
+      camera.translate(-speed * cameraZ);
       break;
     case GLFW_KEY_A:
-      camera.translate(-speed, 0.0, 0.0);
+      camera.translate(-speed * cameraX);
       break;
     case GLFW_KEY_S:
-      camera.translate(0.0, 0.0, speed);
+      camera.translate(speed * cameraZ);
       break;
     case GLFW_KEY_D:
-      camera.translate(speed, 0.0, 0.0);
+      camera.translate(speed * cameraX);
   }
 
   camera.updateMatrixWorld();
