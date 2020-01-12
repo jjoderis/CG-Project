@@ -6,6 +6,7 @@
 #include <OpenGL/shader/shader.h>
 #include <core/material/material.h>
 #include <vector>
+#include <string>
 
 namespace CG{
 
@@ -33,7 +34,7 @@ namespace CG{
         OpenGLMaterial(const CG::RGBA_Color &color);
 
         //creates a material with the given vertex and fragment shader
-        OpenGLMaterial(const char* vertexShaderData, const char* fragmentShaderData);
+        OpenGLMaterial(const std::string vertexShaderData, const std::string fragmentShaderData);
 
         //Copy constructor: copies the color and deep copies the shader information; doesn't copy the program name
         OpenGLMaterial(const OpenGLMaterial &other);
@@ -44,17 +45,17 @@ namespace CG{
         OpenGLMaterial& operator= (const OpenGLMaterial &other);
 
         //sets a new vertex shader and recompiles the program
-        void setVertexShader(const char* shaderData);
+        void setVertexShader(const std::string shaderData);
 
         //sets a new tesselation shader and recompiles the program
-        void setTesselationControlShader(const char* shaderData);
-        void setTesselationEvaluationShader(const char* shaderData);
+        void setTesselationControlShader(const std::string shaderData);
+        void setTesselationEvaluationShader(const std::string shaderData);
 
         //sets a new geometry shader and recompiles the program
-        void setGeometryShader(const char* shaderData);
+        void setGeometryShader(const std::string shaderData);
 
         //sets a new fragment shader and recompiles the program
-        void setFragmentShader(const char* shaderData);
+        void setFragmentShader(const std::string shaderData);
 
         //queries locations of uniform variables in the program and stores them
         void getUniformLocs();

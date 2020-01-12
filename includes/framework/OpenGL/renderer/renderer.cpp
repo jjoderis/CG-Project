@@ -3,6 +3,8 @@
 
 CG::Renderer::Renderer(){
     glEnable(GL_DEPTH_TEST);
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glPolygonMode(GL_BACK, GL_LINE);
 }
 
 void CG::Renderer::renderMesh(const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix) const{

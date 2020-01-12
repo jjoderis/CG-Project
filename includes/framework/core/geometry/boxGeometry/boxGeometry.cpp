@@ -21,7 +21,7 @@ CG::BoxGeometry::BoxGeometry(float width, float height, float depth)
         { 5, 6, 2 }, //right
         { 5, 4, 6 }, //back
         { 4, 7, 6 }, //back
-        { 4, 0, 3 }, //left
+        { 4, 0, 7 }, //left
         { 0, 3, 7 }, //left
         { 3, 2, 7 }, //top
         { 2, 6, 7 }, //top

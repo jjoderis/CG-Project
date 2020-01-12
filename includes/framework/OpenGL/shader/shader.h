@@ -4,12 +4,13 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <vector>
+#include <string>
 
 namespace CG{
     // Taken from code in this repository https://github.com/openglredbook/examples/tree/master/src
     typedef struct {
         GLenum       type;
-        const char*  shaderData; //string containing shader code or string containing path to file with shader code
+        std::string  shaderData; //string containing shader code or string containing path to file with shader code
         GLuint       shader;
     } ShaderInfo;
 

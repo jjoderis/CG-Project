@@ -40,7 +40,8 @@ GLuint CG::updateShaderProgram(GLuint program, std::vector<CG::ShaderInfo> &shad
         if(!entry.shader){
             entry.shader = glCreateShader(entry.type);
 
-            glShaderSource(entry.shader, 1, &entry.shaderData, 0);
+            const char* shaderText = entry.shaderData.c_str();
+            glShaderSource(entry.shader, 1, &shaderText, 0);
 
             glCompileShader(entry.shader);
 

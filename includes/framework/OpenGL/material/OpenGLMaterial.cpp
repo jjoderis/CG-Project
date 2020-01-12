@@ -1,6 +1,6 @@
 #include "OpenGLMaterial.h"
 
-CG::OpenGLMaterial::OpenGLMaterial(const char* vertexShaderData, const char* fragmentShaderData){
+CG::OpenGLMaterial::OpenGLMaterial(const std::string vertexShaderData, const std::string fragmentShaderData){
     m_shaders.emplace_back(
         ShaderInfo{
             GL_VERTEX_SHADER,
@@ -83,7 +83,7 @@ CG::OpenGLMaterial& CG::OpenGLMaterial::operator= (const OpenGLMaterial &other){
     return *this;
 }
 
-void CG::OpenGLMaterial::setVertexShader(const char* shaderData){
+void CG::OpenGLMaterial::setVertexShader(const std::string shaderData){
     std::vector<ShaderInfo> newShader{
         ShaderInfo{
             GL_VERTEX_SHADER,
@@ -96,7 +96,7 @@ void CG::OpenGLMaterial::setVertexShader(const char* shaderData){
     getUniformLocs();
 }
 
-void CG::OpenGLMaterial::setTesselationControlShader(const char* shaderData){
+void CG::OpenGLMaterial::setTesselationControlShader(const std::string shaderData){
     std::vector<ShaderInfo> newShader{
         ShaderInfo{
             GL_TESS_CONTROL_SHADER,
@@ -109,7 +109,7 @@ void CG::OpenGLMaterial::setTesselationControlShader(const char* shaderData){
     getUniformLocs();
 }
 
-void CG::OpenGLMaterial::setTesselationEvaluationShader(const char* shaderData){
+void CG::OpenGLMaterial::setTesselationEvaluationShader(const std::string shaderData){
     std::vector<ShaderInfo> newShader{
         ShaderInfo{
             GL_TESS_EVALUATION_SHADER,
@@ -122,7 +122,7 @@ void CG::OpenGLMaterial::setTesselationEvaluationShader(const char* shaderData){
     getUniformLocs();
 }
 
-void CG::OpenGLMaterial::setGeometryShader(const char* shaderData){
+void CG::OpenGLMaterial::setGeometryShader(const std::string shaderData){
     std::vector<ShaderInfo> newShader{
         ShaderInfo{
             GL_GEOMETRY_SHADER,
@@ -135,7 +135,7 @@ void CG::OpenGLMaterial::setGeometryShader(const char* shaderData){
     getUniformLocs();
 }
 
-void CG::OpenGLMaterial::setFragmentShader(const char* shaderData){
+void CG::OpenGLMaterial::setFragmentShader(const std::string shaderData){
     std::vector<ShaderInfo> newShader{
         ShaderInfo{
             GL_FRAGMENT_SHADER,

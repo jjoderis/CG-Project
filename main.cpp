@@ -1,6 +1,9 @@
 #include <iostream>
 #include <math.h>
 #include <cstring>
+#include <fstream>
+#include <string>
+#include <cerrno>
 
 #include <core/scene/scene.h>
 #include <core/mesh/mesh.h>
@@ -22,60 +25,18 @@ void handleMouseMovement(GLFWwindow *window, double x, double y);
 void handleWindowResizing(GLFWwindow *window, int width, int height);
 void handleScrolling(GLFWwindow *window, double xOffset, double yOffset);
 
+std::string readTextFile(const char* filePath);
+
 float counter = 0.0f;
 CG::Scene scene{};
 CG::Camera camera{ 1.0, 100, 45, WINDOW_WIDTH/WINDOW_HEIGHT };
 
 void init(){
-
   std::shared_ptr<CG::OpenGLSphereGeometry> geoPtr = std::make_shared<CG::OpenGLSphereGeometry>(CG::OpenGLSphereGeometry{1.0, 30, 30});
   
   std::shared_ptr<CG::OpenGLMaterial> redPtr = std::make_shared<CG::OpenGLMaterial>(CG::OpenGLMaterial{
-    R"(
-      #version 450 core
-
-      layout (location = 0) in vec4 vPosition;
-      layout (location = 1) in vec4 vNormal;
-
-      uniform mat4 modelViewMatrix;
-      uniform mat4 projectionMatrix;
-      uniform mat4 normalMatrix;
-
-      out vec3 iNormal;
-      out vec3 iPosition;
-
-      void main(){
-        iNormal = normalize((normalMatrix * vNormal).xyz);
-        iPosition = (modelViewMatrix * vPosition).xyz;
-        gl_Position = projectionMatrix * vec4(iPosition, 1.0);
-      }
-    )",
-    R"(
-      #version 450 core
-
-      uniform vec4 baseColor;
-
-      in vec3 iNormal;
-      in vec3 iPosition;
-
-      layout (location = 0) out vec4 fColor;
-
-      void main(){
-        vec3 lightVector = iPosition;
-        vec3 reflected = normalize(reflect(lightVector, iNormal));
-        vec3 cameraVector = normalize(-iPosition);
-        float phong = dot(reflected, cameraVector);
-        if(phong>0.0){
-          phong = pow(phong, 100.0*0.4);
-        }else{
-          phong = 0.0;
-        }
-
-        float lambert = dot(normalize(-iPosition), iNormal);
-
-        fColor = vec4(phong * vec3(1.0, 1.0, 1.0) + lambert * baseColor.xyz, 1.0);
-      }
-    )"
+    readTextFile("../media/shaders/phongShader/phong.vert"),
+    readTextFile("../media/shaders/phongShader/phong.frag")
   });
 
   redPtr->setColor(1.0, 0.0, 0.0);
@@ -109,7 +70,7 @@ void init(){
     obj.updateMatrixWorld();
   };
 
-  redSphere->setVelocity(CG::Vector3{0.01, 0.02, 0.0});
+  redSphere->setVelocity(CG::Vector3{0.06, 0.05, 0.2});
 
   redSphere->setAnimation(animation);
 
@@ -224,4 +185,20 @@ void handleScrolling(GLFWwindow *window, double xOffset, double yOffset){
   std::cout << fov << '\n';
   camera.setFOV(fov+yOffset);
   camera.updateProjectionMatrix();
+}
+
+// source: http://insanecoding.blogspot.com/2011/11/how-to-read-in-file-in-c.html
+std::string readTextFile(const char* filePath){
+  std::ifstream in(filePath, std::ios::in | std::ios::binary);
+  if (in)
+  {
+    std::string contents;
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
+    in.close();
+    return(contents);
+  }
+  throw(errno);
 }
