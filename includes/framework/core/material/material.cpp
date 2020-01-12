@@ -14,6 +14,7 @@ CG::Material::Material(const CG::Material &other){
 
 CG::Material& CG::Material::operator= (const CG::Material &other){
     m_color = other.m_color;
+    m_shininess = other.m_shininess;
 
     return *this;
 }
@@ -38,4 +39,11 @@ void CG::Material::setColor(float r, float g, float b, float a){
 
 CG::RGBA_Color& CG::Material::getColor(){
     return m_color;
+}
+
+void CG::Material::setShininess(float shininess){
+    m_shininess = shininess;
+}
+float CG::Material::getShininess(){
+    return m_shininess;
 }

@@ -10,6 +10,9 @@ namespace CG{
         //a base color
         CG::RGBA_Color m_color{ 1.0, 1.0, 1.0, 1.0 };
 
+        //used in e.g. phong shader to calculate specularity
+        float m_shininess{ 30 };
+
     public:
         //creates a material with a basic shader that only renders triangles with the stored color
         Material();
@@ -35,6 +38,9 @@ namespace CG{
         void setColor(RGBA_Color color);
         void setColor(float r, float g, float b, float a);
         RGBA_Color& getColor();
+
+        void setShininess(float dullness);
+        float getShininess();
     };
 }
 

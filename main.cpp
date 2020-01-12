@@ -40,6 +40,7 @@ void init(){
   });
 
   redPtr->setColor(1.0, 0.0, 0.0);
+  redPtr->setShininess(120.0);
 
   std::shared_ptr<CG::Mesh> redSphere(new CG::Mesh{geoPtr, redPtr});
 

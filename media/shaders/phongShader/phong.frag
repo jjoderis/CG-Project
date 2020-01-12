@@ -1,6 +1,7 @@
 #version 450 core
 
 uniform vec4 baseColor;
+uniform float shininess;
 
 in vec3 iNormal;
 in vec3 iPosition;
@@ -12,8 +13,9 @@ void main(){
     vec3 reflected = normalize(reflect(lightVector, iNormal));
     vec3 cameraVector = normalize(-iPosition);
     float phong = dot(reflected, cameraVector);
+
     if(phong>0.0){
-        phong = pow(phong, 100.0*0.4);
+        phong = pow(phong, shininess);
     }else{
         phong = 0.0;
     }

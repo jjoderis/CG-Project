@@ -22,6 +22,7 @@ void CG::Renderer::renderMesh(const Mesh *mesh, const Matrix4 &viewMatrix, const
     glUniformMatrix4fv(material->uniformLocs.modelViewMatrix, 1, GL_FALSE, modelViewMatrix.data());
     glUniformMatrix4fv(material->uniformLocs.projectionMatrix, 1, GL_FALSE, projectionMatrix.data());
     glUniformMatrix4fv(material->uniformLocs.normalMatrix, 1, GL_FALSE, normalMatrix.data());
+    glUniform1f(material->uniformLocs.shininess, material->getShininess());
 
     glBindVertexArray(geometry->getVAO());
     if(geometry->getNumFaces()){

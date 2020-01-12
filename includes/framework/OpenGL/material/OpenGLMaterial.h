@@ -15,6 +15,7 @@ namespace CG{
         GLint modelViewMatrix;
         GLint projectionMatrix;
         GLint normalMatrix;
+        GLint shininess;
     } uniformLocations;
 
     class OpenGLMaterial : public Material{
