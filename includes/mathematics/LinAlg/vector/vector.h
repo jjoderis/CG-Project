@@ -9,61 +9,6 @@
 
 namespace LinAlg
 {
-    //Workaround to make friend functions only with correct template class
-    template <typename T, int size>
-    class Vector;
-
-    template <typename T, int size>
-    std::ostream& operator<< (std::ostream &out, const Vector<T, size> &vector);
-
-    template <typename T, int size>
-    bool operator== (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
-
-    template <typename T, int size>
-    bool operator!= (const Vector<T, size> &vec1, const Vector<T,size> &vec2);
-
-    template <typename T, int size>
-    Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2);
-
-    template <typename T, int size>
-    Vector<T, size> operator+(const Vector<T, size> &vec, T val);   
-
-    template <typename T, int size>
-    Vector<T, size> operator+(T val, const Vector<T, size> &vec);   
-
-    template <typename T, int size>
-    Vector<T, size> operator-(const Vector<T, size> &v1, const Vector<T, size> &v2);
-
-    template <typename T, int size>
-    Vector<T, size> operator-(const Vector<T, size> &vec, T val);   
-
-    template <typename T, int size>
-    Vector<T, size> operator-(T val, const Vector<T, size> &vec);
-
-    template <typename T, int size>
-    Vector<T, size> operator*(const Vector<T, size> &v1, const Vector<T, size> &v2);
-
-    template <typename T, int size>
-    Vector<T, size> operator*(const Vector<T, size> &vec, T val);   
-
-    template <typename T, int size>
-    Vector<T, size> operator*(T val, const Vector<T, size> &vec);
-
-    template <typename T, int size>
-    Vector<T, size> operator/(const Vector<T, size> &v1, const Vector<T, size> &v2);
-
-    template <typename T, int size>
-    Vector<T, size> operator/(const Vector<T, size> &vec, T val);   
-
-    template <typename T, int size>
-    Vector<T, size> operator/(T val, const Vector<T, size> &vec);
-
-    template<typename T, int size>
-    Vector<T, size> orthogonalProject(const Vector<T, size> &v1, const Vector<T, size> &v2);
-
-    template<typename T>
-    Vector<T, 3> cross(const Vector<T, 3> &v1, const Vector<T, 3> &v2);        
-
     //A basic Vector class template for different types like int, float, etc, and different sizes size
     template <typename T, int size>
     class Vector
@@ -156,10 +101,6 @@ namespace LinAlg
             m_data[index] = val;
         }
 
-
-        //overload + to return a new vector that is the sum of the two given vectors
-        friend Vector<T, size> operator+<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
-
         //overload += to add the other vector to this one and return reference to this vector
         Vector<T, size>& operator+= (const Vector<T, size> &other){
 
@@ -169,10 +110,6 @@ namespace LinAlg
 
             return *this;
         }
-
-        //overload + to add the given value to all entries of the given vector and return new vector by value
-        friend Vector<T, size> operator+<T, size> (const Vector<T, size> &vec, T val);
-        friend Vector<T, size> operator+<T, size> (T val, const Vector<T, size> &vec);
 
         //overload += to add a value to every entry of the vector
         Vector<T, size>& operator+= (T val){
@@ -184,9 +121,6 @@ namespace LinAlg
             return *this;
         }
 
-        //overload - to return a new vector that is the difference of the two given vectors
-        friend Vector<T, size> operator-<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
-
         //overload -= to subtract the other vector from this one and return reference to this vector
         Vector<T, size>& operator-= (const Vector<T, size> &other){
 
@@ -196,11 +130,6 @@ namespace LinAlg
 
             return *this;
         }
-
-        //overload - to subtract the given value from all entries of the given vector and return new vector by value
-        friend Vector<T, size> operator-<T, size> (const Vector<T, size> &vec, T val);
-        //overload - to return a new vector that is equal to difference of the given value and each vector entry
-        friend Vector<T, size> operator-<T, size> (T val, const Vector<T, size> &vec);
 
         //overload -= to subtract a value from every entry of the vector
         Vector<T, size>& operator-= (T val){
@@ -223,9 +152,6 @@ namespace LinAlg
             return newVec;    
         }
 
-        //overload * to do element wise multiplication and return the resulting vector
-        friend Vector<T, size> operator*<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
-
         //overload * set this vector to result of element wise multiplication with given vector and return reference to it
         Vector<T, size>& operator*= (const Vector<T, size> &other){
 
@@ -235,10 +161,6 @@ namespace LinAlg
 
             return *this;
         } 
-
-        //overload * to return a vector that is equal to this vector multiplied by a scalar
-        friend Vector<T, size> operator*<T, size> (const Vector<T, size> &vec, T val);
-        friend Vector<T, size> operator*<T, size> (T val, const Vector<T, size> &vec);
 
         //overload *= to multiply every entry of the vector with a given value
         Vector<T, size>& operator*= (T val){
@@ -250,9 +172,6 @@ namespace LinAlg
             return *this;
         }
 
-        //overload / to do element wise division and return the resulting vector
-        friend Vector<T, size> operator/<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
-
         //overload / set this vector to result of element wise division with given vector and return reference to it
         Vector<T, size>& operator/= (const Vector<T, size> &other){
 
@@ -262,10 +181,6 @@ namespace LinAlg
 
             return *this;
         } 
-
-        //overload / to return a vector that is equal to (this vector divided by a scalar)/(a scalar divided by this vector)
-        friend Vector<T, size> operator/<T, size> (const Vector<T, size> &vec, T val);
-        friend Vector<T, size> operator/<T, size> (T val, const Vector<T, size> &vec);
 
         //overload /= to divide every entry of the vector by a given value
         Vector<T, size>& operator/= (T val){
@@ -315,20 +230,6 @@ namespace LinAlg
 
             return true;
         }
-
-        //orthogonaly project v1 onto v2
-        friend Vector<T, size> orthogonalProject<T, size> (const Vector<T, size> &v1, const Vector<T, size> &v2);
-
-        //cross product between v1 and v2; only defined for Vectors<T, 3>
-        friend Vector<T, 3> cross<T> (const Vector<T, 3> &v1, const Vector<T, 3> &v2);
-
-        //overload == operator; this is strict equality which is not necessarily what we want for floating point values
-        friend bool operator==<T, size> (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
-        friend bool operator!=<T, size> (const Vector<T, size> &vec1, const Vector<T, size> &vec2);
-
-        //overload << to be able to write vector to console
-        friend std::ostream& operator<<<T, size> (std::ostream &out, const Vector<T, size> &vector);
-
     };
 
     template <typename T, int size>
@@ -336,7 +237,7 @@ namespace LinAlg
         Vector<T, size> newVec;
 
         for(int i = 0; i < size; ++i){
-            newVec.m_data[i] = v1.m_data[i] + v2.m_data[i];
+            newVec.set(i, v1.at(i) + v2.at(i));
         }     
 
         return newVec;
@@ -346,9 +247,7 @@ namespace LinAlg
     Vector<T, size> operator+ (const Vector<T, size> &vec, T val){
         Vector<T, size> newVec{ vec };
 
-        for(int i = 0; i < size; ++i){
-            newVec.m_data[i] += val;
-        }
+        newVec += val;
 
         return newVec;
     }
@@ -357,9 +256,7 @@ namespace LinAlg
     Vector<T, size> operator+ (T val, const Vector<T, size> &vec){
         Vector<T, size> newVec{ vec };
 
-        for(int i = 0; i < size; ++i){
-            newVec.m_data[i] += val;
-        }
+        newVec += val;
 
         return newVec;
     }
@@ -369,7 +266,7 @@ namespace LinAlg
         Vector<T, size> newVec;
 
         for(int i = 0; i < size; ++i){
-            newVec.m_data[i] = v1.m_data[i] - v2.m_data[i];
+            newVec.at(i) = v1.at(i) - v2.at(i);
         }     
 
         return newVec;
@@ -379,9 +276,7 @@ namespace LinAlg
     Vector<T, size> operator- (const Vector<T, size> &vec, T val){
         Vector<T, size> newVec{ vec };
 
-        for(int i = 0; i < size; ++i){
-            newVec.m_data[i] -= val;
-        }
+        newVec -= val;
 
         return newVec;
     }
@@ -391,7 +286,7 @@ namespace LinAlg
         Vector<T, size> newVec;
 
         for(int i = 0; i < size; ++i){
-            newVec.m_data[i] = val - vec.m_data[i];
+            newVec.at(i) = val - vec.at(i);
         }
 
         return newVec;
@@ -402,7 +297,7 @@ namespace LinAlg
         Vector<T, size> newVec;
 
         for(int i = 0; i < size; ++i){
-            newVec.m_data[i] = v1.m_data[i] * v2.m_data[i];
+            newVec.at(i) = v1.at(i) * v2.at(i);
         }     
 
         return newVec;
@@ -412,9 +307,7 @@ namespace LinAlg
     Vector<T, size> operator* (const Vector<T, size> &vec, T val){
         Vector<T, size> newVec{ vec };
 
-        for(int i = 0; i < size; ++i){
-            newVec.m_data[i] *= val;
-        }
+        newVec *= val;
 
         return newVec;
     }
@@ -423,9 +316,7 @@ namespace LinAlg
     Vector<T, size> operator* (T val, const Vector<T, size> &vec){
         Vector<T, size> newVec{ vec };
 
-        for(int i = 0; i < size; ++i){
-            newVec.m_data[i] *= val;
-        }
+        newVec *= val;
 
         return newVec;
     }
@@ -435,7 +326,7 @@ namespace LinAlg
         Vector<T, size> newVec;
 
         for(int i = 0; i < size; ++i){
-            newVec.m_data[i] = v1.m_data[i] / v2.m_data[i];
+            newVec.at(i) = v1.at(i) / v2.at(i);
         }     
 
         return newVec;
@@ -445,9 +336,7 @@ namespace LinAlg
     Vector<T, size> operator/ (const Vector<T, size> &vec, T val){
         Vector<T, size> newVec{ vec };
 
-        for(int i = 0; i < size; ++i){
-            newVec.m_data[i] /= val;
-        }
+        newVec /= val;
 
         return newVec;
     }
@@ -457,7 +346,7 @@ namespace LinAlg
         Vector<T, size> newVec;
 
         for(int i = 0; i < size; ++i){
-            newVec.m_data[i] = val / vec.m_data[i];
+            newVec.at(i) = val / vec.at(i);
         }
 
         return newVec;
@@ -475,19 +364,30 @@ namespace LinAlg
         Vector<T, size> newVec{ v2 };
 
         for(int i = 0; i < size; ++i){
-            newVec.m_data[i] *= t;
+            newVec.at(i) *= t;
         }
 
         return newVec;
+    }
+
+    template<typename T, int size>
+    double dot(const Vector<T, size> &v1, const Vector<T, size> &v2){
+        double sum = 0.0;
+        
+        for(int i = 0; i < size; ++i){
+            sum += v1.at(i) * v2.at(i);
+        }
+
+        return sum;
     }
 
     template<typename T>
     Vector<T, 3> cross(const Vector<T, 3> &v1, const Vector<T, 3> &v2){
         Vector<T, 3> newVec;
 
-        newVec.m_data[0] = v1.m_data[1] * v2.m_data[2] - v1.m_data[2] * v2.m_data[1];
-        newVec.m_data[1] = v1.m_data[2] * v2.m_data[0] - v1.m_data[0] * v2.m_data[2];
-        newVec.m_data[2] = v1.m_data[0] * v2.m_data[1] - v1.m_data[1] * v2.m_data[0];
+        newVec.at(0) = v1.at(1) * v2.at(2) - v1.at(2) * v2.at(1);
+        newVec.at(1) = v1.at(2) * v2.at(0) - v1.at(0) * v2.at(2);
+        newVec.at(2) = v1.at(0) * v2.at(1) - v1.at(1) * v2.at(0);
 
         return newVec;
     }
@@ -496,7 +396,7 @@ namespace LinAlg
     bool operator== (const Vector<T, size> &vec1, const Vector<T, size> &vec2){
         
         for(int i = 0; i < size; ++i){
-            if(vec1.m_data[i] != vec2.m_data[i]){
+            if(vec1.at(i) != vec2.at(i)){
                 return false;
             }
         }
@@ -511,10 +411,10 @@ namespace LinAlg
 
     template <typename T, int size>
     std::ostream& operator<< (std::ostream &out, const Vector<T, size> &vector){
-        out << "[ " << vector.m_data[0];
+        out << "[ " << vector.at(0);
 
         for(int i = 1; i < size; ++i){
-            out << ", " << vector.m_data[i];
+            out << ", " << vector.at(i);
         }
 
         out << " ]";
