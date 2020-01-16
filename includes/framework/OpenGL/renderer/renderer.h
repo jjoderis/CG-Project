@@ -18,6 +18,8 @@ namespace CG{
 
     GLenum m_drawMode{ GL_TRIANGLES };
 
+    unsigned int m_tranformFeedback{ 0 };
+
     void (*m_beforeAll)(const Renderer &renderer, Matrix4 &viewMatrix, Matrix4 &viewMatrixInverse, Matrix4 &projectionMatrix){ nullptr };
     void (*m_beforeRender)(const Renderer &renderer, const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){ nullptr };
     void (*m_mainRender)(const Renderer &renderer, const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){ renderMesh };
@@ -46,6 +48,9 @@ namespace CG{
     
         void setAfterAll(void (*afterAll)(const Renderer &renderer, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix));
         void deleteAfterAll();
+
+        unsigned int getTransformFeedback() const;
+        void setTransformFeedback(unsigned int name);
     };
 
 }

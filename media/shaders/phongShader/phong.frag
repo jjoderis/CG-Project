@@ -21,7 +21,7 @@ void main(){
         phong = 0.0;
     }
 
-    float lambert = dot(normalize(-iPosition), iNormal);
+    float lambert = dot(normalize(lightPosition-iPosition), iNormal);
 
     fColor = vec4(phong * vec3(1.0, 1.0, 1.0) + lambert * baseColor.xyz, 1.0);
 }

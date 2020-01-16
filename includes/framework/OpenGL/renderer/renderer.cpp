@@ -109,3 +109,11 @@ void CG::Renderer::setAfterAll(void (*afterAll)(const Renderer &renderer, const 
 void CG::Renderer::deleteAfterAll(){
     m_afterAll = nullptr;
 }
+
+unsigned int CG::Renderer::getTransformFeedback() const{
+    return m_tranformFeedback;
+}
+
+void CG::Renderer::setTransformFeedback(unsigned int name){
+    m_tranformFeedback = name;
+}
