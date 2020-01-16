@@ -11,54 +11,6 @@
 namespace LinAlg
 {
     template <typename T, int rows, int cols>
-    class Matrix;
-
-    template <typename T, int rows, int cols>
-    bool operator== (const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
-    template <typename T, int rows, int cols>
-    std::ostream& operator<< (std::ostream &out, Matrix<T, rows, cols> &mat);
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator+(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator+(const Matrix<T, rows, cols> &mat, T val);   
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator+(T val, const Matrix<T, rows, cols> &mat);
-    
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator-(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator-(const Matrix<T, rows, cols> &mat, T val);   
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator-(T val, const Matrix<T, rows, cols> &mat);
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator*(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator*(const Matrix<T, rows, cols> &mat, T val);   
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator*(T val, const Matrix<T, rows, cols> &mat);
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator/(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator/(const Matrix<T, rows, cols> &mat, T val);   
-
-    template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator/(T val, const Matrix<T, rows, cols> &mat);
-
-    template <typename T, int rows, int cols>
-    Matrix<T, cols, rows> transpose(const Matrix<T, rows, cols> &mat);
-
-    template <typename T, int rows, int cols>
     class Matrix
     {
     protected:
@@ -148,10 +100,6 @@ namespace LinAlg
             return *this;
         }
 
-        //creates new matrix that is the transpose of given matrix and returns it
-        friend Matrix<T, cols, rows> transpose<T, rows, cols>(const Matrix<T, rows, cols> &mat);
-        friend Matrix<T, rows, cols> transpose<T, cols, rows>(const Matrix<T, cols, rows> &mat);
-
         //sets square matrix to the transpose of itself 
         Matrix<T, rows, cols>& transpose(){
             assert(rows == cols);
@@ -180,9 +128,6 @@ namespace LinAlg
             return sum;
         }
 
-        //overload + to return a new matrix that is the sum of the two given matrices
-        friend Matrix<T, rows, cols> operator+<T, rows, cols> (const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
         //overload += to add the other matrix to this one and return reference to this matrix
         Matrix<T, rows, cols>& operator+= (const Matrix<T, rows, cols> &other){
 
@@ -192,10 +137,6 @@ namespace LinAlg
 
             return *this;
         }
-
-        //overload + to add the given value to all entries of the given matrix and return new matrix by value
-        friend Matrix<T, rows, cols> operator+<T, rows, cols> (const Matrix<T, rows, cols> &mat, T val);
-        friend Matrix<T, rows, cols> operator+<T, rows, cols> (T val, const Matrix<T, rows, cols> &mat);
 
         //overload += to add a value to every entry of the vector
         Matrix<T, rows, cols>& operator+= (T val){
@@ -207,9 +148,6 @@ namespace LinAlg
             return *this;
         }
 
-        //overload - to return a new matrix that is the difference of the two given matrices
-        friend Matrix<T, rows, cols> operator-<T, rows, cols> (const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
         //overload -= to subtract the other matrix from this one and return reference to this matrix
         Matrix<T, rows, cols>& operator-= (const Matrix<T, rows, cols> &other){
 
@@ -219,11 +157,6 @@ namespace LinAlg
 
             return *this;
         }
-
-        //overload - to subtract the given value from all entries of the given matrix and return new matrix by value
-        friend Matrix<T, rows, cols> operator-<T, rows, cols> (const Matrix<T, rows, cols> &mat, T val);
-        //overload - to return a new matrix that is equal to difference of the given value and each matrix entry
-        friend Matrix<T, rows, cols> operator-<T, rows, cols> (T val, const Matrix<T, rows, cols> &mat);
 
         //overload -= to subtract a value from every entry of the matrix
         Matrix<T, rows, cols>& operator-= (T val){
@@ -246,9 +179,6 @@ namespace LinAlg
             return newMat;    
         }
 
-        //overload * to do element wise multiplication and return the resulting matrix
-        friend Matrix<T, rows, cols> operator*<T, rows, cols> (const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
         //overload * set this matrix to result of element wise multiplication with given matrix and return reference to it
         Matrix<T, rows, cols>& operator*= (const Matrix<T, rows, cols> &other){
 
@@ -257,11 +187,7 @@ namespace LinAlg
             }
 
             return *this;
-        } 
-
-        //overload * to return a matrix that is equal to this matrix multiplied by a scalar
-        friend Matrix<T, rows, cols> operator*<T, rows, cols> (const Matrix<T, rows, cols> &mat, T val);
-        friend Matrix<T, rows, cols> operator*<T, rows, cols> (T val, const Matrix<T, rows, cols> &mat);
+        }
 
         //overload *= to multiply every entry of the matrix with a given value
         Matrix<T, rows, cols>& operator*= (T val){
@@ -273,9 +199,6 @@ namespace LinAlg
             return *this;
         }
 
-        //overload / to do element wise division and return the resulting matrix
-        friend Matrix<T, rows, cols> operator/<T, rows, cols> (const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
         //overload / set this matrix to result of element wise division with given matrix and return reference to it
         Matrix<T, rows, cols>& operator/= (const Matrix<T, rows, cols> &other){
             for(int i = 0; i < rows * cols; ++i){
@@ -283,11 +206,7 @@ namespace LinAlg
             }
 
             return *this;
-        } 
-
-        //overload / to return a matrix that is equal to (this matrix divided by a scalar)/(a scalar divided by this matrix)
-        friend Matrix<T, rows, cols> operator/<T, rows, cols> (const Matrix<T, rows, cols> &mat, T val);
-        friend Matrix<T, rows, cols> operator/<T, rows, cols> (T val, const Matrix<T, rows, cols> &mat);
+        }
 
         //overload /= to divide every entry of the matrix by a given value
         Matrix<T, rows, cols>& operator/= (T val){
@@ -298,12 +217,6 @@ namespace LinAlg
 
             return *this;
         }
-
-        //compare matrices element wise
-        friend bool operator==<T, rows, cols> (const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2);
-
-        //overload << operator to print matrix to std::out
-        friend std::ostream& operator<<<T, rows, cols> (std::ostream &out, Matrix<T, rows, cols> &mat);
     };
 
     //computes matrix matrix multiplication and returns the resulting matrix
@@ -346,7 +259,7 @@ namespace LinAlg
 
         for(int col = 0; col < cols; ++col){
             for(int row = 0; row < rows; ++row){
-                trans.m_data[row * cols + col] = mat.m_data[col * rows + row];
+                trans.at(col, row) = mat.at(row, col);
             }
         }
 
@@ -355,11 +268,9 @@ namespace LinAlg
 
     template <typename T, int rows, int cols>
     Matrix<T, rows, cols> operator+(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2){
-        Matrix<T, rows, cols> newMat;
+        Matrix<T, rows, cols> newMat{ m1 };
 
-        for(int i = 0; i < rows*cols; ++i){
-            newMat.m_data[i] = m1.m_data[i] + m2.m_data[i];
-        }     
+        newMat += m2; 
 
         return newMat;
     }
@@ -368,31 +279,21 @@ namespace LinAlg
     Matrix<T, rows, cols> operator+ (const Matrix<T, rows, cols> &mat, T val){
         Matrix<T, rows, cols> newMat{ mat };
 
-        for(int i = 0; i < rows*cols; ++i){
-            newMat.m_data[i] += val;
-        }
+        newMat += val;
         
         return newMat;
     }
 
     template <typename T, int rows, int cols>
     Matrix<T, rows, cols> operator+ (T val, const Matrix<T, rows, cols> &mat){
-        Matrix<T, rows, cols> newMat{ mat };
-
-        for(int i = 0; i < rows*cols; ++i){
-            newMat.m_data[i] += val;
-        }
-
-        return newMat;
+        return mat + val;
     }
 
     template <typename T, int rows, int cols>
     Matrix<T, rows, cols> operator-(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2){
-        Matrix<T, rows, cols> newMat;
+        Matrix<T, rows, cols> newMat{ m1 };
 
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] = m1.m_data[i] - m2.m_data[i];
-        }     
+        newMat -= m2;
 
         return newMat;
     }
@@ -401,19 +302,19 @@ namespace LinAlg
     Matrix<T, rows, cols> operator- (const Matrix<T, rows, cols> &mat, T val){
         Matrix<T, rows, cols> newMat{ mat };
 
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] -= val;
-        }
+        newMat -= val;
 
         return newMat;
     }
 
     template <typename T, int rows, int cols>
     Matrix<T, rows, cols> operator- (T val, const Matrix<T, rows, cols> &mat){
-        Matrix<T, rows, cols> newMat;
+        Matrix<T, rows, cols> newMat{ mat };
 
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] = val - mat.m_data[i];
+        for(int i = 0; i < rows; ++i){
+            for(int j = 0; j < cols; ++j){
+                newMat.at(i, j) = val - newMat.at(i, j);
+            }
         }
 
         return newMat;
@@ -421,11 +322,9 @@ namespace LinAlg
 
     template <typename T, int rows, int cols>
     Matrix<T, rows, cols> operator*(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2){
-        Matrix<T, rows, cols> newMat;
+        Matrix<T, rows, cols> newMat{ m1 };
 
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] = m1.m_data[i] * m2.m_data[i];
-        }     
+        newMat *= m2;
 
         return newMat;
     }
@@ -434,33 +333,23 @@ namespace LinAlg
     Matrix<T, rows, cols> operator* (const Matrix<T, rows, cols> &mat, T val){
         Matrix<T, rows, cols> newMat{ mat };
 
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] *= val;
-        }
+        newMat *= val;
 
         return newMat;
     }
 
     template <typename T, int rows, int cols>
     Matrix<T, rows, cols> operator* (T val, const Matrix<T, rows, cols> &mat){
-        Matrix<T, rows, cols> newMat{ mat };
-
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] *= val;
-        }
-
-        return newMat;
+        return mat * val;
     }
 
 
 
     template <typename T, int rows, int cols>
     Matrix<T, rows, cols> operator/(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2){
-        Matrix<T, rows, cols> newMat;
+        Matrix<T, rows, cols> newMat{ m1 };
 
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] = m1.m_data[i] / m2.m_data[i];
-        }     
+        newMat /= m2;
 
         return newMat;
     }
@@ -469,19 +358,19 @@ namespace LinAlg
     Matrix<T, rows, cols> operator/ (const Matrix<T, rows, cols> &mat, T val){
         Matrix<T, rows, cols> newMat{ mat };
 
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] /= val;
-        }
+        newMat /= val;
 
         return newMat;
     }
 
     template <typename T, int rows, int cols>
     Matrix<T, rows, cols> operator/ (T val, const Matrix<T, rows, cols> &mat){
-        Matrix<T, rows, cols> newMat;
+        Matrix<T, rows, cols> newMat{ mat };
 
-        for(int i = 0; i < rows * cols; ++i){
-            newMat.m_data[i] = val / mat.m_data[i];
+        for(int i = 0; i < rows; ++i){
+            for(int j = 0; j < cols; ++j){
+                newMat.at(i,j) = val / newMat.at(i, j);
+            }
         }
 
         return newMat;
@@ -489,9 +378,12 @@ namespace LinAlg
 
     template <typename T, int rows, int cols>
     bool operator== (const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2){
-        for(int i = 0; i < rows*cols; ++i){
-            if(m1.m_data[i] != m2.m_data[i]){
-                return false;
+        
+        for(int i = 0; i < rows; ++i){
+            for(int j = 0; j < cols; ++j){
+                if(m1.at(i, j) != m2.at(i, j)){
+                    return false;
+                }
             }
         }
 
@@ -519,8 +411,5 @@ namespace LinAlg
         return out;
     }
 }
-
-
-
 
 #endif
