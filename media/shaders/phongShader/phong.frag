@@ -5,11 +5,12 @@ uniform float shininess;
 
 in vec3 iNormal;
 in vec3 iPosition;
+in vec3 lightPosition;
 
 layout (location = 0) out vec4 fColor;
 
 void main(){
-    vec3 lightVector = iPosition;
+    vec3 lightVector = iPosition - lightPosition;
     vec3 reflected = normalize(reflect(lightVector, iNormal));
     vec3 cameraVector = normalize(-iPosition);
     float phong = dot(reflected, cameraVector);

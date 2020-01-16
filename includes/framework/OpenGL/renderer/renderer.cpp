@@ -19,6 +19,8 @@ void CG::Renderer::renderMesh(const Mesh *mesh, const Matrix4 &viewMatrix, const
     glUseProgram(material->getProgram());
 
     glUniform4fv(material->uniformLocs.baseColor, 1, material->getColor().data());
+    glUniformMatrix4fv(material->uniformLocs.modelMatrix, 1, GL_FALSE, mesh->getMatrixWorld().data());
+    glUniformMatrix4fv(material->uniformLocs.viewMatrix, 1, GL_FALSE, viewMatrix.data());
     glUniformMatrix4fv(material->uniformLocs.modelViewMatrix, 1, GL_FALSE, modelViewMatrix.data());
     glUniformMatrix4fv(material->uniformLocs.projectionMatrix, 1, GL_FALSE, projectionMatrix.data());
     glUniformMatrix4fv(material->uniformLocs.normalMatrix, 1, GL_FALSE, normalMatrix.data());

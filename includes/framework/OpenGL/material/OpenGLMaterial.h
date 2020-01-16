@@ -12,6 +12,8 @@ namespace CG{
 
     typedef struct {
         GLint baseColor;
+        GLint modelMatrix;
+        GLint viewMatrix;
         GLint modelViewMatrix;
         GLint projectionMatrix;
         GLint normalMatrix;

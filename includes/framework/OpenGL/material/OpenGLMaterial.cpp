@@ -154,6 +154,8 @@ void CG::OpenGLMaterial::getUniformLocs(){
     uniformLocs.projectionMatrix = glGetUniformLocation(m_program, "projectionMatrix");
     uniformLocs.normalMatrix = glGetUniformLocation(m_program, "normalMatrix");
     uniformLocs.shininess = glGetUniformLocation(m_program, "shininess");
+    uniformLocs.modelMatrix = glGetUniformLocation(m_program, "modelMatrix");
+    uniformLocs.viewMatrix = glGetUniformLocation(m_program, "viewMatrix");
 }
 
 int CG::OpenGLMaterial::getProgram() const{
