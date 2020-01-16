@@ -37,7 +37,7 @@ add_subdirectory( ${INCLUDE_DIR}/framework )
 if(NOT BUILD_TESTS)
 
     #add executable
-    add_executable(CG-Project main.cpp)
+    add_executable(CG-Project main.cpp setUpCGStuff.cpp setUpInputHandlers.cpp)
 
     target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew Math_Util CG_Framework)
 

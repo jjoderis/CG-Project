@@ -28,9 +28,9 @@ void CG::renderMesh(const Renderer &renderer, const Mesh *mesh, const Matrix4 &v
 
     glBindVertexArray(geometry->getVAO());
     if(geometry->getNumFaces()){
-        glDrawElements(renderer.getDrawMode(), 3 * geometry->getNumFaces(), GL_UNSIGNED_INT, NULL);
+        glDrawElements(material->getDrawMode(), 3 * geometry->getNumFaces(), GL_UNSIGNED_INT, NULL);
     }else{
-        glDrawArrays(renderer.getDrawMode(), 0, geometry->getNumVertices());
+        glDrawArrays(material->getDrawMode(), 0, geometry->getNumVertices());
     }
 
     for(const std::shared_ptr<Mesh> &child : mesh->getChildren()){

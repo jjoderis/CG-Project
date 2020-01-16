@@ -162,3 +162,11 @@ int CG::OpenGLMaterial::getProgram() const{
     return m_program;
 }
 
+void CG::OpenGLMaterial::setDrawMode(GLenum drawMode){
+    m_drawMode = drawMode;
+}
+
+GLenum CG::OpenGLMaterial::getDrawMode() const{
+    return m_drawMode;
+}
+

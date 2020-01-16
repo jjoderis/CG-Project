@@ -27,6 +27,8 @@ namespace CG{
         //a collection of shaderInformation that contains all stages of the shaderProgram
         std::vector<CG::ShaderInfo> m_shaders;
 
+        GLenum m_drawMode{ GL_TRIANGLES };
+
     public:
         //the locations of all uniform variables in the shader program
         uniformLocations uniformLocs;
@@ -65,6 +67,8 @@ namespace CG{
 
         int getProgram() const;
 
+        void setDrawMode(GLenum drawMode);
+        GLenum getDrawMode() const;
     };
 
 }
