@@ -31,6 +31,8 @@ std::string readTextFile(const char* filePath){
   throw(errno);
 }
 
+void setUpRenderer(CG::Renderer &renderer);
+
 
 void setUp(CG::Scene &scene, CG::Camera &camera, CG::Renderer &renderer){
     (void)camera;
@@ -117,4 +119,18 @@ void setUp(CG::Scene &scene, CG::Camera &camera, CG::Renderer &renderer){
 
     scene.addChild(redSphere);
     scene.addChild(yellowCube);
+
+    setUpRenderer(renderer);
+}
+
+void setUpRenderer(CG::Renderer &renderer){
+    // (void)renderer;
+
+    renderer.setRenderFunction([](CG::Renderer &renderer, CG::Scene &scene, CG::Camera &camera){
+        (void)renderer;
+        (void)scene;
+        (void)camera;
+
+        std::cout << "Test\n";
+    });
 }

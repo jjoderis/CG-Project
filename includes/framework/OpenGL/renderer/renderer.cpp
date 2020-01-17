@@ -7,7 +7,7 @@ CG::Renderer::Renderer(){
     glPolygonMode(GL_BACK, GL_LINE);
 }
 
-void CG::renderMesh(const Renderer &renderer, const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){
+void CG::renderMesh(Renderer &renderer, const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){
     std::shared_ptr<OpenGLMaterial> material{ std::dynamic_pointer_cast<OpenGLMaterial>(mesh->getMaterial()) };
     std::shared_ptr<OpenGLGeometry> geometry{ std::dynamic_pointer_cast<OpenGLGeometry>(mesh->getGeometry()) }; 
 
@@ -38,7 +38,7 @@ void CG::renderMesh(const Renderer &renderer, const Mesh *mesh, const Matrix4 &v
     }
 }
 
-void CG::Renderer::render(const Scene &scene, const Camera &camera) const{
+void CG::renderScene(CG::Renderer &renderer, CG::Scene &scene, CG::Camera &camera){
     glClearBufferfv(GL_COLOR, 0, scene.getBackground().data());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -46,74 +46,31 @@ void CG::Renderer::render(const Scene &scene, const Camera &camera) const{
     Matrix4 viewMatrixInverse = camera.getMatrixWorld();
     Matrix4 projectionMatrix = camera.getProjectionMatrix();
 
-    if (m_beforeAll) {
-        m_beforeAll(*this, viewMatrix, viewMatrixInverse, projectionMatrix);
-    }
-
     for(const std::shared_ptr<Mesh> &mesh : scene.getChildren()){
-        if (m_beforeRender) {
-            m_beforeRender(*this, mesh.get(), viewMatrix, viewMatrixInverse, projectionMatrix);
-        }
 
         if(mesh->isAnimated){
             mesh->animate();
         }
 
-        m_mainRender(*this, mesh.get(), viewMatrix, viewMatrixInverse, projectionMatrix);
-
-        if (m_afterRender) {
-            m_afterRender(*this, mesh.get(), viewMatrix, viewMatrixInverse, projectionMatrix);
-        }
+        renderMesh(renderer, mesh.get(), viewMatrix, viewMatrixInverse, projectionMatrix);
     }
+}
 
-    if (m_afterAll) {
-        m_afterAll(*this, viewMatrix, viewMatrixInverse, projectionMatrix);
-    }
+void CG::Renderer::render(CG::Scene &scene, CG::Camera &camera){
+    m_renderFunction(*this, scene, camera);
 }
 
 void CG::Renderer::setDrawMode(GLenum drawMode){
     m_drawMode = drawMode;
 }
-GLenum CG::Renderer::getDrawMode() const{
+inline GLenum CG::Renderer::getDrawMode() const{
     return m_drawMode;
 }
 
-void CG::Renderer::setBeforeAll(void (*beforeAll)(const Renderer &renderer, Matrix4 &viewMatrix, Matrix4 &viewMatrixInverse, Matrix4 &projectionMatrix)){
-    m_beforeAll = beforeAll;
-}
-void CG::Renderer::deleteBeforeAll(){
-    m_beforeAll = nullptr;
-}
-
-void CG::Renderer::setBeforeRender(void (*beforeRender)(const Renderer &renderer, const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)){
-    m_beforeRender = beforeRender;
-}
-void CG::Renderer::deleteBeforeRender(){
-    m_beforeRender = nullptr;
-}
-
-void CG::Renderer::setMainRender(void (*mainRender)(const Renderer &renderer, const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)){
-    m_mainRender = mainRender;
-}
-
-void CG::Renderer::setAfterRender(void (*afterRender)(const Renderer &renderer, const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)){
-    m_afterRender = afterRender;
-}
-void CG::Renderer::deleteAfterRender(){
-    m_afterRender = nullptr;
-}
-
-void CG::Renderer::setAfterAll(void (*afterAll)(const Renderer &renderer, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)){
-    m_afterAll = afterAll;
-}
-void CG::Renderer::deleteAfterAll(){
-    m_afterAll = nullptr;
-}
-
-unsigned int CG::Renderer::getTransformFeedback() const{
+inline unsigned int& CG::Renderer::getTransformFeedback(){
     return m_tranformFeedback;
 }
 
-void CG::Renderer::setTransformFeedback(unsigned int name){
-    m_tranformFeedback = name;
+void CG::Renderer::setRenderFunction(void(*renderFunction)(Renderer &renderer, Scene &scene, Camera &camera)){
+    m_renderFunction = renderFunction;
 }
