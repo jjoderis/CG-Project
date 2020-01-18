@@ -1,6 +1,6 @@
 #version 420 core
 
-uniform mat4 model_matrix;
+uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 uniform int triangle_count;
 
@@ -94,5 +94,5 @@ void main(void){
 
     velocity_out = new_velocity * 0.9999;
     position_out = new_position;
-    gl_Position = projection_matrix * (model_matrix * position);
+    gl_Position = projection_matrix * (view_matrix * position);
 }

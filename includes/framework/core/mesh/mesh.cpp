@@ -1,20 +1,24 @@
 #include "mesh.h"
 
-CG::Mesh::Mesh() : Object3D() {}
+template <typename geometryClass, typename materialClass>
+CG::Mesh<geometryClass, materialClass>::Mesh() : Object3D() {}
 
-CG::Mesh::Mesh(const CG::Geometry &geometry, const CG::Material &material) 
+template <typename geometryClass, typename materialClass>
+CG::Mesh<geometryClass, materialClass>::Mesh(const geometryClass &geometry, const materialClass &material) 
     : Object3D(),
-      m_geometry(std::make_shared<CG::Geometry>(geometry)),
-      m_material(std::make_shared<CG::Material>(material))
+      m_geometry(std::make_shared<geometryClass>(geometry)),
+      m_material(std::make_shared<materialClass>(material))
 {}
 
-CG::Mesh::Mesh(const std::shared_ptr<CG::Geometry> &geometry, const std::shared_ptr<CG::Material> &material)
+template <typename geometryClass, typename materialClass>
+CG::Mesh<geometryClass, materialClass>::Mesh(const std::shared_ptr<geometryClass> &geometry, const std::shared_ptr<materialClass> &material)
     : Object3D(),
       m_geometry{ geometry },
       m_material{ material }
 {}
 
-CG::Mesh::Mesh(const Mesh &other)
+template <typename geometryClass, typename materialClass>
+CG::Mesh<geometryClass, materialClass>::Mesh(const Mesh &other)
     : Object3D(other),
       m_geometry(other.m_geometry),
       m_material(other.m_material),
@@ -22,7 +26,8 @@ CG::Mesh::Mesh(const Mesh &other)
       m_children{other.m_children}
 {}
 
-CG::Mesh& CG::Mesh::operator= (const CG::Mesh &other){
+template <typename geometryClass, typename materialClass>
+CG::Mesh<geometryClass, materialClass>& CG::Mesh<geometryClass, materialClass>::operator= (const CG::Mesh<geometryClass, materialClass> &other){
 
     if(&other == this){
         return *this;
@@ -38,7 +43,8 @@ CG::Mesh& CG::Mesh::operator= (const CG::Mesh &other){
     return *this;
 }
 
-void CG::Mesh::updateMatrixWorld() {
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::updateMatrixWorld() {
     CG::Object3D::updateMatrixWorld();
 
     if(m_parent.lock()){
@@ -51,35 +57,58 @@ void CG::Mesh::updateMatrixWorld() {
     }
 }
 
-void CG::Mesh::setGeometry(const CG::Geometry &geometry){
-    m_geometry = std::make_shared<CG::Geometry>(geometry);
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::setName(std::string &name){
+    m_name = name;
 }
 
-void CG::Mesh::setGeometry(const std::shared_ptr<CG::Geometry> &geometry){
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::setName(const char* name){
+    m_name = name;
+}
+
+template <typename geometryClass, typename materialClass>
+const std::string& CG::Mesh<geometryClass, materialClass>::getName(){
+    return m_name;
+}
+
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::setGeometry(const geometryClass &geometry){
+    m_geometry = std::make_shared<geometryClass>(geometry);
+}
+
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::setGeometry(const std::shared_ptr<geometryClass> &geometry){
     m_geometry = geometry;
 }
 
-std::shared_ptr<CG::Geometry> CG::Mesh::getGeometry() const{
+template <typename geometryClass, typename materialClass>
+std::shared_ptr<geometryClass> CG::Mesh<geometryClass, materialClass>::getGeometry() const{
     return m_geometry;
 }
 
-void CG::Mesh::setMaterial(const CG::Material &material){
-    m_material = std::make_shared<CG::Material>(material);
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::setMaterial(const materialClass &material){
+    m_material = std::make_shared<materialClass>(material);
 }
 
-void CG::Mesh::setMaterial(const std::shared_ptr<CG::Material> &material){
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::setMaterial(const std::shared_ptr<materialClass> &material){
     m_material = material;
 }
 
-std::shared_ptr<CG::Material> CG::Mesh::getMaterial() const{
+template <typename geometryClass, typename materialClass>
+std::shared_ptr<materialClass> CG::Mesh<geometryClass, materialClass>::getMaterial() const{
     return m_material;
 }
 
-void CG::Mesh::addChild(std::shared_ptr<Mesh> newChild){
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::addChild(std::shared_ptr<Mesh<geometryClass, materialClass>> newChild){
     m_children.emplace_back(newChild);
 }
 
-void CG::Mesh::removeChild(Mesh *objPtr){
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::removeChild(Mesh<geometryClass, materialClass> *objPtr){
     for(unsigned int i = 0; i < m_children.size(); ++i){
         if(m_children[i].get() == objPtr){
             m_children.erase(m_children.begin() + i);
@@ -88,25 +117,30 @@ void CG::Mesh::removeChild(Mesh *objPtr){
     }
 }
 
-const std::vector<std::shared_ptr<CG::Mesh>>& CG::Mesh::getChildren() const{
+template <typename geometryClass, typename materialClass>
+const std::vector<std::shared_ptr<CG::Mesh<geometryClass, materialClass>>>& CG::Mesh<geometryClass, materialClass>::getChildren() const{
     return m_children;
 }
 
-void CG::Mesh::setParent(std::shared_ptr<Mesh> obj){
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::setParent(std::shared_ptr<Mesh<geometryClass, materialClass>> obj){
     if(m_parent.lock()){
         m_parent.lock()->removeChild(this);
     }
     m_parent = obj;
 }
 
-const std::shared_ptr<CG::Mesh> CG::Mesh::getParent(){
+template <typename geometryClass, typename materialClass>
+const std::shared_ptr<CG::Mesh<geometryClass, materialClass>> CG::Mesh<geometryClass, materialClass>::getParent(){
     return m_parent.lock();
 }
 
-void CG::Mesh::render(Matrix4 &viewMatrix, Matrix4 &viewMatrixInverse, Matrix4 &projectionMatrix){
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::render(const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){
     m_renderFunction(this, viewMatrix, viewMatrixInverse, projectionMatrix);
 }
 
-void CG::Mesh::setRenderFunction(void(*renderFunction)(Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)){
+template <typename geometryClass, typename materialClass>
+void CG::Mesh<geometryClass, materialClass>::setRenderFunction(void(*renderFunction)(Mesh<geometryClass, materialClass> *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)){
     m_renderFunction = renderFunction;
 }

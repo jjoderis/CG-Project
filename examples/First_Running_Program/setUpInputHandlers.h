@@ -1,4 +1,4 @@
-#include <core/scene/scene.h>
+#include <OpenGL/scene/OpenGLScene.h>
 #include <core/camera/camera.h>
 #include <OpenGL/renderer/renderer.h>
 
@@ -13,7 +13,7 @@ void handleMouseMovement(GLFWwindow *window, double x, double y);
 void handleWindowResizing(GLFWwindow *window, int width, int height);
 void handleScrolling(GLFWwindow *window, double xOffset, double yOffset);
 
-void setUpInputHandling(GLFWwindow *window, CG::Scene &scene, CG::Camera &camerax, CG::Renderer &renderer){
+void setUpInputHandling(GLFWwindow *window, CG::OpenGLScene &scene, CG::Camera &camerax, CG::Renderer &renderer){
     (void)scene;
     (void)renderer;
 

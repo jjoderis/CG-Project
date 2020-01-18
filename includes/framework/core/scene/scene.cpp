@@ -1,22 +1,28 @@
 #include <core/scene/scene.h>
 
-CG::Scene::Scene(){}
+template <typename meshClass>
+CG::Scene<meshClass>::Scene(){}
 
-CG::Scene::Scene(const RGBA_Color &background) : m_background{ background} {}
+template <typename meshClass>
+CG::Scene<meshClass>::Scene(const RGBA_Color &background) : m_background{ background} {}
 
-void CG::Scene::setBackground(const RGBA_Color &background){
+template <typename meshClass>
+void CG::Scene<meshClass>::setBackground(const RGBA_Color &background){
     m_background = background;
 }
 
-const CG::RGBA_Color& CG::Scene::getBackground() const{
+template <typename meshClass>
+const CG::RGBA_Color& CG::Scene<meshClass>::getBackground() const{
     return m_background;
 }
 
-void CG::Scene::addChild(std::shared_ptr<Mesh> newChild){
+template <typename meshClass>
+void CG::Scene<meshClass>::addChild(std::shared_ptr<meshClass> newChild){
     m_children.emplace_back(newChild);
 }
 
-void CG::Scene::removeChild(Mesh *objPtr){
+template <typename meshClass>
+void CG::Scene<meshClass>::removeChild(meshClass *objPtr){
     for(unsigned int i = 0; i < m_children.size(); ++i){
         if(m_children[i].get() == objPtr){
             m_children.erase(m_children.begin() + i);
@@ -25,15 +31,18 @@ void CG::Scene::removeChild(Mesh *objPtr){
     }
 }
 
-const std::vector<std::shared_ptr<CG::Mesh>>& CG::Scene::getChildren() const{
+template <typename meshClass>
+const std::vector<std::shared_ptr<meshClass>>& CG::Scene<meshClass>::getChildren() const{
     return m_children;
 }
 
-void CG::Scene::addParticles(const std::shared_ptr<CG::Mesh> particles){
+template <typename meshClass>
+void CG::Scene<meshClass>::addParticles(const std::shared_ptr<meshClass> particles){
     m_particles.emplace_back(particles);
 }
 
-void CG::Scene::removeParticles(Mesh *objPtr){
+template <typename meshClass>
+void CG::Scene<meshClass>::removeParticles(meshClass *objPtr){
     for(unsigned int i = 0; i < m_particles.size(); ++i){
         if(m_particles[i].get() == objPtr){
             m_particles.erase(m_particles.begin() + i);
@@ -42,6 +51,7 @@ void CG::Scene::removeParticles(Mesh *objPtr){
     }
 }
 
-const std::vector<std::shared_ptr<CG::Mesh>>& CG::Scene::getParticles() const{
+template <typename meshClass>
+const std::vector<std::shared_ptr<meshClass>>& CG::Scene<meshClass>::getParticles() const{
     return m_children;
 }

@@ -11,8 +11,8 @@ add_library(CG_Framework
     core/geometry/geometry.cpp
     core/material/material.cpp
     core/object3D/object3D.cpp
-    core/mesh/mesh.cpp
-    core/scene/scene.cpp
+    core/mesh/baseMesh.cpp
+    core/scene/baseScene.cpp
     core/camera/camera.cpp
     core/geometry/sphereGeometry/sphereGeometry.cpp
     core/geometry/boxGeometry/boxGeometry.cpp
@@ -22,6 +22,8 @@ add_library(CG_Framework
     OpenGL/geometry/sphereGeometry/OpenGLSphereGeometry.cpp
     OpenGL/geometry/boxGeometry/OpenGLBoxGeometry.cpp
     OpenGL/renderer/renderer.cpp
+    OpenGL/mesh/OpenGLMesh.cpp
+    OpenGL/scene/OpenGLScene.cpp
 )
 
 set(TEST_FILES

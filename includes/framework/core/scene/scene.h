@@ -7,13 +7,14 @@
 
 namespace CG{
     //a scene that holds the whole rendering context (all objects, the camera, etc)
+    template<typename meshClass>
     class Scene : public Object3D{
     protected:
         RGBA_Color m_background{ 0.0, 0.0, 0.0, 1.0 };
 
-        std::vector<std::shared_ptr<CG::Mesh>> m_children;
+        std::vector<std::shared_ptr<meshClass>> m_children;
 
-        std::vector<std::shared_ptr<CG::Mesh>> m_particles;
+        std::vector<std::shared_ptr<meshClass>> m_particles;
 
     public:
         Scene();
@@ -22,14 +23,16 @@ namespace CG{
         void setBackground(const RGBA_Color &background);
         const RGBA_Color& getBackground() const;
 
-        void addChild(std::shared_ptr<Mesh> newChild);
-        void removeChild(Mesh *objPtr);
-        const std::vector<std::shared_ptr<Mesh>>& getChildren() const;
+        void addChild(std::shared_ptr<meshClass> newChild);
+        void removeChild(meshClass *objPtr);
+        const std::vector<std::shared_ptr<meshClass>>& getChildren() const;
 
-        void addParticles(const std::shared_ptr<CG::Mesh> particles);
-        void removeParticles(Mesh *objPtr);
-        const std::vector<std::shared_ptr<Mesh>>& getParticles() const;
+        void addParticles(const std::shared_ptr<meshClass> particles);
+        void removeParticles(meshClass *objPtr);
+        const std::vector<std::shared_ptr<meshClass>>& getParticles() const;
     };
+
+    using BaseScene = Scene<BaseMesh>;
 }
 
 #endif

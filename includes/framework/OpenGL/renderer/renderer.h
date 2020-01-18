@@ -2,7 +2,7 @@
 #define CG_FRAMEWORK_CORE_RENDERER_RENDERER_H
 
 #include <GL/glew.h>
-#include <core/scene/scene.h>
+#include <OpenGL/scene/OpenGLScene.h>
 #include <core/camera/camera.h>
 #include <OpenGL/material/OpenGLMaterial.h>
 #include <OpenGL/geometry/OpenGLGeometry.h>
@@ -11,8 +11,7 @@
 namespace CG{
     class Renderer;
 
-    void renderScene(Renderer &renderer, Scene &scene, Camera &camera);
-    void renderMesh(Renderer &renderer, const Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix);
+    void renderScene(Renderer &renderer, OpenGLScene &scene, Camera &camera);
 
     //A class used to render a given scene
     class Renderer{
@@ -21,20 +20,26 @@ namespace CG{
 
     std::vector<unsigned int> m_tranformFeedbacks{};
 
-    void(*m_renderFunction)(Renderer &renderer, Scene &scene, Camera &camera){renderScene};
+    int m_frameCounter{ 0 };
+
+    void(*m_renderFunction)(Renderer &renderer, OpenGLScene &scene, Camera &camera){renderScene};
     
     public:
         Renderer();
 
         //renders the given scene using the given camera
-        void render(Scene &scene, Camera &camera);
+        void render(OpenGLScene &scene, Camera &camera);
 
         void setDrawMode(GLenum drawMode);
         GLenum getDrawMode() const;
 
-        void setRenderFunction(void(*renderFunction)(Renderer &renderer, Scene &scene, Camera &camera));
+        void setRenderFunction(void(*renderFunction)(Renderer &renderer, OpenGLScene &scene, Camera &camera));
 
         std::vector<unsigned int>& getTransformFeedbacks();
+
+        void increaseFrameCounter();
+        void setFrameCounter(int count);
+        int getFrameCount();
     };
 
 }

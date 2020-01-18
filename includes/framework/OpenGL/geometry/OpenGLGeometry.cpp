@@ -132,3 +132,7 @@ void CG::OpenGLGeometry::updateOpenGL() {
 int CG::OpenGLGeometry::getVAO() const{
     return m_VAO;
 }
+
+int CG::OpenGLGeometry::getVBO() const{
+    return m_VBO;
+}

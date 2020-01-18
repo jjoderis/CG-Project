@@ -26,6 +26,8 @@ set( TEST_DIR ${PROJECT_SOURCE_DIR}/test )
 set( PROJECT_INCLUDES 
     ${INCLUDE_DIR}/mathematics
     ${INCLUDE_DIR}/framework
+    ${INCLUDE_DIR}/helpers
+    examples
 )
 
 #add the glew subdirectory
@@ -33,13 +35,14 @@ add_subdirectory( ${GLEW_DIR} )
 
 add_subdirectory( ${INCLUDE_DIR}/mathematics )
 add_subdirectory( ${INCLUDE_DIR}/framework )
+add_subdirectory( ${INCLUDE_DIR}/helpers )
 
 if(NOT BUILD_TESTS)
 
     #add executable
-    add_executable(CG-Project main.cpp setUpCGStuff.cpp setUpInputHandlers.cpp)
+    add_executable(CG-Project main.cpp)
 
-    target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew Math_Util CG_Framework)
+    target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew Math_Util CG_Framework CG_Helper_Functions)
 
     target_include_directories(CG-Project PUBLIC
         ${GLEW_DIR}

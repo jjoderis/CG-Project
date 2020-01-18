@@ -1,13 +1,12 @@
 #include <iostream>
 #include <math.h>
 
-#include <core/scene/scene.h>
-#include <core/mesh/mesh.h>
+#include <OpenGL/scene/OpenGLScene.h>
 #include <core/camera/camera.h>
 #include <OpenGL/renderer/renderer.h>
-#include <OpenGL/material/OpenGLMaterial.h>
-#include <OpenGL/geometry/sphereGeometry/OpenGLSphereGeometry.h>
-#include <OpenGL/geometry/boxGeometry/OpenGLBoxGeometry.h>
+
+#include <First_Running_Program/setUpCGStuff.h>
+#include <First_Running_Program/setUpInputHandlers.h>
 
 #include <GL/glew.h>
 
@@ -15,9 +14,6 @@
 
 #define WINDOW_WIDTH 640.0
 #define WINDOW_HEIGHT 480.0
-
-void setUp(CG::Scene &scene, CG::Camera &camera, CG::Renderer &renderer);
-void setUpInputHandling(GLFWwindow *window, CG::Scene &scene, CG::Camera &camera, CG::Renderer &renderer);
 
 float counter = 0.0f;
 
@@ -38,7 +34,7 @@ int main(){
 
 	fprintf(stdout, "OpenGL Version is: %s\n", glGetString(GL_VERSION));
 
-  CG::Scene scene{};
+  CG::OpenGLScene scene{};
   CG::Camera camera{ 1.0, 100, 45, WINDOW_WIDTH/WINDOW_HEIGHT };
   CG::Renderer renderer{};
 

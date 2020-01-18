@@ -1,5 +1,4 @@
 #include "renderer.h"
-#include <memory>
 
 CG::Renderer::Renderer(){
     glEnable(GL_DEPTH_TEST);
@@ -7,7 +6,7 @@ CG::Renderer::Renderer(){
     glPolygonMode(GL_BACK, GL_LINE);
 }
 
-void CG::renderScene(CG::Renderer &renderer, CG::Scene &scene, CG::Camera &camera){
+void CG::renderScene(CG::Renderer &renderer, CG::OpenGLScene &scene, CG::Camera &camera){
     (void)renderer;
 
     glClearBufferfv(GL_COLOR, 0, scene.getBackground().data());
@@ -17,7 +16,7 @@ void CG::renderScene(CG::Renderer &renderer, CG::Scene &scene, CG::Camera &camer
     Matrix4 viewMatrixInverse = camera.getMatrixWorld();
     Matrix4 projectionMatrix = camera.getProjectionMatrix();
 
-    for(const std::shared_ptr<Mesh> &mesh : scene.getChildren()){
+    for(const std::shared_ptr<CG::OpenGLMesh> &mesh : scene.getChildren()){
 
         if(mesh->isAnimated){
             mesh->animate();
@@ -27,7 +26,7 @@ void CG::renderScene(CG::Renderer &renderer, CG::Scene &scene, CG::Camera &camer
     }
 }
 
-void CG::Renderer::render(CG::Scene &scene, CG::Camera &camera){
+void CG::Renderer::render(CG::OpenGLScene &scene, CG::Camera &camera){
     m_renderFunction(*this, scene, camera);
 }
 
@@ -42,6 +41,16 @@ std::vector<unsigned int>& CG::Renderer::getTransformFeedbacks(){
     return m_tranformFeedbacks;
 }
 
-void CG::Renderer::setRenderFunction(void(*renderFunction)(Renderer &renderer, Scene &scene, Camera &camera)){
+void CG::Renderer::setRenderFunction(void(*renderFunction)(Renderer &renderer, OpenGLScene &scene, Camera &camera)){
     m_renderFunction = renderFunction;
+}
+
+void CG::Renderer::increaseFrameCounter(){
+    ++m_frameCounter;
+}
+void CG::Renderer::setFrameCounter(int count){
+    m_frameCounter = count; 
+}
+int CG::Renderer::getFrameCount(){
+    return m_frameCounter;
 }
