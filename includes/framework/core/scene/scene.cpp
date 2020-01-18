@@ -28,3 +28,20 @@ void CG::Scene::removeChild(Mesh *objPtr){
 const std::vector<std::shared_ptr<CG::Mesh>>& CG::Scene::getChildren() const{
     return m_children;
 }
+
+void CG::Scene::addParticles(const std::shared_ptr<CG::Mesh> particles){
+    m_particles.emplace_back(particles);
+}
+
+void CG::Scene::removeParticles(Mesh *objPtr){
+    for(unsigned int i = 0; i < m_particles.size(); ++i){
+        if(m_particles[i].get() == objPtr){
+            m_particles.erase(m_particles.begin() + i);
+            break;
+        }
+    }
+}
+
+const std::vector<std::shared_ptr<CG::Mesh>>& CG::Scene::getParticles() const{
+    return m_children;
+}

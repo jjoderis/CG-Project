@@ -18,6 +18,12 @@ namespace CG{
         std::weak_ptr<Mesh> m_parent; //use weak ptr to aleviate cyclic dependency issues
         std::vector<std::shared_ptr<Mesh>> m_children;
 
+        void (*m_renderFunction)(Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){
+            [](Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){
+                (void)mesh;(void)viewMatrix;(void)viewMatrixInverse;(void)projectionMatrix;
+            }
+        };
+
     public:
         Mesh();
 
@@ -45,6 +51,10 @@ namespace CG{
 
         void setParent(std::shared_ptr<Mesh> obj);
         const std::shared_ptr<Mesh> getParent();
+
+        void render(Matrix4 &viewMatrix, Matrix4 &viewMatrixInverse, Matrix4 &projectionMatrix);
+
+        void setRenderFunction(void(*renderFunction)(Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)); 
     };
 }
 

@@ -102,3 +102,11 @@ void CG::Mesh::setParent(std::shared_ptr<Mesh> obj){
 const std::shared_ptr<CG::Mesh> CG::Mesh::getParent(){
     return m_parent.lock();
 }
+
+void CG::Mesh::render(Matrix4 &viewMatrix, Matrix4 &viewMatrixInverse, Matrix4 &projectionMatrix){
+    m_renderFunction(this, viewMatrix, viewMatrixInverse, projectionMatrix);
+}
+
+void CG::Mesh::setRenderFunction(void(*renderFunction)(Mesh *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)){
+    m_renderFunction = renderFunction;
+}

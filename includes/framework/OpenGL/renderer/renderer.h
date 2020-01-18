@@ -19,7 +19,7 @@ namespace CG{
 
     GLenum m_drawMode{ GL_TRIANGLES };
 
-    unsigned int m_tranformFeedback{ 0 };
+    std::vector<unsigned int> m_tranformFeedbacks{};
 
     void(*m_renderFunction)(Renderer &renderer, Scene &scene, Camera &camera){renderScene};
     
@@ -34,7 +34,7 @@ namespace CG{
 
         void setRenderFunction(void(*renderFunction)(Renderer &renderer, Scene &scene, Camera &camera));
 
-        unsigned int& getTransformFeedback();
+        std::vector<unsigned int>& getTransformFeedbacks();
     };
 
 }

@@ -13,6 +13,8 @@ namespace CG{
 
         std::vector<std::shared_ptr<CG::Mesh>> m_children;
 
+        std::vector<std::shared_ptr<CG::Mesh>> m_particles;
+
     public:
         Scene();
         Scene(const RGBA_Color &background);
@@ -23,6 +25,10 @@ namespace CG{
         void addChild(std::shared_ptr<Mesh> newChild);
         void removeChild(Mesh *objPtr);
         const std::vector<std::shared_ptr<Mesh>>& getChildren() const;
+
+        void addParticles(const std::shared_ptr<CG::Mesh> particles);
+        void removeParticles(Mesh *objPtr);
+        const std::vector<std::shared_ptr<Mesh>>& getParticles() const;
     };
 }
 
