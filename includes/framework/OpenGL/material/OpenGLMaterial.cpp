@@ -18,7 +18,6 @@ CG::OpenGLMaterial::OpenGLMaterial(const std::string vertexShaderData, const std
     );
 
     m_program = CG::createShaderProgram(m_shaders);
-    getUniformLocs();
 }
 
 CG::OpenGLMaterial::OpenGLMaterial(const CG::RGBA_Color &color) : OpenGLMaterial(){
@@ -67,6 +66,11 @@ CG::OpenGLMaterial::OpenGLMaterial(const OpenGLMaterial &other) : Material{ othe
 
 
 CG::OpenGLMaterial& CG::OpenGLMaterial::operator= (const OpenGLMaterial &other){
+    
+    if(&other == this){
+        return *this;
+    }
+
     for(const ShaderInfo &entry : other.m_shaders){
         m_shaders.emplace_back(
             ShaderInfo{
@@ -77,8 +81,11 @@ CG::OpenGLMaterial& CG::OpenGLMaterial::operator= (const OpenGLMaterial &other){
         );
     }
     m_program = CG::createShaderProgram(m_shaders);
-    getUniformLocs();
-    getUniformLocs();
+    m_drawMode = other.m_drawMode;
+
+    for(auto const &key : other.uniforms){
+        addUniform(key.first);
+    }
 
     return *this;
 }
@@ -93,7 +100,6 @@ void CG::OpenGLMaterial::setVertexShader(const std::string shaderData){
     };
 
     m_program = CG::updateShaderProgram(m_program, m_shaders, newShader);
-    getUniformLocs();
 }
 
 void CG::OpenGLMaterial::setTesselationControlShader(const std::string shaderData){
@@ -106,7 +112,6 @@ void CG::OpenGLMaterial::setTesselationControlShader(const std::string shaderDat
     };
 
     m_program = CG::updateShaderProgram(m_program, m_shaders, newShader);
-    getUniformLocs();
 }
 
 void CG::OpenGLMaterial::setTesselationEvaluationShader(const std::string shaderData){
@@ -119,7 +124,6 @@ void CG::OpenGLMaterial::setTesselationEvaluationShader(const std::string shader
     };
 
     m_program = CG::updateShaderProgram(m_program, m_shaders, newShader);
-    getUniformLocs();
 }
 
 void CG::OpenGLMaterial::setGeometryShader(const std::string shaderData){
@@ -132,7 +136,6 @@ void CG::OpenGLMaterial::setGeometryShader(const std::string shaderData){
     };
 
     m_program = CG::updateShaderProgram(m_program, m_shaders, newShader);
-    getUniformLocs();
 }
 
 void CG::OpenGLMaterial::setFragmentShader(const std::string shaderData){
@@ -145,18 +148,12 @@ void CG::OpenGLMaterial::setFragmentShader(const std::string shaderData){
     };
 
     m_program = CG::updateShaderProgram(m_program, m_shaders, newShader);
-    getUniformLocs();
 }
 
-void CG::OpenGLMaterial::getUniformLocs(){
-    uniformLocs.baseColor = glGetUniformLocation(m_program, "baseColor");
-    uniformLocs.modelViewMatrix = glGetUniformLocation(m_program, "modelViewMatrix");
-    uniformLocs.projectionMatrix = glGetUniformLocation(m_program, "projectionMatrix");
-    uniformLocs.normalMatrix = glGetUniformLocation(m_program, "normalMatrix");
-    uniformLocs.shininess = glGetUniformLocation(m_program, "shininess");
-    uniformLocs.modelMatrix = glGetUniformLocation(m_program, "modelMatrix");
-    uniformLocs.viewMatrix = glGetUniformLocation(m_program, "viewMatrix");
+void CG::OpenGLMaterial::addUniform(const char* name) {
+    uniforms.insert({name, glGetUniformLocation(m_program, name)});
 }
+
 
 int CG::OpenGLMaterial::getProgram() const{
     return m_program;

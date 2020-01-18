@@ -5,20 +5,9 @@
 #include <color/color.h>
 #include <OpenGL/shader/shader.h>
 #include <material/material.h>
-#include <vector>
-#include <string>
+#include <map>
 
 namespace CG{
-
-    typedef struct {
-        GLint baseColor;
-        GLint modelMatrix;
-        GLint viewMatrix;
-        GLint modelViewMatrix;
-        GLint projectionMatrix;
-        GLint normalMatrix;
-        GLint shininess;
-    } uniformLocations;
 
     class OpenGLMaterial : public Material{
     protected:
@@ -31,7 +20,7 @@ namespace CG{
 
     public:
         //the locations of all uniform variables in the shader program
-        uniformLocations uniformLocs;
+        std::map<const char*, GLint> uniforms;
 
         //creates material with basic shader
         OpenGLMaterial();
@@ -62,8 +51,8 @@ namespace CG{
         //sets a new fragment shader and recompiles the program
         void setFragmentShader(const std::string shaderData);
 
-        //queries locations of uniform variables in the program and stores them
-        void getUniformLocs();
+        //queries location of uniform variable in the program and stores it
+        void addUniform(const char* name);
 
         int getProgram() const;
 

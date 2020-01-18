@@ -3,9 +3,13 @@
 #include <OpenGL/material/OpenGLMaterial.h>
 #include <fileHandling/fileHandler.h>
 
-void setUpSphere(CG::OpenGLScene &scene){
+void setUpSphereGeometry(CG::OpenGLMesh *mesh){
     std::shared_ptr<CG::OpenGLSphereGeometry> geoPtr = std::make_shared<CG::OpenGLSphereGeometry>(CG::OpenGLSphereGeometry{1.0, 30, 30});
-  
+
+    mesh->setGeometry(geoPtr);
+}
+
+void setUpRedMaterial(CG::OpenGLMesh *mesh){
     std::shared_ptr<CG::OpenGLMaterial> redPtr = std::make_shared<CG::OpenGLMaterial>(CG::OpenGLMaterial{
         readTextFile("../media/shaders/phongShader/phong.vert"),
         readTextFile("../media/shaders/phongShader/phong.frag")
@@ -14,7 +18,22 @@ void setUpSphere(CG::OpenGLScene &scene){
     redPtr->setColor(1.0, 0.0, 0.0);
     redPtr->setShininess(120.0);
 
-    std::shared_ptr<CG::OpenGLMesh> redSphere(new CG::OpenGLMesh{geoPtr, redPtr});
+    redPtr->addUniform("modelViewMatrix");
+    redPtr->addUniform("projectionMatrix");
+    redPtr->addUniform("normalMatrix");
+    redPtr->addUniform("viewMatrix");
+    redPtr->addUniform("baseColor");
+    redPtr->addUniform("shininess");
+    redPtr->addUniform("modelMatrix");
+
+    mesh->setMaterial(redPtr);
+}
+
+void setUpSphere(CG::OpenGLScene &scene){
+    std::shared_ptr<CG::OpenGLMesh> redSphere(new CG::OpenGLMesh{});
+
+    setUpSphereGeometry(redSphere.get());
+    setUpRedMaterial(redSphere.get());
 
     void (*animation)(CG::Object3D&) = [](CG::Object3D &obj) {
         float radius{ std::dynamic_pointer_cast<CG::SphereGeometry>(dynamic_cast<CG::OpenGLMesh&>(obj).getGeometry())->getRadius() };
@@ -58,13 +77,13 @@ void setUpSphere(CG::OpenGLScene &scene){
 
         glUseProgram(material->getProgram());
 
-        glUniform4fv(material->uniformLocs.baseColor, 1, material->getColor().data());
-        glUniformMatrix4fv(material->uniformLocs.modelMatrix, 1, GL_FALSE, mesh->getMatrixWorld().data());
-        glUniformMatrix4fv(material->uniformLocs.viewMatrix, 1, GL_FALSE, viewMatrix.data());
-        glUniformMatrix4fv(material->uniformLocs.modelViewMatrix, 1, GL_FALSE, modelViewMatrix.data());
-        glUniformMatrix4fv(material->uniformLocs.projectionMatrix, 1, GL_FALSE, projectionMatrix.data());
-        glUniformMatrix4fv(material->uniformLocs.normalMatrix, 1, GL_FALSE, normalMatrix.data());
-        glUniform1f(material->uniformLocs.shininess, material->getShininess());
+        glUniform4fv(material->uniforms.at("baseColor"), 1, material->getColor().data());
+        glUniformMatrix4fv(material->uniforms.at("modelMatrix"), 1, GL_FALSE, mesh->getMatrixWorld().data());
+        glUniformMatrix4fv(material->uniforms.at("viewMatrix"), 1, GL_FALSE, viewMatrix.data());
+        glUniformMatrix4fv(material->uniforms.at("modelViewMatrix"), 1, GL_FALSE, modelViewMatrix.data());
+        glUniformMatrix4fv(material->uniforms.at("projectionMatrix"), 1, GL_FALSE, projectionMatrix.data());
+        glUniformMatrix4fv(material->uniforms.at("normalMatrix"), 1, GL_FALSE, normalMatrix.data());
+        glUniform1f(material->uniforms.at("shininess"), material->getShininess());
 
         glBindVertexArray(geometry->getVAO());
         glDrawElements(GL_TRIANGLES, 3 * geometry->getNumFaces(), GL_UNSIGNED_INT, NULL);
