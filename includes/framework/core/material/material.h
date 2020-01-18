@@ -1,7 +1,7 @@
 #ifndef CG_FRAMEWORK_CORE_MATERIAL_MATERIAL_H
 #define CG_FRAMEWORK_CORE_MATERIAL_MATERIAL_H
 
-#include <core/color/color.h>
+#include <color/color.h>
 
 namespace CG{
     //A class that handles different parameters used for rendering

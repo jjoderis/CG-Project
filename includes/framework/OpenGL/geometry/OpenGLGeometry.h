@@ -2,8 +2,8 @@
 #define CG_FRAMEWORK_OPENGL_OPENGLGEOMETRY_OPENGLGEOMETRY_H
 
 #include <GL/glew.h>
-#include <core/color/color.h>
-#include <core/geometry/geometry.h>
+#include <color/color.h>
+#include <geometry/geometry.h>
 
 #define BUFFER_OFFSET(a) ((void*)(a))
 

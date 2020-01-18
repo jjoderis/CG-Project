@@ -1,7 +1,7 @@
 #ifndef CG_FRAMEWORK_OPENGL_GEOMETRY_SPHEREGEOMETRY_OPENGLSPHEREGEOMETRY_OPENGLSPHEREGEOMETRY_H
 #define CG_FRAMEWORK_OPENGL_GEOMETRY_SPHEREGEOMETRY_OPENGLSPHEREGEOMETRY_OPENGLSPHEREGEOMETRY_H
 
-#include <core/geometry/sphereGeometry/sphereGeometry.h>
+#include <geometry/sphereGeometry/sphereGeometry.h>
 #include <OpenGL/geometry/OpenGLGeometry.h>
 
 namespace CG{

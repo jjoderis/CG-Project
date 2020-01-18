@@ -1,7 +1,7 @@
 #ifndef CG_FRAMEWORK_CORE_GEOMETRY_BOXGEOMETRY_BOXGEOMETRY_H
 #define CG_FRAMEWORK_CORE_GEOMETRY_BOXGEOMETRY_BOXGEOMETRY_H
 
-#include <core/geometry/geometry.h>
+#include <geometry/geometry.h>
 
 namespace CG{
 

@@ -1,7 +1,7 @@
 #ifndef CG_FRAMEWORK_OPENGL_MESH_OPENGLMESH_OPENGLMESH_H
 #define CG_FRAMEWORK_OPENGL_MESH_OPENGLMESH_OPENGLMESH_H
 
-#include <core/mesh/mesh.h>
+#include <mesh/mesh.h>
 #include <OpenGL/geometry/OpenGLGeometry.h>
 #include <OpenGL/material/OpenGLMaterial.h>
 

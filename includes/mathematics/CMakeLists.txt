@@ -1,4 +1,6 @@
-add_library(Math_Util ./util/util.cpp)
+add_library(Math_Util 
+    ./util/util.cpp
+)
 
 set(TEST_FILES
     ${TEST_FILES}

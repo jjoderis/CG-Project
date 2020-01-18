@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include <OpenGL/scene/OpenGLScene.h>
-#include <core/camera/camera.h>
+#include <camera/camera.h>
 #include <OpenGL/material/OpenGLMaterial.h>
 #include <OpenGL/geometry/OpenGLGeometry.h>
 #include <memory>

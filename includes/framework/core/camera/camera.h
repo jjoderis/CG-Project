@@ -1,7 +1,7 @@
 #ifndef CG_FRAMEWORK_CORE_CAMERA_CAMERA_H
 #define CG_FRAMEWORK_CORE_CAMERA_CAMERA_H
 
-#include <core/object3D/object3D.h>
+#include <object3D/object3D.h>
 
 namespace CG{
     //a basic camera class that will be used for rendering

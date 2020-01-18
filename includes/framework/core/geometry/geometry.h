@@ -2,8 +2,8 @@
 #define CG_FRAMEWORK_CORE_GEOMETRY_GEOMETRY_H
 
 #include <vector>
-#include <core/face/face.h>
-#include <core/color/color.h>
+#include <face/face.h>
+#include <color/color.h>
 #include <math/math.h>
 #include <initializer_list>
 

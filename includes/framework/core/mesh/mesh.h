@@ -2,9 +2,9 @@
 #define CG_FRAMEWORK_CORE_MESH_MESH_H
 
 #include <memory>
-#include <core/object3D/object3D.h>
-#include <core/geometry/geometry.h>
-#include <core/material/material.h>
+#include <object3D/object3D.h>
+#include <geometry/geometry.h>
+#include <material/material.h>
 #include <string>
 
 namespace CG{

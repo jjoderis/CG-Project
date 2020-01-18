@@ -1,9 +1,9 @@
 #ifndef CG_FRAMEWORK_CORE_SCENE_SCENE_H
 #define CG_FRAMEWORK_CORE_SCENE_SCENE_H
 
-#include <core/object3D/object3D.h>
-#include <core/mesh/mesh.h>
-#include <core/color/color.h>
+#include <object3D/object3D.h>
+#include <mesh/mesh.h>
+#include <color/color.h>
 
 namespace CG{
     //a scene that holds the whole rendering context (all objects, the camera, etc)

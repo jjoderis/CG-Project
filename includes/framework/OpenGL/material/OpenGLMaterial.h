@@ -2,9 +2,9 @@
 #define CG_FRAMEWORK_OPENGL_MATERIAL_OPENGLMATERIAL_H
 
 #include <GL/glew.h>
-#include <core/color/color.h>
+#include <color/color.h>
 #include <OpenGL/shader/shader.h>
-#include <core/material/material.h>
+#include <material/material.h>
 #include <vector>
 #include <string>
 

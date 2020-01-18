@@ -1,0 +1,17 @@
+include_directories(
+    ..
+    ../core
+    ../../mathematics
+    ../../../glew
+)
+
+add_library(CG_Framework_OpenGL
+    geometry/OpenGLGeometry.cpp
+    geometry/boxGeometry/OpenGLBoxGeometry.cpp
+    geometry/sphereGeometry/OpenGLSphereGeometry.cpp
+    material/OpenGLMaterial.cpp
+    mesh/OpenGLMesh.cpp
+    renderer/renderer.cpp
+    scene/OpenGLScene.cpp
+    shader/shader.cpp
+)

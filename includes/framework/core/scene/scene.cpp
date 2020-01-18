@@ -1,4 +1,4 @@
-#include <core/scene/scene.h>
+#include "scene.h"
 
 template <typename meshClass>
 CG::Scene<meshClass>::Scene(){}
