@@ -3,11 +3,12 @@
 
 #include <OpenGL/material/OpenGLMaterial.h>
 #include <fileHandling/fileHandler.h>
+#include <stb_image.h>
 
 CG::OpenGLMaterial setUpPhongMaterial(){
     CG::OpenGLMaterial phongMat = CG::OpenGLMaterial{
-        readTextFile("../media/shaders/phongShader/phong.vert"),
-        readTextFile("../media/shaders/phongShader/phong.frag")
+        readTextFile("../media/shaders/texturePhong/phong.vert"),
+        readTextFile("../media/shaders/texturePhong/phong.frag")
     };
 
     phongMat.setShininess(120.0);
@@ -20,24 +21,23 @@ CG::OpenGLMaterial setUpPhongMaterial(){
     phongMat.addUniform("shininess");
     phongMat.addUniform("modelMatrix");
 
-    // 8 X 8 Checkerboard
-    const unsigned short texCheckerboardData[]{
-        0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00,
-        0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF,
-        0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00,
-        0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF,
-        0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00,
-        0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF,
-        0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00,
-        0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF
-    };
-
     unsigned int texObj{ 0 };
     glCreateTextures(GL_TEXTURE_2D, 1, &texObj);
-    glTexStorage2D(GL_TEXTURE_2D, 4, GL_RGBA8, 8, 8);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 8, GL_RED, GL_UNSIGNED_BYTE, texCheckerboardData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(0);
 
+    unsigned char* data = stbi_load("../media/textures/earth.jpg", &width, &height, &nrChannels, 0);
+
+    if(data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    stbi_image_free(data);
     phongMat.addTexture(texObj);
 
     return phongMat;

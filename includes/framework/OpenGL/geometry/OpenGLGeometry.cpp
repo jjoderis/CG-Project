@@ -35,6 +35,7 @@ CG::OpenGLGeometry& CG::OpenGLGeometry::operator= (const CG::OpenGLGeometry &oth
     Geometry::operator=(other);
     m_useNormals = other.m_useNormals;
     m_useColors = other.m_useColors;
+    m_useUVs = other.m_useUVs;
     calculateFaceNormals();
     calculateVertexNormals();
     updateOpenGL();
@@ -60,8 +61,9 @@ void CG::OpenGLGeometry::updateOpenGL() {
     //calculate needed buffer storage space
     long unsigned int vertexSpace{ 3 * sizeof(float) * numVertices };
     long unsigned int normalSpace{ m_useNormals ? 3 * sizeof(float) * numVertices : 0 };
+    long unsigned int uvSpace{ m_useUVs ? 2 * sizeof(float) * numVertices : 0 };
     long unsigned int colorSpace{ m_useColors ? 4 * sizeof(float) * numVertices : 0 };
-    long unsigned int storageSpace{ vertexSpace + normalSpace + colorSpace };
+    long unsigned int storageSpace{ vertexSpace + normalSpace + uvSpace + colorSpace };
 
     //allocate buffer space for vertices normals and optionally colors
     glNamedBufferStorage(m_VBO, storageSpace, nullptr, GL_DYNAMIC_STORAGE_BIT);
@@ -71,13 +73,11 @@ void CG::OpenGLGeometry::updateOpenGL() {
         if(m_useNormals){
             glNamedBufferSubData(m_VBO, 3 * i * sizeof(float) + vertexSpace, 3 * sizeof(float), m_vertNormals[i].data());
         }
-    }
-
-    int i = 0;
-    if(m_useColors){
-        for(CG::RGBA_Color &color : m_vertColors){
-            glNamedBufferSubData(m_VBO, 4 * i * sizeof(float) + vertexSpace + normalSpace, 4 * sizeof(float), color.data());
-            ++i;
+        if(m_useUVs){
+            glNamedBufferSubData(m_VBO, 3 * i * sizeof(float) + vertexSpace + normalSpace, 2 * sizeof(float), m_vertUVs[i].data());
+        }
+        if(m_useColors){
+            glNamedBufferSubData(m_VBO, 4 * i * sizeof(float) + vertexSpace + normalSpace + uvSpace, 4 * sizeof(float), m_vertColors.data());
         }
     }
 
@@ -113,8 +113,14 @@ void CG::OpenGLGeometry::updateOpenGL() {
         ++index;
     }
 
+    if(m_useUVs){
+        glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertexSpace + normalSpace));
+        glEnableVertexAttribArray(index);
+        ++index;
+    }
+
     if(m_useColors){
-        glVertexAttribPointer(index, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertexSpace + normalSpace));
+        glVertexAttribPointer(index, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertexSpace + uvSpace + normalSpace));
         glEnableVertexAttribArray(index);
         ++index;
     }
@@ -131,6 +137,12 @@ void CG::OpenGLGeometry::activateColors(){
 }
 void CG::OpenGLGeometry::deactivateColors(){
     m_useColors = false;
+}
+void CG::OpenGLGeometry::activateUVs(){
+    m_useUVs = true;
+}
+void CG::OpenGLGeometry::deactivateUVs(){
+    m_useUVs = true;
 }
 
 int CG::OpenGLGeometry::getVAO() const{

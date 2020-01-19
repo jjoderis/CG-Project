@@ -91,10 +91,11 @@ CG::OpenGLMaterial& CG::OpenGLMaterial::operator= (const OpenGLMaterial &other){
     m_drawMode = other.m_drawMode;
     m_texObjs = other.m_texObjs;
 
+
     for(auto const &key : other.uniforms){
         addUniform(key.first);
     }
-
+    
     return *this;
 }
 
@@ -159,7 +160,12 @@ void CG::OpenGLMaterial::setFragmentShader(const std::string shaderData){
 }
 
 void CG::OpenGLMaterial::addUniform(const char* name) {
-    uniforms.insert({name, glGetUniformLocation(m_program, name)});
+    uniforms.insert({std::string(name), glGetUniformLocation(m_program, name)});
+}
+
+void CG::OpenGLMaterial::addUniform(const std::string &name)
+{
+    uniforms.insert({name, glGetUniformLocation(m_program, name.c_str())});
 }
 
 
@@ -181,5 +187,9 @@ void CG::OpenGLMaterial::addTexture(unsigned int texObj){
 
 std::vector<unsigned int>& CG::OpenGLMaterial::getTextures(){
     return m_texObjs;
+}
+
+int CG::OpenGLMaterial::getNumTextures() const{
+    return m_texObjs.size();
 }
 

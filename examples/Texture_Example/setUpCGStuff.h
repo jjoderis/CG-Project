@@ -5,7 +5,7 @@
 #include <core/camera/camera.h>
 #include <OpenGL/renderer/renderer.h>
 
-#include "animations/bounceAround.h"
+#include "animations/animations.h"
 #include "geometry/box.h"
 #include "material/phong.h"
 #include "renderFunctions/renderFunctions.h"
@@ -25,6 +25,7 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     redSphere->setGeometry(spherePtr);
     redSphere->getMaterial()->setColor(1.0, 0.0, 0.0);
     redSphere->setRenderFunction(renderPhong);
+    redSphere->setAnimation(rotateAroundY);
 
     scene.addChild(redSphere);
 

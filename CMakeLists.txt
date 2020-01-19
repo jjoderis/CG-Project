@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 #specify C++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic-errors")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors")
 
 #set option to build tests or the project from command line
 option(BUILD_TESTS "BUILD_TESTS" OFF)
@@ -21,6 +21,7 @@ FIND_PACKAGE( glfw3 3.2 REQUIRED )
 
 set( INCLUDE_DIR ${PROJECT_SOURCE_DIR}/includes )
 set( GLEW_DIR ${PROJECT_SOURCE_DIR}/glew )
+set( STB_DIR ${PROJECT_SOURCE_DIR}/stb )
 set( TEST_DIR ${PROJECT_SOURCE_DIR}/test )
 
 set( PROJECT_INCLUDES 
@@ -33,7 +34,7 @@ set( PROJECT_INCLUDES
 
 #add the glew subdirectory
 add_subdirectory( ${GLEW_DIR} )
-
+add_subdirectory( ${STB_DIR} )
 add_subdirectory( ${INCLUDE_DIR}/mathematics )
 add_subdirectory( ${INCLUDE_DIR}/framework/core )
 add_subdirectory( ${INCLUDE_DIR}/framework/OpenGL )
@@ -44,10 +45,11 @@ if(NOT BUILD_TESTS)
     #add executable
     add_executable(CG-Project main.cpp)
 
-    target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew Math_Util CG_Framework_Core CG_Framework_OpenGL CG_Helper_Functions)
+    target_link_libraries(CG-Project PUBLIC ${OPENGL_LIBRARIES} glfw Glew Math_Util CG_Framework_Core CG_Framework_OpenGL CG_Helper_Functions STB)
 
     target_include_directories(CG-Project PUBLIC
         ${GLEW_DIR}
+        ${STB_DIR}
         ${PROJECT_INCLUDES}
     )
 

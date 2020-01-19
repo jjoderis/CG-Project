@@ -57,6 +57,8 @@ void renderPhong(CG::OpenGLMesh *mesh, const CG::Matrix4 &viewMatrix, const CG::
     CG::Matrix4 normalMatrix{dot(mesh->getMatrixWorldInverse(), viewMatrixInverse).transpose()};
 
     glUseProgram(material->getProgram());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, material->getTextures()[0]);
 
     glUniform4fv(material->uniforms.at("baseColor"), 1, material->getColor().data());
     glUniformMatrix4fv(material->uniforms.at("modelMatrix"), 1, GL_FALSE, mesh->getMatrixWorld().data());
@@ -69,6 +71,9 @@ void renderPhong(CG::OpenGLMesh *mesh, const CG::Matrix4 &viewMatrix, const CG::
     glBindVertexArray(geometry->getVAO());
     glDrawElements(GL_TRIANGLES, 3 * geometry->getNumFaces(), GL_UNSIGNED_INT, NULL);
     
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     for(const std::shared_ptr<CG::OpenGLMesh> &child : mesh->getChildren()){
         child->render(viewMatrix, viewMatrixInverse, projectionMatrix);

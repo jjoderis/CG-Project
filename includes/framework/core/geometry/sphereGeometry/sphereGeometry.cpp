@@ -9,6 +9,7 @@ CG::SphereGeometry::SphereGeometry(float radius, unsigned int widthSegs, unsigne
 
     m_vertices.resize(numVertices);
     m_vertNormals.resize(numVertices);
+    m_vertUVs.resize(numVertices);
     m_faces.resize(numFaces);
 
     m_vertices[0] = Vector3{ 0.0, radius, 0.0 };
@@ -42,6 +43,12 @@ CG::SphereGeometry::SphereGeometry(float radius, unsigned int widthSegs, unsigne
                 m_faces[numFaces - widthSegs + j] = Face{numVertices - 1, fRVI + ((j + 1) % widthSegs), fRVI + j};
             }
         }
+    }
+
+    for (unsigned int i = 0; i < numVertices; i++) {
+        float u = (M_PI + atan2(m_vertices[i].at(1) - m_center.at(1), m_vertices[i].at(0) - m_center.at(0))) / (2 * M_PI);
+        float v = atan2( sqrt( pow( m_vertices[i].at(0) - m_center.at(0) , 2 ) + pow( m_vertices[i].at(1) - m_center.at(1) , 2 ) ) , m_vertices[i].at(2) - m_center.at(2) ) / M_PI;
+        m_vertUVs[i] = Vector2{u, v};
     }
     
     calculateFaceNormals();

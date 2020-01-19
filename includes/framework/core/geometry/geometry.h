@@ -22,6 +22,8 @@ namespace CG {
         //normals for all faces
         std::vector<Vector3> m_faceNormals;
 
+        std::vector<Vector2> m_vertUVs;
+
         Vector3 m_center{ 0.0, 0.0, 0.0 };
 
     public:

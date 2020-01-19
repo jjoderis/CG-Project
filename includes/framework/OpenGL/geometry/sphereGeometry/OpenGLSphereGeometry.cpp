@@ -6,5 +6,6 @@ CG::OpenGLSphereGeometry::OpenGLSphereGeometry(float radius, unsigned int widthS
     calculateFaceNormals();
     calculateVertexNormals();
     activateNormals();
+    activateUVs();
     updateOpenGL();
 }

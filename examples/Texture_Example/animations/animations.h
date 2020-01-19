@@ -33,4 +33,9 @@ void bounceAround(CG::Object3D &obj) {
     obj.updateMatrixWorld();
 }
 
+void rotateAroundY(CG::Object3D &obj){
+    obj.rotateY(degToRad(1));
+    obj.updateMatrixWorld();
+}
+
 #endif

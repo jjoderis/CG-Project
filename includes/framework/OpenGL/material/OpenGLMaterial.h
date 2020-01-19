@@ -23,7 +23,7 @@ namespace CG{
 
     public:
         //the locations of all uniform variables in the shader program
-        std::map<const char*, GLint> uniforms;
+        std::map<std::string, GLint> uniforms;
 
         //creates material with basic shader
         OpenGLMaterial();
@@ -56,6 +56,7 @@ namespace CG{
 
         //queries location of uniform variable in the program and stores it
         void addUniform(const char* name);
+        void addUniform(const std::string &name);
 
         int getProgram() const;
 
@@ -64,6 +65,7 @@ namespace CG{
 
         void addTexture(unsigned int texObj);
         std::vector<unsigned int>& getTextures();
+        int getNumTextures() const;
     };
 
 }

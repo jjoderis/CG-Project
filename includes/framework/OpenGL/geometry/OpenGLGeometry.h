@@ -20,6 +20,7 @@ namespace CG{
 
         bool m_useNormals{ false };
         bool m_useColors{ false };
+        bool m_useUVs{ false };
 
     public:
         OpenGLGeometry();
@@ -43,6 +44,8 @@ namespace CG{
         void deactivateNormals();
         void activateColors();
         void deactivateColors();
+        void activateUVs();
+        void deactivateUVs();
 
         int getVAO() const;
         void setVAO(unsigned int VAO);
