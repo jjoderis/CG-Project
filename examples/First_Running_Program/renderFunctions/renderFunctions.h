@@ -27,9 +27,9 @@ void renderPlainWireFrame(CG::OpenGLMesh *mesh, const CG::Matrix4 &viewMatrix, c
     std::shared_ptr<CG::OpenGLGeometry> geometry{ mesh->getGeometry() }; 
 
     setUpPlainRendering(mesh, viewMatrix, viewMatrixInverse, projectionMatrix);
-
-    glDrawArrays(GL_LINES, 0, geometry->getNumVertices());
-
+    glPolygonMode(GL_FRONT, GL_LINE);
+    glDrawElements(GL_QUADS, 4 * geometry->getNumFaces(), GL_UNSIGNED_INT, NULL);
+    glPolygonMode(GL_FRONT, GL_FILL);
     for(const std::shared_ptr<CG::OpenGLMesh> &child : mesh->getChildren()){
         child->render(viewMatrix, viewMatrixInverse, projectionMatrix);
     }

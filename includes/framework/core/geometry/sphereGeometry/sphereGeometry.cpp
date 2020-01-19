@@ -28,23 +28,24 @@ CG::SphereGeometry::SphereGeometry(float radius, unsigned int widthSegs, unsigne
             m_vertNormals[1 + i * widthSegs + j] = vec.normalize();
 
             if(i == 0){
-                m_faces[j] = Face3{j+1, (j+1)%(widthSegs) + 1, 0};
+                m_faces[j] = Face{j+1, (j+1)%(widthSegs) + 1, 0};
             }
 
             //index of first vertex in current row
             int fRVI = 1 + i * widthSegs;
             if(i > 0){
-                m_faces[widthSegs + 2 * (i - 1) * widthSegs + 2 * j] = Face3{fRVI + j, fRVI + ((j + 1) % widthSegs), fRVI + j - widthSegs};
-                m_faces[widthSegs + 2 * (i - 1) * widthSegs + 2 * j + 1] = Face3{fRVI + ((j + 1) % widthSegs), fRVI + ((j + 1) % widthSegs) - widthSegs, fRVI + j - widthSegs};
+                m_faces[widthSegs + 2 * (i - 1) * widthSegs + 2 * j] = Face{fRVI + j, fRVI + ((j + 1) % widthSegs), fRVI + j - widthSegs};
+                m_faces[widthSegs + 2 * (i - 1) * widthSegs + 2 * j + 1] = Face{fRVI + ((j + 1) % widthSegs), fRVI + ((j + 1) % widthSegs) - widthSegs, fRVI + j - widthSegs};
             }
 
             if(i == heightSegs - 1){
-                m_faces[numFaces - widthSegs + j] = Face3{numVertices - 1, fRVI + ((j + 1) % widthSegs), fRVI + j};
+                m_faces[numFaces - widthSegs + j] = Face{numVertices - 1, fRVI + ((j + 1) % widthSegs), fRVI + j};
             }
         }
     }
     
     calculateFaceNormals();
+    calculateVertexNormals();
 }
 
 float CG::SphereGeometry::getRadius(){

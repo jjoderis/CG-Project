@@ -29,6 +29,7 @@ CG::BoxGeometry::BoxGeometry(float width, float height, float depth)
         { 5, 1, 0 }
     };
 
+    calculateFaceNormals();
     calculateVertexNormals();
 }
 
