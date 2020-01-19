@@ -133,6 +133,14 @@ int CG::OpenGLGeometry::getVAO() const{
     return m_VAO;
 }
 
+void CG::OpenGLGeometry::setVAO(unsigned int VAO){
+    m_VAO = VAO;
+}
+
 int CG::OpenGLGeometry::getVBO() const{
     return m_VBO;
+}
+
+void CG::OpenGLGeometry::setVBO(unsigned int VBO){
+    m_VBO = VBO;
 }

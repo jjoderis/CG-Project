@@ -52,7 +52,8 @@
         "forward_list": "cpp",
         "unordered_set": "cpp",
         "set": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "random": "cpp"
     },
     "cmake.configureOnOpen": false
 }

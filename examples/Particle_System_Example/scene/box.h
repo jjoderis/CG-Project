@@ -82,6 +82,10 @@ void setUpBox(CG::OpenGLScene &scene){
 
         glBindVertexArray(geometry->getVAO());
         glDrawArrays(GL_LINES, 0, geometry->getNumVertices());
+
+        for(const std::shared_ptr<CG::OpenGLMesh> &child : mesh->getChildren()){
+            child->render(viewMatrix, viewMatrixInverse, projectionMatrix);
+        }
     });
 
     scene.addChild(yellowCube);

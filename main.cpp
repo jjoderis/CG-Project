@@ -5,8 +5,8 @@
 #include <core/camera/camera.h>
 #include <OpenGL/renderer/renderer.h>
 
-#include <First_Running_Program/setUpCGStuff.h>
-#include <First_Running_Program/setUpInputHandlers.h>
+#include <Particle_System_Example/setUpCGStuff.h>
+#include <Particle_System_Example/setUpInputHandlers.h>
 
 #include <GL/glew.h>
 

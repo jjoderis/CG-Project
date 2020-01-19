@@ -45,7 +45,9 @@ namespace CG{
 
 
         int getVAO() const;
+        void setVAO(unsigned int VAO);
         int getVBO() const;
+        void setVBO(unsigned int VBO);
     };
 
 }

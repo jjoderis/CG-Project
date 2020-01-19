@@ -53,5 +53,5 @@ void CG::Scene<meshClass>::removeParticles(meshClass *objPtr){
 
 template <typename meshClass>
 const std::vector<std::shared_ptr<meshClass>>& CG::Scene<meshClass>::getParticles() const{
-    return m_children;
+    return m_particles;
 }
