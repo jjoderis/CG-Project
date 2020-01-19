@@ -50,7 +50,11 @@ CG::OpenGLMaterial::OpenGLMaterial()
             }
         )"
     ) 
-{}
+{
+    addUniform("modelViewMatrix");
+    addUniform("projectionMatrix");
+    addUniform("baseColor");
+}
 
 CG::OpenGLMaterial::~OpenGLMaterial(){
     for(ShaderInfo &entry : m_shaders){

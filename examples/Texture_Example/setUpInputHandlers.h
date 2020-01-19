@@ -1,6 +1,3 @@
-#ifndef CG_EXAMPLES_SETUPINPUTHANDLERS_H
-#define CG_EXAMPLES_SETUPINPUTHANDLERS_H
-
 #include <OpenGL/scene/OpenGLScene.h>
 #include <core/camera/camera.h>
 #include <OpenGL/renderer/renderer.h>
@@ -95,5 +92,3 @@ void handleScrolling(GLFWwindow *window, double xOffset, double yOffset){
   camera->setFOV(fov+yOffset);
   camera->updateProjectionMatrix();
 }
-
-#endif
