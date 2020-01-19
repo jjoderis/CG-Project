@@ -16,6 +16,9 @@ namespace CG{
         //a collection of shaderInformation that contains all stages of the shaderProgram
         std::vector<CG::ShaderInfo> m_shaders;
 
+        //all texture object bound used by this object
+        std::vector<unsigned int> m_texObjs;
+
         GLenum m_drawMode{ GL_TRIANGLES };
 
     public:
@@ -58,6 +61,9 @@ namespace CG{
 
         void setDrawMode(GLenum drawMode);
         GLenum getDrawMode() const;
+
+        void addTexture(unsigned int texObj);
+        std::vector<unsigned int>& getTextures();
     };
 
 }

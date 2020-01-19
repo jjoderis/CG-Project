@@ -61,6 +61,8 @@ CG::OpenGLMaterial::~OpenGLMaterial(){
         glDeleteShader(entry.shader);
     }
 
+    glDeleteTextures(m_texObjs.size(), m_texObjs.data());
+
     glDeleteProgram(m_program);
 }
 
@@ -84,8 +86,10 @@ CG::OpenGLMaterial& CG::OpenGLMaterial::operator= (const OpenGLMaterial &other){
             }
         );
     }
+
     m_program = CG::createShaderProgram(m_shaders);
     m_drawMode = other.m_drawMode;
+    m_texObjs = other.m_texObjs;
 
     for(auto const &key : other.uniforms){
         addUniform(key.first);
@@ -169,5 +173,13 @@ void CG::OpenGLMaterial::setDrawMode(GLenum drawMode){
 
 GLenum CG::OpenGLMaterial::getDrawMode() const{
     return m_drawMode;
+}
+
+void CG::OpenGLMaterial::addTexture(unsigned int texObj){
+    m_texObjs.emplace_back(texObj);
+}
+
+std::vector<unsigned int>& CG::OpenGLMaterial::getTextures(){
+    return m_texObjs;
 }
 
