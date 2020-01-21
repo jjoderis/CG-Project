@@ -48,8 +48,8 @@ void CG::Mesh<geometryClass, materialClass>::updateMatrixWorld() {
     CG::Object3D::updateMatrixWorld();
 
     if(m_parent.lock()){
-        m_worldMatrix = dot(m_parent.lock()->m_worldMatrix, m_worldMatrix);
-        m_worldMatrixInverse = dot(m_worldMatrixInverse, m_parent.lock()->m_worldMatrixInverse);
+        m_worldMatrix = m_parent.lock()->m_worldMatrix * m_worldMatrix;
+        m_worldMatrixInverse = m_worldMatrixInverse * m_parent.lock()->m_worldMatrixInverse;
     }
 
     for(unsigned int i = 0; i < m_children.size(); ++i){

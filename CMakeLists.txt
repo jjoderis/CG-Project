@@ -96,7 +96,7 @@ if(BUILD_TESTS)
 
     # Now simply link against gtest or gtest_main as needed. Eg
     add_executable(unitTests ${TEST_FILES})
-    target_link_libraries(unitTests gtest_main Math_Util CG_Framework)
+    target_link_libraries(unitTests gtest_main Math_Util CG_Framework_Core CG_Framework_OpenGL CG_Helper_Functions)
     add_test(NAME example_test COMMAND unitTests)
 
     target_include_directories(unitTests PUBLIC

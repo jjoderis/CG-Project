@@ -9,7 +9,7 @@
 void bounceAround(CG::Object3D &obj) {
     float radius{ std::dynamic_pointer_cast<CG::SphereGeometry>(dynamic_cast<CG::OpenGLMesh&>(obj).getGeometry())->getRadius() };
     CG::Matrix4 worldMatrix{obj.getMatrixWorld()};
-    CG::Vector3 worldPos{ dot(worldMatrix, CG::Vector4{ obj.getPosition(), 1.0} ) };
+    CG::Vector3 worldPos{ worldMatrix * CG::Vector4{ obj.getPosition(), 1.0} };
 
     for(int i = 0; i < 3; ++i){
     if(worldPos.at(i) + radius >= 10.0){

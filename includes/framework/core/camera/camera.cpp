@@ -34,10 +34,10 @@ void CG::Camera::updateProjectionMatrix(){
 }
 
 void CG::Camera::lookAt(CG::Vector3 position){
-    Vector3 worldPosition{dot(m_worldMatrix, Vector4{m_position, 1.0})};
+    Vector3 worldPosition{m_worldMatrix * Vector4{m_position, 1.0}};
     Vector3 view{(worldPosition - position).normalize()};
 
-    Vector3 upWorld{dot(m_worldMatrix, Vector4{ 0.0, 1.0, 0.0, 1.0 })};
+    Vector3 upWorld{m_worldMatrix * Vector4{ 0.0, 1.0, 0.0, 1.0 }};
 
     Vector3 right{-(cross(view, upWorld).normalize())};
 

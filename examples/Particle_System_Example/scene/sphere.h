@@ -38,7 +38,7 @@ void setUpSphere(CG::OpenGLScene &scene){
     void (*animation)(CG::Object3D&) = [](CG::Object3D &obj) {
         float radius{ std::dynamic_pointer_cast<CG::SphereGeometry>(dynamic_cast<CG::OpenGLMesh&>(obj).getGeometry())->getRadius() };
         CG::Matrix4 worldMatrix{obj.getMatrixWorld()};
-        CG::Vector3 worldPos{ dot(worldMatrix, CG::Vector4{ obj.getPosition(), 1.0} ) };
+        CG::Vector3 worldPos{ worldMatrix * CG::Vector4{ obj.getPosition(), 1.0} };
 
         for(int i = 0; i < 3; ++i){
         if(worldPos.at(i) + radius >= 10.0){
@@ -70,10 +70,10 @@ void setUpSphere(CG::OpenGLScene &scene){
         std::shared_ptr<CG::OpenGLMaterial> material{ mesh->getMaterial() };
         std::shared_ptr<CG::OpenGLGeometry> geometry{ mesh->getGeometry() }; 
 
-        CG::Matrix4 modelViewMatrix{dot(viewMatrix, mesh->getMatrixWorld())};
+        CG::Matrix4 modelViewMatrix{ viewMatrix * mesh->getMatrixWorld() };
         //transpose inverse of modelView Matrix N = ((mV)^-1)^T = ((V * M)^-1)^T = (M^-1 * V^-1)^T
         
-        CG::Matrix4 normalMatrix{dot(mesh->getMatrixWorldInverse(), viewMatrixInverse).transpose()};
+        CG::Matrix4 normalMatrix{(mesh->getMatrixWorldInverse(), viewMatrixInverse).transpose()};
 
         glUseProgram(material->getProgram());
 

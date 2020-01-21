@@ -36,15 +36,15 @@ void CG::Object3D::updateMatrixWorld(){
 
     CG::Matrix4 scaleMat{createScalingMatrix(m_scale)};
     
-    m_worldMatrix = dot(transMat, rotMat);
-    m_worldMatrix = dot(m_worldMatrix, scaleMat);
+    m_worldMatrix = transMat * rotMat;
+    m_worldMatrix = m_worldMatrix * scaleMat;
 
     CG::Matrix4 transmatInv{createTranslationMatrix(-m_position)};
     CG::Matrix4 rotMatInv{ rotMat.transpose() };
     CG::Matrix4 scaleMatInv{ createScalingMatrix(Vector3{1.0f/m_scale.at(0), 1.0f/m_scale.at(1), 1.0f/m_scale.at(2)}) };
 
-    m_worldMatrixInverse = dot(scaleMatInv, rotMatInv);
-    m_worldMatrixInverse = dot(m_worldMatrixInverse, transmatInv);
+    m_worldMatrixInverse = scaleMatInv * rotMatInv;
+    m_worldMatrixInverse = m_worldMatrixInverse * transmatInv;
 }
 
 void CG::Object3D::setPosition(const CG::Vector3 &position){

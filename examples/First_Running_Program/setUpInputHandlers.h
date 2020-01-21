@@ -43,8 +43,8 @@ void handleKeyboardInput(GLFWwindow *window, int key, int scancode, int action, 
   }
   
   CG::Matrix4 cameraToWorld{ CG::createRotationMatrix(camera->getRotation()) };
-  CG::Vector3 cameraX{ dot(cameraToWorld, CG::Vector4{1.0, 0.0, 0.0, 1.0}) };
-  CG::Vector3 cameraZ{ dot(cameraToWorld, CG::Vector4{0.0, 0.0, 1.0, 1.0}) };
+  CG::Vector3 cameraX{ cameraToWorld * CG::Vector4{1.0, 0.0, 0.0, 1.0} };
+  CG::Vector3 cameraZ{ cameraToWorld * CG::Vector4{0.0, 0.0, 1.0, 1.0} };
 
   switch(key){
     case GLFW_KEY_W:

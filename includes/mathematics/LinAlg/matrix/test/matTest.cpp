@@ -167,16 +167,6 @@ TEST(MATRIX_TEST, unary_sub_overload)
     EXPECT_EQ(-mat, inv);
 }
 
-
-TEST(MATRIX_TEST, mult_overload)
-{
-    LinAlg::Matrix<int, 2, 2> mat{ {2, 3}, {4, 5} };
-
-    LinAlg::Matrix<int, 2, 2> square{ {4, 9}, {16, 25} };
-
-    EXPECT_EQ(mat * mat, square);
-}
-
 TEST(MATRIX_TEST, mult_assign_overload)
 {
     LinAlg::Matrix<int, 2, 2> mat{ {2, 3}, {4, 5} };
@@ -320,7 +310,7 @@ TEST(MATRIX_TEST, matrix_matrix_multiplication)
 
     LinAlg::Matrix<int, 3, 4> res{ {11, 14, 17, 20}, {23, 30, 37, 44}, {35, 46, 57, 68} };
 
-    EXPECT_EQ(dot(mat1, mat2), res);
+    EXPECT_EQ(mat1 * mat2, res);
 }
 
 TEST(MATRIX_TEST, matrix_vector_multiplication)
@@ -330,5 +320,5 @@ TEST(MATRIX_TEST, matrix_vector_multiplication)
 
     LinAlg::Vector<int, 3> res{5, 11, 17};
 
-    EXPECT_EQ(dot(mat, vec), res);
+    EXPECT_EQ(mat * vec, res);
 }

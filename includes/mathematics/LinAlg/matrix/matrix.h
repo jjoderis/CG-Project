@@ -219,40 +219,6 @@ namespace LinAlg
         }
     };
 
-    //computes matrix matrix multiplication and returns the resulting matrix
-    template <typename T, int rowM1, int colM1rowM2, int colM2>
-    Matrix<T, rowM1, colM2> dot(const Matrix<T, rowM1, colM1rowM2> &m1, const Matrix<T, colM1rowM2, colM2> &m2){
-        Matrix<T, rowM1, colM2> res;
-
-        for(int col{ 0 }; col < colM2; ++col){
-            for(int row{ 0 }; row < rowM1; ++row){
-                T sum{ 0 };
-                for(int i{ 0 }; i < colM1rowM2; ++i){
-                    sum += m1.at(row, i) * m2.at(i, col);
-                }
-                res.set(row, col, sum);
-            }
-        }
-
-        return res;
-    }
-
-    //computes matrix vector multiplication and returns resulting vector
-    template <typename T, int rows, int cols>
-    Vector<T, rows> dot(const Matrix<T, rows, cols> &mat, const Vector<T, cols> &vec){
-        Vector<T, rows> res;
-
-        for(int row{ 0 }; row < rows; ++row){
-            T sum{ 0 };
-            for(int i{ 0 }; i < cols; ++i){
-                sum += mat.at(row, i) * vec.at(i);
-            }
-            res.set(row, sum);
-        }
-
-        return res;
-    }
-
     template <typename T, int rows, int cols>
     Matrix<T, cols, rows> transpose(const Matrix<T, rows, cols> &mat){
         Matrix<T, cols, rows> trans;
@@ -320,13 +286,38 @@ namespace LinAlg
         return newMat;
     }
 
+    //computes matrix matrix multiplication and returns the resulting matrix
+    template <typename T, int rowM1, int colM1rowM2, int colM2>
+    Matrix<T, rowM1, colM2> operator*(const Matrix<T, rowM1, colM1rowM2> &m1, const Matrix<T, colM1rowM2, colM2> &m2){
+        Matrix<T, rowM1, colM2> res;
+
+        for(int col{ 0 }; col < colM2; ++col){
+            for(int row{ 0 }; row < rowM1; ++row){
+                T sum{ 0 };
+                for(int i{ 0 }; i < colM1rowM2; ++i){
+                    sum += m1.at(row, i) * m2.at(i, col);
+                }
+                res.set(row, col, sum);
+            }
+        }
+
+        return res;
+    }
+
+    //computes matrix vector multiplication and returns resulting vector
     template <typename T, int rows, int cols>
-    Matrix<T, rows, cols> operator*(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2){
-        Matrix<T, rows, cols> newMat{ m1 };
+    Vector<T, rows> operator*(const Matrix<T, rows, cols> &mat, const Vector<T, cols> &vec){
+        Vector<T, rows> res;
 
-        newMat *= m2;
+        for(int row{ 0 }; row < rows; ++row){
+            T sum{ 0 };
+            for(int i{ 0 }; i < cols; ++i){
+                sum += mat.at(row, i) * vec.at(i);
+            }
+            res.set(row, sum);
+        }
 
-        return newMat;
+        return res;
     }
 
     template <typename T, int rows, int cols>
