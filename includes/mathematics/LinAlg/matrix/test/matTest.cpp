@@ -2,6 +2,13 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
+class MatrixTest : public ::testing::Test {
+    protected:
+        // void SetUp() override {}
+
+        // void TearDown() override {}
+        LinAlg::Matrix<int, 2, 2> m1{ { 1, 2 }, { 3, 4 } };
+};
 
 TEST(MATRIX_TEST, instantiate_many_matrices)
 {
@@ -10,261 +17,159 @@ TEST(MATRIX_TEST, instantiate_many_matrices)
     std::cout << sizeof(matrices) << '\n';
 }
 
-TEST(MATRIX_TEST, initializer_list_constructor)
+TEST_F(MatrixTest, initializer_list_constructor)
 {
-    LinAlg::Matrix<float, 2, 2> mat{ {1.0, 2.0}, {3.0, 4.0} };
-
-    float* matPtr = mat.data();
-    EXPECT_EQ(matPtr[0], 1.0);
-    EXPECT_EQ(matPtr[1], 3.0);
-    EXPECT_EQ(matPtr[2], 2.0);
-    EXPECT_EQ(matPtr[3], 4.0);
+    int* matPtr = m1.data();
+    EXPECT_EQ(matPtr[0], 1);
+    EXPECT_EQ(matPtr[1], 3);
+    EXPECT_EQ(matPtr[2], 2);
+    EXPECT_EQ(matPtr[3], 4);
 }
 
-TEST(MATRIX_TEST, at_function)
+TEST_F(MatrixTest, at_function)
 {
-    LinAlg::Matrix<float, 3, 3> mat{ {1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0} };
-
-    EXPECT_EQ(mat.at(0, 0), 1.0);
-    EXPECT_EQ(mat.at(0, 1), 2.0);
-    EXPECT_EQ(mat.at(0, 2), 3.0);
-    EXPECT_EQ(mat.at(1, 0), 4.0);
-    EXPECT_EQ(mat.at(1, 1), 5.0);
-    EXPECT_EQ(mat.at(1, 2), 6.0);
-    EXPECT_EQ(mat.at(2, 0), 7.0);
-    EXPECT_EQ(mat.at(2, 1), 8.0);
-    EXPECT_EQ(mat.at(2, 2), 9.0);
+    EXPECT_EQ(m1.at(0, 0), 1);
+    EXPECT_EQ(m1.at(0, 1), 2);
+    EXPECT_EQ(m1.at(1, 0), 3);
+    EXPECT_EQ(m1.at(1, 1), 4);
 }
 
-TEST(MATRIX_TEST, copy_constructor)
+TEST_F(MatrixTest, copy_constructor)
 {
-    LinAlg::Matrix<float, 2, 2> mat{ {1.0, 2.0}, {3.0, 4.0} };
-    LinAlg::Matrix<float, 2, 2> matCopy{ mat };
-
-    EXPECT_EQ(mat, matCopy);
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ m1 }));
 }
 
-TEST(MATRIX_TEST, assignment_overload)
+TEST_F(MatrixTest, assignment_overload)
 {
-    LinAlg::Matrix<float, 2, 2> mat{ {1.0, 2.0}, {3.0, 4.0} };
+    LinAlg::Matrix<int, 2, 2> matCopy;
 
-    LinAlg::Matrix<float, 2, 2> matCopy;
-
-    matCopy = mat;
-    ASSERT_EQ(mat, matCopy);
+    matCopy = m1;
+    ASSERT_EQ(m1, matCopy);
 }
 
-TEST(MATRIX_TEST, outstream_overload)
+TEST_F(MatrixTest, outstream_overload)
 {
-    LinAlg::Matrix<float, 2, 2> mat{ {1.0, 2.0}, {3.0, 4.0} };
-
     testing::internal::CaptureStdout();
-    std::cout << mat;
+    std::cout << m1;
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ(output, std::string{"[ [ 1, 2 ], [ 3, 4 ] ]"}); 
 }
 
-TEST(MATRIX_TEST, add_overload)
+TEST_F(MatrixTest, add_overload)
 {
-   LinAlg::Matrix<float, 2, 2> mat1{ {1.0, 2.0}, {3.0, 4.0} };
-   LinAlg::Matrix<float, 2, 2> mat2{ {1.0, 2.0}, {3.0, 4.0} };
-
-   LinAlg::Matrix<float, 2, 2> sum{ {2.0, 4.0}, {6.0, 8.0} };
-   EXPECT_EQ(mat1 + mat2, sum); 
+   EXPECT_EQ(m1 + m1, (LinAlg::Matrix<int, 2, 2>{ {2, 4}, {6, 8} })); 
 }
 
-TEST(MATRIX_TEST, add_assign_overload)
+TEST_F(MatrixTest, add_assign_overload)
 {
-    LinAlg::Matrix<float, 2, 2> mat{ {1.0, 2.0}, {3.0, 4.0} };
-    mat += LinAlg::Matrix<float, 2, 2>{ {1.0, 2.0}, {3.0, 4.0} };
-
-    LinAlg::Matrix<float, 2, 2> sum{ {2.0, 4.0}, {6.0, 8.0} };
-    EXPECT_EQ(mat, sum);
+    m1 += LinAlg::Matrix<int, 2, 2>{ {1, 2}, {3, 4} };
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {2, 4}, {6, 8} }));
 }
 
-TEST(MATRIX_TEST, add_T_right)
+TEST_F(MatrixTest, add_T_right)
 {
-    LinAlg::Matrix<float, 2, 2> mat{ {0.0, 0.0}, {0.0, 0.0} };
-
-    LinAlg::Matrix<float, 2, 2> ones{ {1.0, 1.0}, {1.0, 1.0} };
-
-    EXPECT_EQ(mat + 1.0f, ones);
+    EXPECT_EQ(m1 + 1, (LinAlg::Matrix<int, 2, 2>{ {2, 3}, {4, 5} }));
 }
 
-TEST(MATRIX_TEST, add_T_left)
+TEST_F(MatrixTest, add_T_left)
 {
-    LinAlg::Matrix<float, 2, 2> mat{ {0.0, 0.0}, {0.0, 0.0} };
-
-    LinAlg::Matrix<float, 2, 2> ones{ {1.0, 1.0}, {1.0, 1.0} };
-
-    EXPECT_EQ(1.0f + mat, ones);
+    EXPECT_EQ(1 + m1, (LinAlg::Matrix<int, 2, 2>{ {2, 3}, {4, 5} }));
 }
 
-TEST(MATRIX_TEST, add_assign_T)
+TEST_F(MatrixTest, add_assign_T)
 {
-    LinAlg::Matrix<float, 2, 2> mat{ {0.0, 0.0}, {0.0, 0.0} };
+    m1 += 1;
 
-    LinAlg::Matrix<float, 2, 2> ones{ {1.0, 1.0}, {1.0, 1.0} };
-
-    mat += 1;
-
-    EXPECT_EQ(mat, ones);
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {2, 3}, {4, 5} }));
 }
 
-TEST(MATRIX_TEST, sub_overload)
+TEST_F(MatrixTest, sub_overload)
 {
-   LinAlg::Matrix<int, 2, 2> mat1{ {1, 2}, {3, 4} };
-   LinAlg::Matrix<int, 2, 2> mat2{ {1, 2}, {3, 4} };
-
-   LinAlg::Matrix<int, 2, 2> diff{ {0, 0}, {0, 0} };
-   EXPECT_EQ(mat1 - mat2, diff); 
+   EXPECT_EQ(m1 - m1, (LinAlg::Matrix<int, 2, 2>{ {0, 0}, {0, 0} })); 
 }
 
-TEST(MATRIX_TEST, sub_assign_overload)
+TEST_F(MatrixTest, sub_assign_overload)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {1, 2}, {3, 4} };
-    mat -= LinAlg::Matrix<int, 2, 2>{ {1, 2}, {3, 4} };
+    m1 -= LinAlg::Matrix<int, 2, 2>{ {1, 2}, {3, 4} };
 
-    LinAlg::Matrix<int, 2, 2> diff{ {0, 0}, {0, 0} };
-    EXPECT_EQ(mat, diff);
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {0, 0}, {0, 0} }));
 }
 
-TEST(MATRIX_TEST, sub_T_right)
+TEST_F(MatrixTest, sub_T_right)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {1, 1}, {1, 1} };
-
-    LinAlg::Matrix<int, 2, 2> zeros{ {0, 0}, {0, 0} };
-
-    EXPECT_EQ(mat - 1, zeros);
+    EXPECT_EQ(m1 - 1, (LinAlg::Matrix<int, 2, 2>{ {0, 1}, {2, 3} }));
 }
 
-TEST(MATRIX_TEST, sub_T_left)
+TEST_F(MatrixTest, sub_T_left)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {1, 1}, {1, 1} };
-
-    LinAlg::Matrix<int, 2, 2> zeros{ {0, 0}, {0, 0} };
-
-    EXPECT_EQ(1 - mat, zeros);
+    EXPECT_EQ(1 - m1, (LinAlg::Matrix<int, 2, 2>{ {0, -1}, {-2, -3} }));
 }
 
-TEST(MATRIX_TEST, sub_assign_T)
+TEST_F(MatrixTest, sub_assign_T)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {1, 1}, {1, 1} };
+    m1 -= 1;
 
-    LinAlg::Matrix<int, 2, 2> zeros{ {0, 0}, {0, 0} };
-
-    mat -= 1;
-
-    EXPECT_EQ(mat, zeros);
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {0, 1}, {2, 3} }));
 }
 
-TEST(MATRIX_TEST, unary_sub_overload)
+TEST_F(MatrixTest, unary_sub_overload)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ { 1, -10}, { 2, -8} };
-
-    LinAlg::Matrix<int, 2, 2> inv{ {-1,  10}, {-2,  8} };
-
-    EXPECT_EQ(-mat, inv);
+    EXPECT_EQ(-m1, (LinAlg::Matrix<int, 2, 2>{ {-1, -2}, {-3, -4} }));
 }
 
-TEST(MATRIX_TEST, mult_assign_overload)
+TEST_F(MatrixTest, mult_T_right)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {2, 3}, {4, 5} };
-
-    LinAlg::Matrix<int, 2, 2> square{ {4, 9}, {16, 25} };
-
-    mat *= mat;
-
-    EXPECT_EQ(mat, square);
+    EXPECT_EQ(m1 * 2, (LinAlg::Matrix<int, 2, 2>{ {2, 4}, {6, 8} }));
 }
 
-TEST(MATRIX_TEST, mult_T_right)
+TEST_F(MatrixTest, mult_T_left)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {1, 1}, {1, 1} };
-
-    LinAlg::Matrix<int, 2, 2> twos{ {2, 2}, {2, 2} };
-
-    EXPECT_EQ(mat * 2, twos);
+    EXPECT_EQ(2 * m1, (LinAlg::Matrix<int, 2, 2>{ {2, 4}, {6, 8} }));
 }
 
-TEST(MATRIX_TEST, mult_T_left)
+TEST_F(MatrixTest, mult_assign_T)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {1, 1}, {1, 1} };
+    m1 *= 2;
 
-    LinAlg::Matrix<int, 2, 2> twos{ {2, 2}, {2, 2} };
-
-    EXPECT_EQ(2 * mat, twos);
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {2, 4}, {6, 8} }));
 }
 
-TEST(MATRIX_TEST, mult_assign_T)
+TEST_F(MatrixTest, div_overload)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {1, 1}, {1, 1} };
-
-    LinAlg::Matrix<int, 2, 2> twos{ {2, 2}, {2, 2} };
-
-    mat *= 2;
-
-    EXPECT_EQ(mat, twos);
+    EXPECT_EQ(m1 / m1, (LinAlg::Matrix<int, 2, 2>{ {1, 1}, {1, 1} }));
 }
 
-TEST(MATRIX_TEST, div_overload)
+TEST_F(MatrixTest, div_assign_overload)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {4, 9}, {3, 5} };
+    m1 /= m1;
 
-    LinAlg::Matrix<int, 2, 2> ones{ {1, 1}, {1, 1} };
-
-    EXPECT_EQ(mat / mat, ones);
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {1, 1}, {1, 1} }));
 }
 
-TEST(MATRIX_TEST, div_assign_overload)
+TEST_F(MatrixTest, div_T_right)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {2, 3}, {4, 7} };
-
-    LinAlg::Matrix<int, 2, 2> ones{ {1, 1}, {1, 1} };
-
-    mat /= mat;
-
-    EXPECT_EQ(mat, ones);
+    EXPECT_EQ((LinAlg::Matrix<int, 2, 2>{ {3, 6}, {9, 12} }) / 3, m1);
 }
 
-TEST(MATRIX_TEST, div_T_right)
+TEST_F(MatrixTest, div_T_left)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {3, 9}, {6, 12} };
-
-    LinAlg::Matrix<int, 2, 2> quot{ {1, 3}, {2, 4} };
-
-    EXPECT_EQ(mat / 3, quot);
+    EXPECT_EQ(12 / m1, (LinAlg::Matrix<int, 2, 2>{ {12, 6}, {4, 3} }));
 }
 
-TEST(MATRIX_TEST, div_T_left)
+TEST_F(MatrixTest, div_assign_T)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {2, 4}, {8, 16} };
+    LinAlg::Matrix<int, 2, 2> doubleM{ {2, 4}, {6, 8} };
 
-    LinAlg::Matrix<int, 2, 2> quot{ {8, 4}, {2, 1} };
+    doubleM /= 2;
 
-    EXPECT_EQ(16 / mat, quot);
+    EXPECT_EQ(doubleM, m1);
 }
 
-TEST(MATRIX_TEST, div_assign_T)
+TEST_F(MatrixTest, set_identity)
 {
-    LinAlg::Matrix<int, 2, 2> mat{ {10, 20}, {5, 15} };
+    m1.setIdentity();
 
-    LinAlg::Matrix<int, 2, 2> quot{ {2, 4}, {1, 3} };
-
-    mat /= 5;
-
-    EXPECT_EQ(mat, quot);
-}
-
-TEST(MATRIX_TEST, set_identity)
-{
-    LinAlg::Matrix<int, 3, 3> mat;
-
-    LinAlg::Matrix<int, 3, 3> identity{ {1, 0, 0}, {0, 1, 0}, {0, 0, 1} };
-
-    mat.setIdentity();
-
-    EXPECT_EQ(mat, identity);
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {1, 0}, {0, 1} }));
 }
 
 TEST(MATRIX_TEST, transpose_a_b)
@@ -285,32 +190,21 @@ TEST(MATRIX_TEST, transpose_a_a)
     EXPECT_EQ(transpose(mat), trans);
 }
 
-TEST(MATRIX_TEST, transpose_member_function)
+TEST_F(MatrixTest, transpose_member_function)
 {
-    LinAlg::Matrix<int, 3, 3> mat{ {1, 2, 3}, {4, 5, 6}, {7, 8, 9} };
+    m1.transpose();
 
-    LinAlg::Matrix<int, 3, 3> trans{ {1, 4, 7}, {2, 5, 8}, {3, 6, 9} };
-
-    mat.transpose();
-
-    EXPECT_EQ(mat, trans);
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {1, 3}, {2, 4} }));
 }
 
-TEST(MATRIX_TEST, trace_member_function)
+TEST_F(MatrixTest, trace_member_function)
 {
-    LinAlg::Matrix<int, 3, 3> mat{ {2, 3, 4}, {5, 6, 7}, {8, 9, 10} };
-
-    EXPECT_DOUBLE_EQ(mat.trace(), 18);
+    EXPECT_DOUBLE_EQ(m1.trace(), 5);
 }
 
-TEST(MATRIX_TEST, matrix_matrix_multiplication)
+TEST_F(MatrixTest, matrix_matrix_multiplication)
 {
-    LinAlg::Matrix<int, 3, 2> mat1{ {1, 2}, {3, 4}, {5, 6} };
-    LinAlg::Matrix<int, 2, 4> mat2{ {1, 2, 3, 4}, {5, 6, 7, 8} };
-
-    LinAlg::Matrix<int, 3, 4> res{ {11, 14, 17, 20}, {23, 30, 37, 44}, {35, 46, 57, 68} };
-
-    EXPECT_EQ(mat1 * mat2, res);
+    EXPECT_EQ(m1 * m1, (LinAlg::Matrix<int, 2, 2>{ {7, 10}, {15, 22} }));
 }
 
 TEST(MATRIX_TEST, matrix_vector_multiplication)
@@ -321,4 +215,11 @@ TEST(MATRIX_TEST, matrix_vector_multiplication)
     LinAlg::Vector<int, 3> res{5, 11, 17};
 
     EXPECT_EQ(mat * vec, res);
+}
+
+TEST_F(MatrixTest, mult_assign_overload)
+{
+    m1 *= m1;
+
+    EXPECT_EQ(m1, (LinAlg::Matrix<int, 2, 2>{ {7, 10}, {15, 22} }));
 }

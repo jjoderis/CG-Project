@@ -17,3 +17,9 @@ add_library(CG_Framework_Core
     object3D/object3D.cpp
     scene/baseScene.cpp
 )
+
+set(TEST_FILES
+    ${TEST_FILES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/test/geometryTest.cpp
+    PARENT_SCOPE
+)

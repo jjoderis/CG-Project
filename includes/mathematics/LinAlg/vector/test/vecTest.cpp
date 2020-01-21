@@ -2,6 +2,14 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
+class VectorTest : public ::testing::Test {
+    protected:
+        // void SetUp() override {}
+
+        // void TearDown() override {}
+        LinAlg::Vector<int, 3> v1{ 1, 2, 3 };
+};
+
 TEST(VECTOR_TEST, instantiate_many_vectors)
 {
     LinAlg::Vector<double, 100000> vectors[1000];
@@ -9,292 +17,178 @@ TEST(VECTOR_TEST, instantiate_many_vectors)
     std::cout << sizeof(vectors) << '\n';
 }
 
-TEST(VECTOR_TEST, initializer_list_constructor)
+TEST_F(VectorTest, initializer_list_constructor)
 {
-    LinAlg::Vector<float, 3> vec{ 1.0 , 2.0, 3.0};
-
-    float* vecPtr = vec.data();
-    EXPECT_EQ(vecPtr[0], 1.0);
-    EXPECT_EQ(vecPtr[1], 2.0);
-    EXPECT_EQ(vecPtr[2], 3.0); 
+    int* vecPtr = v1.data();
+    EXPECT_EQ(vecPtr[0], 1);
+    EXPECT_EQ(vecPtr[1], 2);
+    EXPECT_EQ(vecPtr[2], 3); 
 }
 
-TEST(VECTOR_TEST, copy_constructor)
+TEST_F(VectorTest, copy_constructor)
 {
-    LinAlg::Vector<float, 4> origVec{ 1.0, 2.0, 3.0, 4.0 };
-    LinAlg::Vector<float, 4> copyVec{ origVec };
-
-    EXPECT_EQ(origVec, copyVec);
+    EXPECT_EQ(v1, (LinAlg::Vector<int, 3>{ v1 }));
 }
 
-TEST(VECTOR_TEST, smaller_vector_constructor)
+TEST_F(VectorTest, smaller_vector_constructor)
 {
-    LinAlg::Vector<int, 3> vec3{ 1, 2, 3 };
-
-    LinAlg::Vector<int, 4> vec4{ vec3, 10 };
-
-    LinAlg::Vector<int, 4> res{ 1, 2, 3, 10 };
-
-    EXPECT_EQ(vec4, res);
+    EXPECT_EQ((LinAlg::Vector<int, 4>{ v1, 10 }), (LinAlg::Vector<int, 4>{ 1, 2, 3, 10 }));
 }
 
-TEST(VECTOR_TEST, at_function)
+TEST_F(VectorTest, at_function)
 {
-    LinAlg::Vector<int, 3> vec3{ 1, 2, 3 };
-
-    EXPECT_EQ(vec3.at(0), 1);
-    EXPECT_EQ(vec3.at(1), 2);
-    EXPECT_EQ(vec3.at(2), 3);
+    EXPECT_EQ(v1.at(0), 1);
+    EXPECT_EQ(v1.at(1), 2);
+    EXPECT_EQ(v1.at(2), 3);
 }
 
-TEST(VECTOR_TEST, assignment_overload)
+TEST_F(VectorTest, assignment_overload)
 {
-    LinAlg::Vector<float, 2> vec{ 0.0, 0.0 };
+    LinAlg::Vector<int, 3> assignVec{ 2, 2, 2 };
+    assignVec = v1;
 
-    LinAlg::Vector<float, 2> assignVec{ 2.0, 2.0 };
-    vec = assignVec;
-
-    EXPECT_EQ(vec, assignVec);
+    EXPECT_EQ(v1, assignVec);
 }
 
-TEST(VECTOR_TEST, decay_to_array)
+TEST_F(VectorTest, outstream_overload)
 {
-    LinAlg::Vector<float, 3> vec{ 1.0 , 2.0, 3.0};
-
-    float* vecDataPtr = vec.data();
-
-    EXPECT_EQ(*vecDataPtr, 1.0);
-    EXPECT_EQ(*(vecDataPtr + 1), 2.0);  
-    EXPECT_EQ(*(vecDataPtr + 2), 3.0);
-}
-
-TEST(VECTOR_TEST, outstream_overload)
-{
-    LinAlg::Vector<float, 3> vec{ 1.0 , 2.0, 3.0};
-
     testing::internal::CaptureStdout();
-    std::cout << vec;
+    std::cout << v1;
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ(output, std::string{"[ 1, 2, 3 ]"});
 }
 
-TEST(VECTOR_TEST, add_overload)
+TEST_F(VectorTest, add_overload)
 {
-   LinAlg::Vector<float, 3> vec1{ 1.0 , 2.0, 3.0};
-   LinAlg::Vector<float, 3> vec2{ 1.0 , 2.0, 3.0};
-
-   LinAlg::Vector<float, 3> sum{ 2.0, 4.0, 6.0 };
-   EXPECT_EQ(vec1 + vec2, sum); 
+   EXPECT_EQ(v1 + v1, (LinAlg::Vector<int, 3>{ 2, 4, 6 })); 
 }
 
-TEST(VECTOR_TEST, add_assign_overload)
+TEST_F(VectorTest, add_assign_overload)
 {
-    LinAlg::Vector<float, 3> vec1{ 1.0 , 2.0, 3.0};
-    vec1 += LinAlg::Vector<float, 3>{ 1.0 , 2.0, 3.0};
+    v1 += LinAlg::Vector<int, 3>{ 1, 2, 3 };
 
-    LinAlg::Vector<float, 3> sum{ 2.0, 4.0, 6.0 };
-    EXPECT_EQ(vec1, sum);
+    EXPECT_EQ(v1, (LinAlg::Vector<int, 3>{ 2, 4, 6 }));
 }
 
-TEST(VECTOR_TEST, add_T_right)
+TEST_F(VectorTest, add_T_right)
 {
-    LinAlg::Vector<int, 2> vec{ 0, 0 };
-
-    LinAlg::Vector<int, 2> ones{ 1, 1 };
-
-    EXPECT_EQ(vec + 1, ones);
+    EXPECT_EQ(v1 + 1, (LinAlg::Vector<int, 3>{ 2, 3, 4 }));
 }
 
-TEST(VECTOR_TEST, add_T_left)
+TEST_F(VectorTest, add_T_left)
 {
-    LinAlg::Vector<int, 2> vec{ 0, 0 };
-
-    LinAlg::Vector<int, 2> ones{ 1, 1 };
-
-    EXPECT_EQ(1 + vec, ones);
+    EXPECT_EQ(1 + v1, (LinAlg::Vector<int, 3>{ 2, 3, 4 }));
 }
 
-TEST(VECTOR_TEST, add_assign_T)
+TEST_F(VectorTest, add_assign_T)
 {
-    LinAlg::Vector<int, 2> vec{ 0, 0 };
+    v1 += 1;
 
-    LinAlg::Vector<int, 2> ones{ 1, 1 };
-
-    vec += 1;
-
-    EXPECT_EQ(vec, ones);
+    EXPECT_EQ(v1, (LinAlg::Vector<int, 3>{ 2, 3, 4 }));
 }
 
-TEST(VECTOR_TEST, sub_overload)
+TEST_F(VectorTest, sub_overload)
 {
-   LinAlg::Vector<int, 3> vec1{ 1, 2, 3 };
-   LinAlg::Vector<int, 3> vec2{ 1, 2, 3 };
-
-   LinAlg::Vector<int, 3> diff{ 0, 0, 0 };
-   EXPECT_EQ(vec1 - vec2, diff); 
+   EXPECT_EQ(v1 - v1, (LinAlg::Vector<int, 3>{ 0, 0, 0 })); 
 }
 
-TEST(VECTOR_TEST, sub_assign_overload)
+TEST_F(VectorTest, sub_assign_overload)
 {
-    LinAlg::Vector<int, 3> vec1{ 1, 2, 3 };
-    vec1 -= LinAlg::Vector<int, 3>{ 1, 2, 3 };
-
-    LinAlg::Vector<int, 3> diff{ 0, 0, 0 };
-    EXPECT_EQ(vec1, diff);
+    v1-= LinAlg::Vector<int, 3>{ 1, 2, 3 };
+    EXPECT_EQ(v1, (LinAlg::Vector<int, 3>{ 0, 0, 0 }));
 }
 
-TEST(VECTOR_TEST, sub_T_right)
+TEST_F(VectorTest, sub_T_right)
 {
-    LinAlg::Vector<int, 2> vec{ 1, 1 };
-
-    LinAlg::Vector<int, 2> zeros{ 0, 0 };
-
-    EXPECT_EQ(vec - 1, zeros);
+    EXPECT_EQ(v1 - 1, (LinAlg::Vector<int, 3>{ 0, 1, 2 }));
 }
 
-TEST(VECTOR_TEST, sub_T_left)
+TEST_F(VectorTest, sub_T_left)
 {
-    LinAlg::Vector<int, 2> vec{ 1, 1 };
-
-    LinAlg::Vector<int, 2> zeros{ 0, 0 };
-
-    EXPECT_EQ(1 - vec, zeros);
+    EXPECT_EQ(1 - v1, (LinAlg::Vector<int, 3>{ 0, -1, -2 }));
 }
 
-TEST(VECTOR_TEST, sub_assign_T)
+TEST_F(VectorTest, sub_assign_T)
 {
-    LinAlg::Vector<int, 2> vec{ 1, 1 };
+    v1 -= 1;
 
-    LinAlg::Vector<int, 2> zeros{ 0, 0 };
-
-    vec -= 1;
-
-    EXPECT_EQ(vec, zeros);
+    EXPECT_EQ(v1, (LinAlg::Vector<int, 3>{ 0, 1, 2 }));
 }
 
-TEST(VECTOR_TEST, unary_sub_overload)
+TEST_F(VectorTest, unary_sub_overload)
 {
-    LinAlg::Vector<int, 3> vec{  1, -10,  2};
-
-    LinAlg::Vector<int, 3> inv{ -1,  10, -2};
-
-    EXPECT_EQ(-vec, inv);
+    EXPECT_EQ(-v1, (LinAlg::Vector<int, 3>{ -1, -2, -3 }));
 }
 
-TEST(VECTOR_TEST, mult_overload)
+TEST_F(VectorTest, mult_overload)
 {
-    LinAlg::Vector<int, 2> vec{ 2, 3 };
-
-    LinAlg::Vector<int, 2> square{ 4, 9 };
-
-    EXPECT_EQ(vec * vec, square);
+    EXPECT_EQ(v1 * v1, (LinAlg::Vector<int, 3>{ 1, 4, 9 }));
 }
 
-TEST(VECTOR_TEST, mult_assign_overload)
+TEST_F(VectorTest, mult_assign_overload)
 {
-    LinAlg::Vector<int, 2> vec{ 2, 3 };
+    v1 *= v1;
 
-    LinAlg::Vector<int, 2> square{ 4, 9 };
-
-    vec *= vec;
-
-    EXPECT_EQ(vec, square);
+    EXPECT_EQ(v1, (LinAlg::Vector<int, 3>{ 1, 4, 9 }));
 }
 
-TEST(VECTOR_TEST, mult_T_right)
+TEST_F(VectorTest, mult_T_right)
 {
-    LinAlg::Vector<int, 2> vec{ 1, 1 };
-
-    LinAlg::Vector<int, 2> twos{ 2, 2 };
-
-    EXPECT_EQ(vec * 2, twos);
+    EXPECT_EQ(v1 * 2, (LinAlg::Vector<int, 3>{ 2, 4, 6 }));
 }
 
-TEST(VECTOR_TEST, mult_T_left)
+TEST_F(VectorTest, mult_T_left)
 {
-    LinAlg::Vector<int, 2> vec{ 1, 1 };
-
-    LinAlg::Vector<int, 2> twos{ 2, 2 };
-
-    EXPECT_EQ(2 * vec, twos);
+    EXPECT_EQ(2 * v1, (LinAlg::Vector<int, 3>{ 2, 4, 6 }));
 }
 
-TEST(VECTOR_TEST, mult_assign_T)
+TEST_F(VectorTest, mult_assign_T)
 {
-    LinAlg::Vector<int, 2> vec{ 1, 1 };
+    v1 *= 2;
 
-    LinAlg::Vector<int, 2> twos{ 2, 2 };
-
-    vec *= 2;
-
-    EXPECT_EQ(vec, twos);
+    EXPECT_EQ(v1, (LinAlg::Vector<int, 3>{ 2, 4, 6 }));
 }
 
-TEST(VECTOR_TEST, div_overload)
+TEST_F(VectorTest, div_overload)
 {
-    LinAlg::Vector<int, 2> vec{ 4, 9 };
-
-    LinAlg::Vector<int, 2> ones{ 1, 1 };
-
-    EXPECT_EQ(vec / vec, ones);
+    EXPECT_EQ(v1 / v1, (LinAlg::Vector<int, 3>{ 1, 1, 1 }));
 }
 
-TEST(VECTOR_TEST, div_assign_overload)
+TEST_F(VectorTest, div_assign_overload)
 {
-    LinAlg::Vector<int, 2> vec{ 2, 3 };
+    v1 /= v1;
 
-    LinAlg::Vector<int, 2> ones{ 1, 1 };
-
-    vec /= vec;
-
-    EXPECT_EQ(vec, ones);
+    EXPECT_EQ(v1, (LinAlg::Vector<int, 3>{ 1, 1, 1 }));
 }
 
-TEST(VECTOR_TEST, div_T_right)
+TEST_F(VectorTest, div_T_right)
 {
-    LinAlg::Vector<int, 2> vec{ 3, 9 };
-
-    LinAlg::Vector<int, 2> quot{ 1, 3 };
-
-    EXPECT_EQ(vec / 3, quot);
+    EXPECT_EQ((LinAlg::Vector<int, 3>{ 3, 6, 9 }) / 3, v1);
 }
 
-TEST(VECTOR_TEST, div_T_left)
+TEST_F(VectorTest, div_T_left)
 {
-    LinAlg::Vector<int, 2> vec{ 9, 3 };
-
-    LinAlg::Vector<int, 2> quot{ 1, 3 };
-
-    EXPECT_EQ(9 / vec, quot);
+    EXPECT_EQ(6 / (LinAlg::Vector<int, 3>{ 6, 3, 2 }), v1);
 }
 
-TEST(VECTOR_TEST, div_assign_T)
+TEST_F(VectorTest, div_assign_T)
 {
-    LinAlg::Vector<int, 2> vec{ 10, 20 };
+    LinAlg::Vector<int, 3> v2{ 3, 6, 9 };
 
-    LinAlg::Vector<int, 2> quot{ 2, 4 };
+    v2 /= 3;
 
-    vec /= 5;
-
-    EXPECT_EQ(vec, quot);
+    EXPECT_EQ(v2, v1);
 }
 
-TEST(VECTOR_TEST, dot_product)
+TEST_F(VectorTest, dot_product)
 {
-    LinAlg::Vector<int, 3> vec1{ 1, 0, 0 };
-    LinAlg::Vector<int, 3> vec2{ 0, 1, 0 };
-
-    ASSERT_FLOAT_EQ(vec1.dot(vec2), 0.0);
-    ASSERT_FLOAT_EQ(vec1.dot(vec1), 1.0);
+    ASSERT_FLOAT_EQ(v1.dot(v1), 14.0);
+    ASSERT_FLOAT_EQ(v1.dot(LinAlg::Vector<int, 3>{ -3, 0, 1 }), 0.0);
 }
 
-TEST(VECTOR_TEST, length)
+TEST_F(VectorTest, length)
 {
-    LinAlg::Vector<int, 3> vec1{ 1, 0, 0 };
-    LinAlg::Vector<int, 3> vec2{ 2, 0, 0 };
-
-    ASSERT_FLOAT_EQ(vec1.length(), 1.0);
-    ASSERT_FLOAT_EQ(vec2.length(), 2.0);
+    ASSERT_FLOAT_EQ((LinAlg::Vector<int, 3>{ 3, 0, 4 }).length(), 5.0);
 }
 
 TEST(VECTOR_TEST, angleTo)

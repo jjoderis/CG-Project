@@ -181,10 +181,11 @@ namespace LinAlg
 
         //overload * set this matrix to result of element wise multiplication with given matrix and return reference to it
         Matrix<T, rows, cols>& operator*= (const Matrix<T, rows, cols> &other){
+            static_assert(rows == cols, "Illeagal assignment multiplication of non square matrices");
 
-            for(int i = 0; i < rows * cols; ++i){
-                m_data[i] *= other.m_data[i];
-            }
+            Matrix<T, rows, cols> res = *this * other;
+
+            *this = res;
 
             return *this;
         }
