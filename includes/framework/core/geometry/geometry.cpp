@@ -25,11 +25,14 @@ CG::Geometry::Geometry(const std::initializer_list<CG::Vector3> &vertices, const
         m_faces[i] = face;
         ++i;
     }
+
+    calculateVertexNormals();
 }
 
 CG::Geometry::Geometry(const std::vector<CG::Vector3> &vertices, const std::vector<Face> &faces) 
     : m_vertices{ vertices }, m_faces{ faces }
 {
+    calculateVertexNormals();
 }
 
 CG::Geometry::Geometry(const CG::Geometry &other)
@@ -48,6 +51,8 @@ CG::Geometry& CG::Geometry::operator= (const CG::Geometry &other){
     m_faces = other.m_faces;
     m_faceNormals = other.m_faceNormals;
     m_vertColors = other.m_vertColors;
+    m_vertUVs = other.m_vertUVs;
+    m_mapType = other.m_mapType;
 
     return *this;
 }
@@ -112,8 +117,27 @@ int CG::Geometry::getNumFaces() const{
     return m_faces.size();
 }
 
+std::vector<CG::Vector2>& CG::Geometry::getVertUVs(){
+    return m_vertUVs;
+}
+
+void CG::Geometry::setMapType(TextureMapping mapType){
+    m_mapType = mapType;
+
+    calculateVertexUVs();
+}
+
 bool CG::operator== (const Geometry &g1, const Geometry &g2){
-    return ((g1.m_vertices == g2.m_vertices) && (g1.m_faces == g2.m_faces));
+    bool equal = (g1.m_vertices == g2.m_vertices) &&
+                 (g1.m_faces == g2.m_faces) &&
+                 (g1.m_vertNormals == g2.m_vertNormals) &&
+                 (g1.m_vertColors == g2.m_vertColors) &&
+                 (g1.m_faceNormals == g2.m_faceNormals) &&
+                 (g1.m_vertUVs == g2.m_vertUVs) &&
+                 (g1.m_center == g2.m_center) &&
+                 (g1.m_mapType == g2.m_mapType);
+
+    return equal;
 }
 
 void CG::Geometry::calculateFaceNormals(){
@@ -130,6 +154,8 @@ void CG::Geometry::calculateFaceNormals(){
 }
 
 void CG::Geometry::calculateVertexNormals(){
+    calculateFaceNormals();
+
     std::vector<int> occurences(m_vertices.size());
     m_vertNormals.resize(m_vertices.size());
 
@@ -146,4 +172,31 @@ void CG::Geometry::calculateVertexNormals(){
         m_vertNormals[i] /= occurences[i];
         m_vertNormals[i].normalize();
     } 
+}
+
+void CG::Geometry::calculateVertexUVs(){
+    if(m_vertUVs.size() != m_vertices.size()){
+        m_vertUVs.resize(m_vertices.size());
+    }
+
+    switch(m_mapType){
+        case SPHERE_MAPPING:
+            calculateSphereMapping();
+            break;
+        case BOX_MAPPING:
+            calculateBoxMapping();
+            break;
+    }
+}
+
+void CG::Geometry::calculateSphereMapping(){
+    for (unsigned int i = 0; i < m_vertices.size(); ++i) {
+        Vector3 toCenter{ (m_vertices[i] - m_center).normalize() };
+        float u = 0.5 + atan2(toCenter.at(0), toCenter.at(2)) / (2 * M_PI);
+        float v = 0.5 - asin(toCenter.at(1)) / M_PI;
+        m_vertUVs[i] = Vector2{u, v};
+    }
+}
+void CG::Geometry::calculateBoxMapping(){
+    // TODO: implement
 }

@@ -44,13 +44,8 @@ CG::SphereGeometry::SphereGeometry(float radius, unsigned int widthSegs, unsigne
             }
         }
     }
-
-    for (unsigned int i = 0; i < numVertices; i++) {
-        float u = (M_PI + atan2(m_vertices[i].at(1) - m_center.at(1), m_vertices[i].at(0) - m_center.at(0))) / (2 * M_PI);
-        float v = atan2( sqrt( pow( m_vertices[i].at(0) - m_center.at(0) , 2 ) + pow( m_vertices[i].at(1) - m_center.at(1) , 2 ) ) , m_vertices[i].at(2) - m_center.at(2) ) / M_PI;
-        m_vertUVs[i] = Vector2{u, v};
-    }
     
+    calculateVertexUVs();
     calculateFaceNormals();
     calculateVertexNormals();
 }

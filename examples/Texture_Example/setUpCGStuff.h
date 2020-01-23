@@ -16,6 +16,9 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
 
     std::shared_ptr<CG::OpenGLSphereGeometry> spherePtr{ new CG::OpenGLSphereGeometry{ 1.0, 30, 30 } };
     std::shared_ptr<CG::OpenGLGeometry> boxPtr = std::make_shared<CG::OpenGLGeometry>(setUpBoxGeometry());
+    spherePtr->activateNormals();
+    spherePtr->activateUVs();
+    spherePtr->updateOpenGL();
 
     CG::OpenGLMaterial phong{ setUpPhongMaterial() };
     CG::OpenGLMaterial plainYellow{ CG::RGBA_Color{ 1.0, 1.0, 0.0, 1.0 } };
@@ -25,11 +28,13 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     redSphere->setGeometry(spherePtr);
     redSphere->getMaterial()->setColor(1.0, 0.0, 0.0);
     redSphere->setRenderFunction(renderPhong);
-    redSphere->setAnimation(rotateAroundY);
+    //redSphere->setAnimation(rotateAroundY);
+    redSphere->translate(0.0, 1.0, 0.0);
+    redSphere->updateMatrixWorld();
 
     scene.addChild(redSphere);
 
-    camera.setPosition(3.0, 0.0, 0.0);
+    camera.setPosition(3.0, 1.0, 0.0);
     camera.rotateY(degToRad(90));
     camera.updateMatrixWorld();
 

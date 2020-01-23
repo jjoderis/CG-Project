@@ -8,7 +8,11 @@
 #include <initializer_list>
 
 namespace CG {
-    //A class that handles the vertices and faces of 3D objects; sets up OpenGL Objects that are then used for rendering
+
+    //type of mapping that can be used by a geoemtry
+    enum TextureMapping{ SPHERE_MAPPING, BOX_MAPPING };
+
+    //A class that handles the vertices and faces of 3D objects
     class Geometry {
     protected:
         //points in 3D space that are the base of the geometry
@@ -21,33 +25,36 @@ namespace CG {
         std::vector<Face> m_faces;
         //normals for all faces
         std::vector<Vector3> m_faceNormals;
-
+        // uv values used for texture mapping
         std::vector<Vector2> m_vertUVs;
 
         Vector3 m_center{ 0.0, 0.0, 0.0 };
 
+        TextureMapping m_mapType{ SPHERE_MAPPING };
+
     public:
         Geometry();
 
-        //creates vertices and faces from given data and stores them; sets up OpenGL information
-        Geometry(const std::initializer_list<float> &vertexData, const std::initializer_list<int> &faceData);
-
-        //stores copies of given vertices and faces; sets up OpenGL information
+        //stores copies of given vertices and faces
         Geometry(const std::initializer_list<CG::Vector3> &vertices, const std::initializer_list<CG::Face> &faces);
 
-        //copies vertices and faces data; sets up OpenGl information
+        //copies vertices and faces data
         Geometry(const std::vector<CG::Vector3> &vertices, const std::vector<Face> &faces);
 
-        //Copy constructor; copies vertices and faces from another geometry; doesn't copy OpenGL information
+        //Copy constructor; copies vertices and faces from another geometry
         Geometry(const Geometry &other);
 
-        //copies vertices and faces from another geometry; doesn't copy OpenGL information
+        //copies vertices and faces from another geometry
         Geometry& operator= (const Geometry &other);
 
         ~Geometry();
 
         void calculateFaceNormals();
         void calculateVertexNormals();
+
+        void calculateVertexUVs();
+        void calculateSphereMapping();
+        void calculateBoxMapping();
 
         //overwrites internal vertex data with copy of given vertex data
         virtual void setVertices(const std::vector<CG::Vector3> &vertices);
@@ -73,6 +80,11 @@ namespace CG {
         std::vector<Face>& getFaces();
         std::vector<Vector3>& getFaceNormals();
         int getNumFaces() const;
+
+        //returns reference to the UV values of all vertices
+        std::vector<Vector2>& getVertUVs();
+
+        void setMapType(TextureMapping mapType);
 
         friend bool operator== (const Geometry &g1, const Geometry &g2);
     };

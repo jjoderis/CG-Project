@@ -74,7 +74,7 @@ void CG::OpenGLGeometry::updateOpenGL() {
             glNamedBufferSubData(m_VBO, 3 * i * sizeof(float) + vertexSpace, 3 * sizeof(float), m_vertNormals[i].data());
         }
         if(m_useUVs){
-            glNamedBufferSubData(m_VBO, 3 * i * sizeof(float) + vertexSpace + normalSpace, 2 * sizeof(float), m_vertUVs[i].data());
+            glNamedBufferSubData(m_VBO, 2 * i * sizeof(float) + vertexSpace + normalSpace, 2 * sizeof(float), m_vertUVs[i].data());
         }
         if(m_useColors){
             glNamedBufferSubData(m_VBO, 4 * i * sizeof(float) + vertexSpace + normalSpace + uvSpace, 4 * sizeof(float), m_vertColors.data());
