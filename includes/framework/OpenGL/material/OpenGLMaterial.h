@@ -5,7 +5,9 @@
 #include <color/color.h>
 #include <OpenGL/shader/shader.h>
 #include <material/material.h>
+#include <initializer_list>
 #include <map>
+#include <stb_image.h>
 
 namespace CG{
 
@@ -19,19 +21,23 @@ namespace CG{
         //all texture object bound used by this object
         std::vector<unsigned int> m_texObjs;
 
-        GLenum m_drawMode{ GL_TRIANGLES };
+        //the locations of all uniform variables in the shader program
+        mutable std::map<std::string, GLint> m_uniforms;
+
+        void(*m_uniformDataFunction)(const CG::OpenGLMaterial &material){
+            [](const CG::OpenGLMaterial &material){ 
+                glUniform4fv(material.getUniform("baseColor"), 1, material.getColor().data()); 
+            }
+        };
 
     public:
-        //the locations of all uniform variables in the shader program
-        std::map<std::string, GLint> uniforms;
-
         //creates material with basic shader
         OpenGLMaterial();
 
         OpenGLMaterial(const CG::RGBA_Color &color);
 
         //creates a material with the given vertex and fragment shader
-        OpenGLMaterial(const std::string vertexShaderData, const std::string fragmentShaderData);
+        OpenGLMaterial(const std::initializer_list<CG::ShaderInfo> &shaderData);
 
         //Copy constructor: copies the color and deep copies the shader information; doesn't copy the program name
         OpenGLMaterial(const OpenGLMaterial &other);
@@ -42,30 +48,37 @@ namespace CG{
         OpenGLMaterial& operator= (const OpenGLMaterial &other);
 
         //sets a new vertex shader and recompiles the program
-        void setVertexShader(const std::string shaderData);
+        void setVertexShader(const std::string shaderData, bool isFile);
 
         //sets a new tesselation shader and recompiles the program
-        void setTesselationControlShader(const std::string shaderData);
-        void setTesselationEvaluationShader(const std::string shaderData);
+        void setTesselationControlShader(const std::string shaderData, bool isFile);
+        void setTesselationEvaluationShader(const std::string shaderData, bool isFile);
 
         //sets a new geometry shader and recompiles the program
-        void setGeometryShader(const std::string shaderData);
+        void setGeometryShader(const std::string shaderData, bool isFile);
 
         //sets a new fragment shader and recompiles the program
-        void setFragmentShader(const std::string shaderData);
+        void setFragmentShader(const std::string shaderData, bool isFile);
 
         //queries location of uniform variable in the program and stores it
-        void addUniform(const char* name);
-        void addUniform(const std::string &name);
+        GLint getUniform(const char* name) const;
+        GLint getUniform(const std::string &name) const;
 
         int getProgram() const;
 
-        void setDrawMode(GLenum drawMode);
-        GLenum getDrawMode() const;
-
-        void addTexture(unsigned int texObj);
+        
         std::vector<unsigned int>& getTextures();
         int getNumTextures() const;
+
+        void setUniformDataFunction(void(*uniformDataFunction)(const CG::OpenGLMaterial &material));
+
+        void setupUniformData() const;
+
+        void addTexture(const char* filePath);
+
+        void bindTextures() const;
+
+        void unbindTextures() const;
     };
 
 }

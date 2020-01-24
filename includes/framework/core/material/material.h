@@ -37,10 +37,10 @@ namespace CG{
         void setColor(float r, float g, float b);
         void setColor(RGBA_Color color);
         void setColor(float r, float g, float b, float a);
-        RGBA_Color& getColor();
+        const RGBA_Color& getColor() const;
 
         void setShininess(float dullness);
-        float getShininess();
+        float getShininess() const;
     };
 }
 

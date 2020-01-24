@@ -6,19 +6,16 @@
 
 CG::OpenGLMaterial setUpPhongMaterial(){
     CG::OpenGLMaterial phongMat = CG::OpenGLMaterial{
-        readTextFile("../media/shaders/phongShader/phong.vert"),
-        readTextFile("../media/shaders/phongShader/phong.frag")
+        CG::ShaderInfo{ GL_VERTEX_SHADER, "../media/shaders/phongShader/phong.vert", true, 0 },
+        CG::ShaderInfo{ GL_FRAGMENT_SHADER, "../media/shaders/phongShader/phong.frag", true, 0 }
     };
 
     phongMat.setShininess(120.0);
 
-    phongMat.addUniform("modelViewMatrix");
-    phongMat.addUniform("projectionMatrix");
-    phongMat.addUniform("normalMatrix");
-    phongMat.addUniform("viewMatrix");
-    phongMat.addUniform("baseColor");
-    phongMat.addUniform("shininess");
-    phongMat.addUniform("modelMatrix");
+    phongMat.setUniformDataFunction([](const CG::OpenGLMaterial &material){
+        glUniform1f(material.getUniform("shininess"), material.getShininess());
+        glUniform4fv(material.getUniform("baseColor"), 1, material.getColor().data());
+    });
 
     return phongMat;
 }

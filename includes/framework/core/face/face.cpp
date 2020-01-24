@@ -5,6 +5,11 @@ CG::Face::Face(){
     m_indices.resize(0);
 }
 
+CG::Face::Face(unsigned int a, unsigned int b) : Face(){
+    m_indices.emplace_back(a);
+    m_indices.emplace_back(b);
+}
+
 CG::Face::Face(unsigned int a, unsigned int b, unsigned int c) : Face(){
     m_indices.emplace_back(a);
     m_indices.emplace_back(b);

@@ -18,13 +18,10 @@ CG::Mesh<geometryClass, materialClass>::Mesh(const std::shared_ptr<geometryClass
 {}
 
 template <typename geometryClass, typename materialClass>
-CG::Mesh<geometryClass, materialClass>::Mesh(const Mesh &other)
-    : Object3D(other),
-      m_geometry(other.m_geometry),
-      m_material(other.m_material),
-      m_parent{ other.m_parent},
-      m_children{other.m_children}
-{}
+CG::Mesh<geometryClass, materialClass>::Mesh(const Mesh &other) : Object3D{ other }
+{
+    *this = other;
+}
 
 template <typename geometryClass, typename materialClass>
 CG::Mesh<geometryClass, materialClass>& CG::Mesh<geometryClass, materialClass>::operator= (const CG::Mesh<geometryClass, materialClass> &other){
@@ -32,6 +29,8 @@ CG::Mesh<geometryClass, materialClass>& CG::Mesh<geometryClass, materialClass>::
     if(&other == this){
         return *this;
     }
+
+    CG::Object3D::operator=(other);
 
     m_geometry = other.m_geometry;
     m_material = other.m_material;
@@ -137,10 +136,7 @@ const std::shared_ptr<CG::Mesh<geometryClass, materialClass>> CG::Mesh<geometryC
 
 template <typename geometryClass, typename materialClass>
 void CG::Mesh<geometryClass, materialClass>::render(const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){
-    m_renderFunction(this, viewMatrix, viewMatrixInverse, projectionMatrix);
-}
-
-template <typename geometryClass, typename materialClass>
-void CG::Mesh<geometryClass, materialClass>::setRenderFunction(void(*renderFunction)(Mesh<geometryClass, materialClass> *mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix)){
-    m_renderFunction = renderFunction;
+    (void)viewMatrix;
+    (void)viewMatrixInverse;
+    (void)projectionMatrix;
 }

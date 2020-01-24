@@ -5,12 +5,15 @@
 #include <GL/glew.h>
 #include <vector>
 #include <string>
+#include <helpers/fileHandling/fileHandler.h>
+#include <map>
 
 namespace CG{
     // Taken from code in this repository https://github.com/openglredbook/examples/tree/master/src
     typedef struct {
         GLenum       type;
         std::string  shaderData; //string containing shader code or string containing path to file with shader code
+        bool isFile;
         GLuint       shader;
     } ShaderInfo;
 

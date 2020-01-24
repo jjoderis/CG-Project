@@ -8,4 +8,5 @@ CG::OpenGLSphereGeometry::OpenGLSphereGeometry(float radius, unsigned int widthS
     activateNormals();
     activateUVs();
     updateOpenGL();
+    m_drawPrimitive = GL_TRIANGLES;
 }

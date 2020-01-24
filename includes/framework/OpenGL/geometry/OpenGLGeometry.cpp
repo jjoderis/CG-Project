@@ -5,25 +5,20 @@ CG::OpenGLGeometry::OpenGLGeometry() : Geometry() {}
 CG::OpenGLGeometry::OpenGLGeometry(const std::initializer_list<CG::Vector3> &vertices, const std::initializer_list<CG::Face> &faces)
     : Geometry{vertices, faces}
 {
-    calculateFaceNormals();
-    calculateVertexNormals();
-    updateOpenGL();
+    setUpFaceBasedInformation();
 }
 
 CG::OpenGLGeometry::OpenGLGeometry(const std::vector<CG::Vector3> &vertices, const std::vector<Face> &faces)
     : Geometry{vertices, faces}
 {
-    calculateFaceNormals();
-    calculateVertexNormals();
-    updateOpenGL();
+    setUpFaceBasedInformation();
 }
 
 CG::OpenGLGeometry::OpenGLGeometry(const CG::OpenGLGeometry &other)
     : Geometry{ other }
 {
-    calculateFaceNormals();
-    calculateVertexNormals();
-    updateOpenGL();
+    *this = other;
+    setUpFaceBasedInformation();
 }
 
 CG::OpenGLGeometry& CG::OpenGLGeometry::operator= (const CG::OpenGLGeometry &other){
@@ -36,11 +31,35 @@ CG::OpenGLGeometry& CG::OpenGLGeometry::operator= (const CG::OpenGLGeometry &oth
     m_useNormals = other.m_useNormals;
     m_useColors = other.m_useColors;
     m_useUVs = other.m_useUVs;
-    calculateFaceNormals();
-    calculateVertexNormals();
-    updateOpenGL();
+    m_drawPrimitive = other.m_drawPrimitive;
+    
+    setUpFaceBasedInformation();
 
     return *this;
+}
+
+void CG::OpenGLGeometry::setUpFaceBasedInformation(){
+    if(m_faces.size()){
+        switch(m_faces[0].getNumIndices()){
+            case 1:
+                m_drawPrimitive = GL_POINTS;
+                break;
+            case 2:
+                m_drawPrimitive = GL_LINES;
+                break;
+            case 3:
+                m_drawPrimitive = GL_TRIANGLES;
+            case 4:
+                m_drawPrimitive = GL_QUADS;
+            default:
+                calculateFaceNormals();
+                calculateVertexNormals();
+        }
+    } else {
+        m_drawPrimitive = GL_POINTS;
+    }
+    
+    updateOpenGL();
 }
 
 CG::OpenGLGeometry::~OpenGLGeometry() {
@@ -159,4 +178,17 @@ int CG::OpenGLGeometry::getVBO() const{
 
 void CG::OpenGLGeometry::setVBO(unsigned int VBO){
     m_VBO = VBO;
+}
+
+void CG::OpenGLGeometry::setDrawPrimitive(GLenum primitive){
+    m_drawPrimitive = primitive;
+}
+
+void CG::OpenGLGeometry::drawGeometry() const{
+    glBindVertexArray(m_VAO);
+    if(m_faces.size()){
+        glDrawElements(m_drawPrimitive, m_faces[0].getNumIndices() * m_faces.size(), GL_UNSIGNED_INT, NULL);
+    } else {
+        glDrawArrays(m_drawPrimitive, 0, m_vertices.size());
+    }
 }

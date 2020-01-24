@@ -37,13 +37,13 @@ void CG::Material::setColor(float r, float g, float b, float a){
     m_color = CG::RGBA_Color{ r, g, b, a };
 }
 
-CG::RGBA_Color& CG::Material::getColor(){
+const CG::RGBA_Color& CG::Material::getColor() const{
     return m_color;
 }
 
 void CG::Material::setShininess(float shininess){
     m_shininess = shininess;
 }
-float CG::Material::getShininess(){
+float CG::Material::getShininess() const{
     return m_shininess;
 }

@@ -5,6 +5,8 @@
 #include <vector>
 
 namespace CG {
+    //TODO find suitable name since a "face" that is just a line makes no sense
+
     //A face denotes the indices of a triangle or quad that are supposed to form a polygon
     class Face {
         std::vector<unsigned int> m_indices;
@@ -12,6 +14,8 @@ namespace CG {
 
         Face();
         
+        Face(unsigned int a, unsigned int b);
+
         Face(unsigned int a, unsigned int b, unsigned int c);
 
         Face(unsigned int a, unsigned int b, unsigned int c, unsigned int d);

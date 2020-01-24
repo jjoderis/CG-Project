@@ -6,7 +6,7 @@
 #include <OpenGL/renderer/renderer.h>
 
 #include <Texture_Example/setUpCGStuff.h>
-#include <First_Running_Program/setUpInputHandlers.h>
+#include <camera/fpsCamera.h>
 
 #include <GL/glew.h>
 

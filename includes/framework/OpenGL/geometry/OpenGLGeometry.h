@@ -22,6 +22,12 @@ namespace CG{
         bool m_useColors{ false };
         bool m_useUVs{ false };
 
+        GLenum m_drawPrimitive{ GL_NONE };
+
+        //if there are faces calculate face and vertex normals and set draw primitive to 
+        //correct value (e.g. GL_TRIANGLES for faces with three vertices etc)
+        void setUpFaceBasedInformation();
+
     public:
         OpenGLGeometry();
 
@@ -51,6 +57,10 @@ namespace CG{
         void setVAO(unsigned int VAO);
         int getVBO() const;
         void setVBO(unsigned int VBO);
+
+        void setDrawPrimitive(GLenum primitive);
+
+        void drawGeometry() const;
     };
 
 }
