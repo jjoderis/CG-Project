@@ -29,6 +29,7 @@ set( PROJECT_INCLUDES
     ${INCLUDE_DIR}/framework/core
     ${INCLUDE_DIR}/helpers
     ${INCLUDE_DIR}/mathematics
+    ${INCLUDE_DIR}
     examples
 )
 

@@ -21,5 +21,7 @@ add_library(CG_Framework_Core
 set(TEST_FILES
     ${TEST_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/test/geometryTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/math/test/mathTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/object3D/test/object3DTest.cpp
     PARENT_SCOPE
 )

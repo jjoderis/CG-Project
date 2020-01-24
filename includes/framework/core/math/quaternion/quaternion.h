@@ -31,7 +31,7 @@ namespace CG{
 
         Quaternion conjugate() const;
         float norm() const;
-        void normalize();
+        Quaternion& normalize();
         Quaternion inverse() const;
         Quaternion& invert();
 

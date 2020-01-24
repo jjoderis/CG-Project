@@ -70,10 +70,11 @@ float CG::Quaternion::norm() const{
     return sqrt(pow(m_imaginary.at(0) , 2) + pow(m_imaginary.at(1) , 2) + pow(m_imaginary.at(2) , 2) + pow(m_real, 2));
 }
 
-void CG::Quaternion::normalize(){
+CG::Quaternion& CG::Quaternion::normalize(){
     m_imaginary.normalize();
     m_imaginary *= sin(m_real/2);
     m_real = cos(m_real/2);
+    return *this;
 }
 
 CG::Quaternion CG::Quaternion::inverse() const{

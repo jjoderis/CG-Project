@@ -218,6 +218,18 @@ namespace LinAlg
 
             return *this;
         }
+
+        //compares two matrices taking possible rounding errors into account
+        bool allClose(const Matrix<T, rows, cols> &other) const{
+
+            for(int i = 0; i < rows*cols; ++i){
+                if(!CG::Util::isClose(m_data[i], other.m_data[i], 1E-10, 1E-6)){
+                    return false;
+                }
+            }
+
+            return true;
+        }
     };
 
     template <typename T, int rows, int cols>

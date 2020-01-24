@@ -1,8 +1,10 @@
 include_directories(
     ..
+    ../..
     ../core
     ../../mathematics
     ../../../glew
+    ../../../stb
 )
 
 add_library(CG_Framework_OpenGL
