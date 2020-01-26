@@ -54,7 +54,7 @@ CG::OpenGLMaterial::~OpenGLMaterial(){
         glDeleteShader(entry.shader);
     }
 
-    glDeleteTextures(m_texObjs.size(), m_texObjs.data());
+    //glDeleteTextures(m_texObjs.size(), m_texObjs.data());
 
     glDeleteProgram(m_program);
 }
@@ -192,11 +192,13 @@ void CG::OpenGLMaterial::addTexture(const char* filePath){
     assert("We only allow 16 textures per material" && m_texObjs.size() < 16);
 
     unsigned int texObj{ 0 };
+
     glCreateTextures(GL_TEXTURE_2D, 1, &texObj);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(0);
@@ -206,11 +208,15 @@ void CG::OpenGLMaterial::addTexture(const char* filePath){
     if(data) {
         const char* lastDotOccurrence = strrchr(filePath, '.');
         if (strcmp(lastDotOccurrence, ".jpg") == 0) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            
+            glTextureStorage2D(texObj, 1, GL_RGB8, width, height);
+            glTextureSubImage2D(texObj, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+
             glGenerateMipmap(GL_TEXTURE_2D);
         }
         else if (strcmp(lastDotOccurrence, ".png") == 0) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            glTextureStorage2D(texObj, 1, GL_RGB8, width, height);
+            glTextureSubImage2D(texObj, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
         }
         else {
@@ -225,18 +231,17 @@ void CG::OpenGLMaterial::addTexture(const char* filePath){
         return;
     }
     stbi_image_free(data);
+    m_texObjs.emplace_back(texObj);
 }
 
 void CG::OpenGLMaterial::bindTextures() const{
     for(unsigned int i = 0; i < m_texObjs.size(); ++i){
-        glActiveTexture(GL_TEXTURE1 + i);
-        glBindTexture(GL_TEXTURE_2D, m_texObjs[i]);
+        glBindTextureUnit(i, m_texObjs[i]);
     }
 }
 
 void CG::OpenGLMaterial::unbindTextures() const{
     for(unsigned int i = 0; i < m_texObjs.size(); ++i){
-        glActiveTexture(GL_TEXTURE1 + i);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTextureUnit(i, 0);
     }
 }

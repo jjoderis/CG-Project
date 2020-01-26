@@ -24,7 +24,7 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     redSphere->setMaterial(phong);
     redSphere->setGeometry(spherePtr);
     redSphere->getMaterial()->setColor(1.0, 0.0, 0.0);
-    redSphere->setAnimation(rotateAroundY);
+    //redSphere->setAnimation(rotateAroundY);
     redSphere->translate(0.0, 1.0, 0.0);
     redSphere->updateMatrixWorld();
 
