@@ -54,8 +54,6 @@ CG::OpenGLMaterial::~OpenGLMaterial(){
         glDeleteShader(entry.shader);
     }
 
-    //glDeleteTextures(m_texObjs.size(), m_texObjs.data());
-
     glDeleteProgram(m_program);
 }
 
@@ -172,7 +170,7 @@ int CG::OpenGLMaterial::getProgram() const{
     return m_program;
 }
 
-std::vector<unsigned int>& CG::OpenGLMaterial::getTextures(){
+std::vector<std::shared_ptr<CG::TexObj>>& CG::OpenGLMaterial::getTextures(){
     return m_texObjs;
 }
 
@@ -231,12 +229,12 @@ void CG::OpenGLMaterial::addTexture(const char* filePath){
         return;
     }
     stbi_image_free(data);
-    m_texObjs.emplace_back(texObj);
+    m_texObjs.emplace_back(std::make_shared<CG::TexObj>(texObj));
 }
 
 void CG::OpenGLMaterial::bindTextures() const{
     for(unsigned int i = 0; i < m_texObjs.size(); ++i){
-        glBindTextureUnit(i, m_texObjs[i]);
+        glBindTextureUnit(i, m_texObjs[i]->getName());
     }
 }
 
@@ -244,4 +242,16 @@ void CG::OpenGLMaterial::unbindTextures() const{
     for(unsigned int i = 0; i < m_texObjs.size(); ++i){
         glBindTextureUnit(i, 0);
     }
+}
+
+CG::TexObj::TexObj(unsigned int name){
+    m_name = name;
+}
+
+CG::TexObj::~TexObj(){
+    glDeleteTextures(1, &m_name);
+}
+
+unsigned int CG::TexObj::getName() const{
+    return m_name;
 }
