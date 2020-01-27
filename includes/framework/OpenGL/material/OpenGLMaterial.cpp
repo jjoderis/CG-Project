@@ -80,7 +80,7 @@ CG::OpenGLMaterial& CG::OpenGLMaterial::operator= (const OpenGLMaterial &other){
     }
 
     m_program = CG::createShaderProgram(m_shaders);
-    m_texObjs = other.m_texObjs;
+    m_textures = other.m_textures;
     m_uniformDataFunction = other.m_uniformDataFunction;
     
     return *this;
@@ -170,12 +170,12 @@ int CG::OpenGLMaterial::getProgram() const{
     return m_program;
 }
 
-std::vector<std::shared_ptr<CG::TexObj>>& CG::OpenGLMaterial::getTextures(){
-    return m_texObjs;
+std::vector<std::shared_ptr<CG::OpenGLTexture>>& CG::OpenGLMaterial::getTextures(){
+    return m_textures;
 }
 
 int CG::OpenGLMaterial::getNumTextures() const{
-    return m_texObjs.size();
+    return m_textures.size();
 }
 
 void CG::OpenGLMaterial::setUniformDataFunction(void(*uniformDataFunction)(const CG::OpenGLMaterial &material)){
@@ -186,72 +186,20 @@ void CG::OpenGLMaterial::setupUniformData() const{
     m_uniformDataFunction(*this);
 }
 
-void CG::OpenGLMaterial::addTexture(const char* filePath){
-    assert("We only allow 16 textures per material" && m_texObjs.size() < 16);
+void CG::OpenGLMaterial::addTexture(std::shared_ptr<CG::OpenGLTexture> texture){
+    assert("We only allow 16 textures per material" && m_textures.size() < 16);
 
-    unsigned int texObj{ 0 };
-
-    glCreateTextures(GL_TEXTURE_2D, 1, &texObj);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(0);
-
-    unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
-
-    if(data) {
-        const char* lastDotOccurrence = strrchr(filePath, '.');
-        if (strcmp(lastDotOccurrence, ".jpg") == 0) {
-            
-            glTextureStorage2D(texObj, 1, GL_RGB8, width, height);
-            glTextureSubImage2D(texObj, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-
-            glGenerateMipmap(GL_TEXTURE_2D);
-        }
-        else if (strcmp(lastDotOccurrence, ".png") == 0) {
-            glTextureStorage2D(texObj, 1, GL_RGB8, width, height);
-            glTextureSubImage2D(texObj, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-        }
-        else {
-            std::cout << "Material doesnt know how to handle this file format.\n";
-            stbi_image_free(data);
-            return;
-        }
-    }
-    else {
-        std::cout << "Failed to load texture\n";
-        stbi_image_free(data);
-        return;
-    }
-    stbi_image_free(data);
-    m_texObjs.emplace_back(std::make_shared<CG::TexObj>(texObj));
+    m_textures.emplace_back(texture);
 }
 
 void CG::OpenGLMaterial::bindTextures() const{
-    for(unsigned int i = 0; i < m_texObjs.size(); ++i){
-        glBindTextureUnit(i, m_texObjs[i]->getName());
+    for(unsigned int i = 0; i < m_textures.size(); ++i){
+        glBindTextureUnit(i, m_textures[i]->getName());
     }
 }
 
 void CG::OpenGLMaterial::unbindTextures() const{
-    for(unsigned int i = 0; i < m_texObjs.size(); ++i){
+    for(unsigned int i = 0; i < m_textures.size(); ++i){
         glBindTextureUnit(i, 0);
     }
-}
-
-CG::TexObj::TexObj(unsigned int name){
-    m_name = name;
-}
-
-CG::TexObj::~TexObj(){
-    glDeleteTextures(1, &m_name);
-}
-
-unsigned int CG::TexObj::getName() const{
-    return m_name;
 }

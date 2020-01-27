@@ -7,24 +7,10 @@
 #include <material/material.h>
 #include <initializer_list>
 #include <map>
-#include <stb_image.h>
 #include <memory>
+#include <OpenGL/texture/OpenGLTexture.h>
 
 namespace CG{
-
-    //small wrapper object for a texture buffer object
-    //used to be able to have textures freed automatically
-    //while still being able to pass them between materials
-    class TexObj{
-        unsigned int m_name{ 0 };
-
-    public:
-        TexObj(unsigned int name);
-
-        ~TexObj();
-
-        unsigned int getName() const;
-    };
 
     class OpenGLMaterial : public Material{
     protected:
@@ -34,7 +20,7 @@ namespace CG{
         std::vector<CG::ShaderInfo> m_shaders;
 
         //all texture object bound used by this object
-        std::vector<std::shared_ptr<CG::TexObj>> m_texObjs;
+        std::vector<std::shared_ptr<CG::OpenGLTexture>> m_textures;
 
         //the locations of all uniform variables in the shader program
         mutable std::map<std::string, GLint> m_uniforms;
@@ -82,14 +68,14 @@ namespace CG{
         int getProgram() const;
 
         
-        std::vector<std::shared_ptr<CG::TexObj>>& getTextures();
+        std::vector<std::shared_ptr<CG::OpenGLTexture>>& getTextures();
         int getNumTextures() const;
 
         void setUniformDataFunction(void(*uniformDataFunction)(const CG::OpenGLMaterial &material));
 
         void setupUniformData() const;
 
-        void addTexture(const char* filePath);
+        void addTexture(std::shared_ptr<CG::OpenGLTexture> texture);
 
         void bindTextures() const;
 

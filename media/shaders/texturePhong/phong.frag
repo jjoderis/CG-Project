@@ -13,7 +13,7 @@ layout (location = 0) out vec4 fColor;
 
 #define M_PI 3.1415926535897932384626433832795
 
-uniform sampler2D texture1;
+layout (binding = 0) uniform sampler2D texture1;
 
 void main(){
     vec3 lightVector = iPosition - lightPosition;
@@ -33,5 +33,5 @@ void main(){
 
     float lambert = dot(normalize(lightPosition-iPosition), iNormal);
 
-    fColor = vec4(phong * vec3(1.0, 1.0, 1.0) + lambert * texture(texture1, uv).xyz, 1.0);
+    fColor = vec4(phong * vec3(1.0, 1.0, 1.0) + lambert * texture(texture1, iUV).xyz, 1.0);
 }

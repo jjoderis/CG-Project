@@ -16,4 +16,5 @@ add_library(CG_Framework_OpenGL
     renderer/renderer.cpp
     scene/OpenGLScene.cpp
     shader/shader.cpp
+    texture/OpenGLTexture.cpp
 )

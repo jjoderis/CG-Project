@@ -2,8 +2,8 @@
 
 CG::Renderer::Renderer(){
     glEnable(GL_DEPTH_TEST);
-    glPolygonMode(GL_FRONT, GL_FILL);
-    glPolygonMode(GL_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT, GL_FILL);
+    // glPolygonMode(GL_BACK, GL_LINE);
 }
 
 void CG::renderScene(CG::Renderer &renderer, CG::OpenGLScene &scene, CG::Camera &camera){
