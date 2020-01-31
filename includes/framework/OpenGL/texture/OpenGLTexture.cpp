@@ -60,12 +60,12 @@ void CG::OpenGLTexture::loadFromFile(const char* filePath){
     switch(m_type){
         
         case GL_TEXTURE_2D:
-            glTextureStorage2D(m_name, 1, GL_RGB8, width, height);
+            glTextureStorage2D(m_name, 1, GL_RGBA8, width, height);
             glTextureSubImage2D(m_name, m_mipMapLevel, 0, 0, width, height, inputForm, GL_UNSIGNED_BYTE, data);
             break;
 
         case GL_TEXTURE_CUBE_MAP:
-            glTextureStorage2D(m_name, 1, GL_RGB8, width/4, height/3);
+            glTextureStorage2D(m_name, 1, GL_RGBA8, width/4, height/3);
 
             assert("Faces of Cube Maps expect Textures to be squared" && (width/4) == (height/3));
 
