@@ -6,6 +6,7 @@
 #include <geometry/geometry.h>
 #include <material/material.h>
 #include <string>
+#include <functional>
 
 namespace CG{
     //a class that defines a renderable object in 3D space
@@ -56,6 +57,24 @@ namespace CG{
         const std::shared_ptr<Mesh<geometryClass, materialClass>> getParent();
 
         void render(const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix);
+
+        std::function<void(const Mesh<geometryClass, materialClass>&, const Matrix4&, const Matrix4&, const Matrix4&)> beforeRender = 
+            [](const Mesh<geometryClass, materialClass> &mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){
+                (void)mesh;
+                (void)viewMatrix;
+                (void)viewMatrixInverse;
+                (void)projectionMatrix;
+                return;
+            };
+
+        std::function<void(const Mesh<geometryClass, materialClass>&, const Matrix4&, const Matrix4&, const Matrix4&)> afterRender = 
+            [](const Mesh<geometryClass, materialClass> &mesh, const Matrix4 &viewMatrix, const Matrix4 &viewMatrixInverse, const Matrix4 &projectionMatrix){
+                (void)mesh;
+                (void)viewMatrix;
+                (void)viewMatrixInverse;
+                (void)projectionMatrix;
+                return;
+            };
     };
 
     using BaseMesh = Mesh<CG::Geometry, CG::Material>;

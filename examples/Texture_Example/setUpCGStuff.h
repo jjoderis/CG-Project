@@ -16,7 +16,7 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     (void)renderer;
 
     //Geometries
-    std::shared_ptr<CG::OpenGLSphereGeometry> sphereGeoPtr{ new CG::OpenGLSphereGeometry{ 1.0, 30, 30 } };
+    std::shared_ptr<CG::OpenGLSphereGeometry> sphereGeoPtr{ new CG::OpenGLSphereGeometry{ 1.0, 100, 100 } };
     sphereGeoPtr->activateNormals();
     sphereGeoPtr->activateUVs();
     sphereGeoPtr->updateOpenGL();
@@ -37,15 +37,19 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     std::shared_ptr<CG::OpenGLMaterial> envMapPtr = std::make_shared<CG::OpenGLMaterial>(setUpEnvMapMaterial(cubeMapTexture));
 
     std::shared_ptr<CG::OpenGLMaterial> flakeMatPtr = std::make_shared<CG::OpenGLMaterial>(CG::OpenGLMaterial{
-        CG::ShaderInfo{ GL_VERTEX_SHADER, "../media/shaders/sprite/sprite.vert", true, 0},
-        CG::ShaderInfo{ GL_FRAGMENT_SHADER, "../media/shaders/sprite/sprite.frag", true, 0}
+        CG::ShaderInfo{ GL_VERTEX_SHADER, "../media/shaders/sprite/sprite.vert", true, 0 },
+        CG::ShaderInfo{ GL_FRAGMENT_SHADER, "../media/shaders/sprite/sprite.frag", true, 0 }
     });
     flakeMatPtr->addTexture(snowFlakeTexture);
 
 
     std::shared_ptr<CG::OpenGLMesh> sphereMesh = std::make_shared<CG::OpenGLMesh>(CG::OpenGLMesh(sphereGeoPtr, envMapPtr));
     sphereMesh->getMaterial()->setColor(1.0, 0.0, 0.0);
-    // sphereMesh->setAnimation(rotateAroundY);
+    sphereMesh->setAnimation(rotateAroundY);
+
+    sphereMesh->beforeRender = [](const CG::OpenGLMesh &mesh, const CG::Matrix4 &viewMatrix, const CG::Matrix4 &viewMatrixInverse, const CG::Matrix4 &projectionMatrix){
+        glUniformMatrix4fv(mesh.getMaterial()->getUniform("viewMatrixInverse"), 1, GL_FALSE, viewMatrixInverse.data());
+    };
 
     scene.addChild(sphereMesh);
 
