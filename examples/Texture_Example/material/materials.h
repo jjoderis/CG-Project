@@ -12,11 +12,6 @@ CG::OpenGLMaterial setUpPhongMaterial(){
 
     phongMat.setShininess(1000.0);
 
-    phongMat.setUniformDataFunction([](const CG::OpenGLMaterial &material){
-        glUniform4fv(material.getUniform("baseColor"), 1, material.getColor().data());
-        glUniform1f(material.getUniform("shininess"), material.getShininess());
-    });
-
     phongMat.addTexture(std::shared_ptr<CG::OpenGLTexture>{ new CG::OpenGLTexture("../media/textures/earth.jpg")});
 
     return phongMat;

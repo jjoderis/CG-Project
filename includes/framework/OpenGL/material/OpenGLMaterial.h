@@ -25,12 +25,6 @@ namespace CG{
         //the locations of all uniform variables in the shader program
         mutable std::map<std::string, GLint> m_uniforms;
 
-        void(*m_uniformDataFunction)(const CG::OpenGLMaterial &material){
-            [](const CG::OpenGLMaterial &material){ 
-                glUniform4fv(material.getUniform("baseColor"), 1, material.getColor().data()); 
-            }
-        };
-
     public:
         //creates material with basic shader
         OpenGLMaterial();
@@ -69,9 +63,8 @@ namespace CG{
 
         
         std::vector<std::shared_ptr<CG::OpenGLTexture>>& getTextures();
+        
         int getNumTextures() const;
-
-        void setUniformDataFunction(void(*uniformDataFunction)(const CG::OpenGLMaterial &material));
 
         void setupUniformData() const;
 

@@ -81,7 +81,6 @@ CG::OpenGLMaterial& CG::OpenGLMaterial::operator= (const OpenGLMaterial &other){
 
     m_program = CG::createShaderProgram(m_shaders);
     m_textures = other.m_textures;
-    m_uniformDataFunction = other.m_uniformDataFunction;
     
     return *this;
 }
@@ -178,12 +177,10 @@ int CG::OpenGLMaterial::getNumTextures() const{
     return m_textures.size();
 }
 
-void CG::OpenGLMaterial::setUniformDataFunction(void(*uniformDataFunction)(const CG::OpenGLMaterial &material)){
-    m_uniformDataFunction = uniformDataFunction;
-}
 
 void CG::OpenGLMaterial::setupUniformData() const{
-    m_uniformDataFunction(*this);
+    glUniform4fv(getUniform("baseColor"), 1, m_color.data());
+    glUniform1f(getUniform("shininess"), m_shininess);
 }
 
 void CG::OpenGLMaterial::addTexture(std::shared_ptr<CG::OpenGLTexture> texture){
