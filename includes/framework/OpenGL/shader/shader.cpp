@@ -61,6 +61,7 @@ GLuint CG::updateShaderProgram(GLuint program, std::vector<CG::ShaderInfo> &shad
                 std::cerr << "Shader compilation failed: " << log << std::endl;
                 delete [] log;
 
+                assert(false);
                 return 0;
             }
 
@@ -86,6 +87,7 @@ GLuint CG::updateShaderProgram(GLuint program, std::vector<CG::ShaderInfo> &shad
             entry.shader = 0;
         }
         
+        assert(false);
         return 0;
     }
 

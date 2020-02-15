@@ -7,6 +7,7 @@
 #include <string>
 #include <helpers/fileHandling/fileHandler.h>
 #include <map>
+#include <cassert>
 
 namespace CG{
     // Taken from code in this repository https://github.com/openglredbook/examples/tree/master/src
