@@ -16,7 +16,7 @@ struct LightProperties {
     vec4 lightColor;
     vec4 lightPosition;
 
-    vec4 halfVector;
+    vec4 lightDirection;
     vec4 coneDirection;
     float spotCosCutoff;
     float spotExponent;
@@ -35,19 +35,52 @@ in vec3 iNormal;
 in vec4 iPosition;
 
 void main(void){
-    vec4 lightCameraPosition = viewMatrix * Light[0].lightPosition;
-    vec3 objectToLight = normalize((lightCameraPosition - iPosition).xyz);
+    vec3 scatteredLight = vec3(0.0);
+    vec3 reflectedLight = vec3(0.0);
 
-    float diffuse = max(0.0, dot(iNormal, objectToLight));
+    for (int i = 0; i < numLights; ++i){
+        if (!Light[i].isEnabled) {
+            continue;
+        }
 
-    vec3 reflected = normalize(reflect(objectToLight, iNormal));
-    float specular = max(0.0, dot(normalize(iPosition.xyz), reflected));
-    specular = pow(specular, shininess);
+        vec3 lightPosition = (viewMatrix * Light[i].lightPosition).xyz;
+        vec3 lightDirection = lightPosition - iPosition.xyz;
+        float attenuation = 1.0;
 
-    vec3 scatteredLight = vec3(Light[0].ambient) + (Light[0].lightColor * diffuse).xyz;
-    vec3 reflectedLight = vec3(Light[0].lightColor) * specular * Light[0].constantAttenuation;
+        if (Light[i].isLocal) {
+            float lightDistance = length(lightDirection);
+            lightDirection = lightDirection / lightDistance;
 
+            attenuation = 1.0 /
+                (Light[i].constantAttenuation
+                 + Light[i].linearAttenuation * lightDistance
+                 + Light[i].quadraticAttenuation * lightDistance * lightDistance);
+
+            if (Light[i].isSpot) {
+                float spotCos = dot(lightDirection, Light[i].coneDirection.xyz);
+                if (spotCos < Light[i].spotCosCutoff) {
+                    attenuation = 0.0;
+                } else {
+                    attenuation *= pow(spotCos, Light[i].spotExponent);
+                }
+            }
+        }
+
+        vec3 reflected = normalize(reflect(-lightDirection, iNormal));
+
+        float diffuse = max(0.0, dot(iNormal, lightDirection));
+        float specular = max(0.0, dot(iNormal, reflected));
+
+        if (diffuse == 0.0) {
+            specular = 0.0;
+        } else {
+            specular = pow(specular, shininess);
+        }
+
+        scatteredLight += Light[i].ambient.rgb * attenuation + Light[i].lightColor.rgb * diffuse * attenuation;
+        reflectedLight += Light[i].lightColor.rgb * specular * attenuation;
+    }
+    
     vec3 rgb = min(baseColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
-
     fColor = vec4(rgb, baseColor.a);
 }

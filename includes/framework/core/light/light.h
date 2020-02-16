@@ -21,8 +21,8 @@ namespace CG{
         float m_spotExponent{ 1.0 };
 
         float m_constantAttenuation{ 1.0 };
-        float m_linearAttenuation{ 1.0 };
-        float m_quadraticAttenuation{ 1.0 };
+        float m_linearAttenuation{ 0.001 };
+        float m_quadraticAttenuation{ 0.01 };
 
         Light();
 

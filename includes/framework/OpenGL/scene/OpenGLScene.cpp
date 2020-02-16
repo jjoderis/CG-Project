@@ -38,7 +38,7 @@ struct LightPorperties{
     float lightColor[4];
     float lightPosition[4];
 
-    float halfVector[4];
+    float lightDirection[4];
     float coneDirection[4];
     float spotCosCutoff;
     float spotExponent;
