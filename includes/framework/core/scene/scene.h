@@ -4,6 +4,7 @@
 #include <object3D/object3D.h>
 #include <mesh/mesh.h>
 #include <color/color.h>
+#include <light/light.h>
 
 namespace CG{
     //a scene that holds the whole rendering context (all objects, the camera, etc)
@@ -16,6 +17,8 @@ namespace CG{
 
         std::vector<std::shared_ptr<meshClass>> m_particles;
 
+        std::vector<std::shared_ptr<Light>> m_lights;
+
     public:
         Scene();
         Scene(const RGBA_Color &background);
@@ -23,13 +26,15 @@ namespace CG{
         void setBackground(const RGBA_Color &background);
         const RGBA_Color& getBackground() const;
 
-        void addChild(std::shared_ptr<meshClass> newChild);
+        virtual void addChild(std::shared_ptr<meshClass> newChild);
         void removeChild(meshClass *objPtr);
         const std::vector<std::shared_ptr<meshClass>>& getChildren() const;
 
         void addParticles(const std::shared_ptr<meshClass> particles);
         void removeParticles(meshClass *objPtr);
         const std::vector<std::shared_ptr<meshClass>>& getParticles() const;
+
+        virtual void addLight(std::shared_ptr<CG::Light> &light);
     };
 
     using BaseScene = Scene<BaseMesh>;

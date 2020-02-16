@@ -44,8 +44,8 @@ namespace CG{
 
         void setPosition(const Vector3 &position);
         void setPosition(float x, float y, float z);
-        void translate(const Vector3 &transVec);
-        void translate(float x, float y, float z);
+        virtual void translate(const Vector3 &transVec);
+        virtual void translate(float x, float y, float z);
 
         void setScale(const Vector3 &scales);
         void setScale(float xFac, float yFac, float zFac);

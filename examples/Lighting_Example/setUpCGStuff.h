@@ -8,6 +8,7 @@
 #include "animations/bounceAround.h"
 #include "geometry/box.h"
 #include "material/phong.h"
+#include <core/light/pointLight/pointLight.h>
 
 void setUpRenderer(CG::Renderer &renderer);
 
@@ -26,6 +27,7 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     redSphere->getMaterial()->setColor(1.0, 0.0, 0.0);
     redSphere->setAnimation(bounceAround);
     redSphere->setVelocity(CG::Vector3{0.1, 0.2, 0.08}.normalize() * 0.2f);
+
     std::shared_ptr<CG::OpenGLMesh> greenSphere = std::make_shared<CG::OpenGLMesh>();
     greenSphere->setMaterial(phong);
     greenSphere->setGeometry(spherePtr);
@@ -40,7 +42,10 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     scene.addChild(greenSphere);
     scene.addChild(yellowCubeOutline);
 
-    camera.setPosition(3.0, 0.0, 0.0);
+    std::shared_ptr<CG::Light> light2{ new CG::PointLight{CG::Vector4{ 10.0, 0.0, 0.0, 1.0 }} };
+    scene.addLight(light2);
+
+    camera.setPosition(15.0, 0.0, 0.0);
     camera.rotateY(degToRad(90));
     camera.updateMatrixWorld();
 }

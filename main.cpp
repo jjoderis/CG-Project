@@ -5,7 +5,7 @@
 #include <core/camera/camera.h>
 #include <OpenGL/renderer/renderer.h>
 
-#include <Texture_Example/setUpCGStuff.h>
+#include <Lighting_Example/setUpCGStuff.h>
 #include <camera/fpsCamera.h>
 
 #include <GL/glew.h>
