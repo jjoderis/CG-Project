@@ -49,8 +49,10 @@ void CG::OpenGLGeometry::setUpFaceBasedInformation(){
                 break;
             case 3:
                 m_drawPrimitive = GL_TRIANGLES;
+                break;
             case 4:
                 m_drawPrimitive = GL_QUADS;
+                break;
             default:
                 calculateFaceNormals();
                 calculateVertexNormals();

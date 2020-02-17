@@ -26,7 +26,8 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
             { -1.0, 5.0, -5.0 }
         },
         {
-            { 0, 3, 2, 1 }
+            { 2, 1, 0 },
+            { 3, 2, 0 }
         }
     }};
 
@@ -42,6 +43,8 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
         CG::ShaderInfo{ GL_FRAGMENT_SHADER, "../media/shaders/lighting/lighting.frag", true, 0 }
     };
 
+    plainWhite.setShininess(3);
+
     std::shared_ptr<CG::OpenGLMesh> redSphere = std::make_shared<CG::OpenGLMesh>();
     redSphere->setMaterial(phong);
     redSphere->setGeometry(spherePtr);
@@ -50,19 +53,20 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     std::shared_ptr<CG::OpenGLMesh> background = std::make_shared<CG::OpenGLMesh>();
     background->setGeometry(boxPtr);
     background->setMaterial(plainWhite);
+    background->getMaterial()->setColor(1.0, 1.0, 1.0);
 
     scene.addChild(redSphere);
     scene.addChild(background);
 
-    std::shared_ptr<CG::Light> light2{ new CG::PointLight{CG::Vector4{ 5.0, 0.0, 0.0, 1.0 }} };
+    std::shared_ptr<CG::Light> light2{ new CG::PointLight{CG::Vector4{ 2.0, 0.0, 0.0, 1.0 }} };
     scene.addLight(light2);
 
     light2->setAnimation([](CG::Object3D &light) mutable {
         float ms = std::chrono::duration_cast< std::chrono::milliseconds >(
             std::chrono::system_clock::now().time_since_epoch()
-        ).count() % 1000 - 500;
+        ).count() % 3000 - 1500;
 
-        light.setPosition(5.0, 5*sin(ms/500*3.14), 0.0);
+        light.setPosition(5.0, 5*sin(ms/1500*3.14), 1.4*sin(ms/750*3.14));
     });
     light2->isAnimated = true;
 
