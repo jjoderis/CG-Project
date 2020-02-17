@@ -45,54 +45,66 @@ void CG::Object3D::updateMatrixWorld(){
 
     m_worldMatrixInverse = scaleMatInv * rotMatInv;
     m_worldMatrixInverse = m_worldMatrixInverse * transmatInv;
+    triggerCallbacks("updateMatrixWorld");
 }
 
 void CG::Object3D::setPosition(const CG::Vector3 &position){
     m_position = position;
+    triggerCallbacks("setPosition");
 }
 void CG::Object3D::setPosition(float x, float y, float z){
     m_position.at(0) = x;
     m_position.at(1) = y;
     m_position.at(2) = z;
+    triggerCallbacks("setPosition");
 }
 
 void CG::Object3D::translate(const CG::Vector3 &transVec){
     m_position += transVec;
+    triggerCallbacks("translate");
 }
 void CG::Object3D::translate(float x, float y, float z){
     m_position.at(0) += x;
     m_position.at(1) += y;
     m_position.at(2) += z;
+    triggerCallbacks("translate");
 }
 
 void CG::Object3D::setScale(const CG::Vector3 &scales){
     m_scale = scales;
+    triggerCallbacks("setScale");
 }
 void CG::Object3D::setScale(float xFac, float yFac, float zFac){
     m_scale.at(0) = xFac;
     m_scale.at(1) = yFac;
     m_scale.at(2) = zFac;
+    triggerCallbacks("setScale");
 }
 void CG::Object3D::scale(const CG::Vector3 &scales){
     m_scale *= scales;
+    triggerCallbacks("scale");
 }
 void CG::Object3D::scale(float xFac, float yFac, float zFac){
     m_scale.at(0) *= xFac;
     m_scale.at(1) *= yFac;
     m_scale.at(2) *= zFac;
+    triggerCallbacks("scale");
 }
 void CG::Object3D::scale(float scale){
     m_scale *= scale;
+    triggerCallbacks("scale");
 }
 
 
 void CG::Object3D::setRotation(const CG::Quaternion &rotation){
     m_rotation = rotation;
     m_rotation.normalize();
+    triggerCallbacks("setRotation");
 }
 
 void CG::Object3D::setRotation(const CG::Vector3 &axis, float amount){
     m_rotation = Quaternion{sin(amount/2)*normalize(axis), cos(amount/2)};
+    triggerCallbacks("setRotation");
 }
 
 void CG::Object3D::setRotation(float axisX, float axisY, float axisZ, float amount){
@@ -101,6 +113,7 @@ void CG::Object3D::setRotation(float axisX, float axisY, float axisZ, float amou
 
 void CG::Object3D::rotate(const CG::Vector3 &axis, float amount){
     m_rotation *= Quaternion{sin(amount/2)*normalize(axis), cos(amount/2)};
+    triggerCallbacks("rotate");
 }
 
 void CG::Object3D::rotate(float axisX, float axisY, float axisZ, float amount){
@@ -151,11 +164,27 @@ void CG::Object3D::animate(){
     m_animationPtr(*this);
 }
 
-void CG::Object3D::setAnimation(void (*animationPtr)(Object3D&)){
-    m_animationPtr = animationPtr;
+void CG::Object3D::setAnimation(std::function<void(CG::Object3D&)> const &animationFunction){
+    m_animationPtr = animationFunction;
     isAnimated = true;
 }
 void CG::Object3D::deleteAnimation(){
     m_animationPtr = nullptr;
     isAnimated = false;
+}
+
+void CG::Object3D::registerForCallback(const Object3D *registeringObject, std::function<void(const char* event)> const &callback){
+    m_eventHandling.insert({registeringObject, callback});
+}
+void CG::Object3D::unregisterFromCallback(const Object3D *unregisteringObject){
+    m_eventHandling.erase(unregisteringObject);
+}
+
+void CG::Object3D::triggerCallbacks(const char* event) const{
+    auto it = m_eventHandling.begin();
+
+    while (it != m_eventHandling.end()) {
+        it->second(event);
+        ++it;
+    }
 }

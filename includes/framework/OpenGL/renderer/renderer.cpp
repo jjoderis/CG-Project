@@ -24,6 +24,12 @@ void CG::renderScene(CG::Renderer &renderer, CG::OpenGLScene &scene, CG::Camera 
 
         mesh->render(viewMatrix, viewMatrixInverse, projectionMatrix);
     }
+
+    for(const std::shared_ptr<CG::Light> &light: scene.getLights()){
+        if(light->isAnimated){
+            light->animate();
+        }
+    }
 }
 
 void CG::Renderer::render(CG::OpenGLScene &scene, CG::Camera &camera){

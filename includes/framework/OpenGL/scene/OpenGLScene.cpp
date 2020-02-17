@@ -13,6 +13,12 @@ void CG::OpenGLScene::addLight(std::shared_ptr<CG::Light> &light){
     m_lights.emplace_back(light);
 
     updateLightInfoUBO();
+
+    int curIndex{ static_cast<int>(m_lights.size()) - 1 };
+    //register for updates of light to update ubo when information changes
+    light->registerForCallback(this, [curIndex, this](const char* event){
+        this->updateLightInBuffer(curIndex);
+    });
 }
 
 //TODO: bind ubo to mesh material program

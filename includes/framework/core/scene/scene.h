@@ -35,6 +35,7 @@ namespace CG{
         const std::vector<std::shared_ptr<meshClass>>& getParticles() const;
 
         virtual void addLight(std::shared_ptr<CG::Light> &light);
+        const std::vector<std::shared_ptr<CG::Light>>& getLights() const;
     };
 
     using BaseScene = Scene<BaseMesh>;

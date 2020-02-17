@@ -1,5 +1,5 @@
-#ifndef CG_EXAMPLES_SETUPCGSTUFF_H
-#define CG_EXAMPLES_SETUPCGSTUFF_H
+#ifndef CG_EXAMPLES_LIGHTING_BASE_H
+#define CG_EXAMPLES_LIGHTING_BASE_H
 
 #include <OpenGL/scene/OpenGLScene.h>
 #include <core/camera/camera.h>

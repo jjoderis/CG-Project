@@ -5,7 +5,7 @@
 #include <core/camera/camera.h>
 #include <OpenGL/renderer/renderer.h>
 
-#include <Lighting_Example/setUpCGStuff.h>
+#include <Lighting_Example/shadowExample.h>
 #include <camera/fpsCamera.h>
 
 #include <GL/glew.h>
@@ -60,7 +60,6 @@ int main(){
   CG::OpenGLScene scene{};
   CG::Camera camera{ 1.0, 100, 45, WINDOW_WIDTH/WINDOW_HEIGHT };
   CG::Renderer renderer{};
-
 
   setUp(scene, camera, renderer);
   setUpInputHandling(window, scene, camera, renderer);

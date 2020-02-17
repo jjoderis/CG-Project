@@ -18,7 +18,7 @@ namespace CG{
         //contains the faceData relevant to OpenGL
         unsigned int m_EBO{ 0 };
 
-        bool m_useNormals{ false };
+        bool m_useNormals{ true };
         bool m_useColors{ false };
         bool m_useUVs{ false };
 

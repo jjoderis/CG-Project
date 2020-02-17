@@ -11,7 +11,7 @@ out vec3 iNormal;
 out vec4 iPosition;
 
 void main(void){
-    iNormal = normalize((normalMatrix * vNormal).xyz);
+    iNormal = (normalMatrix * vNormal).xyz;
     iPosition = modelViewMatrix * vPosition;
 
     gl_Position = projectionMatrix * iPosition;

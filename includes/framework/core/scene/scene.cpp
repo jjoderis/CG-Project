@@ -60,3 +60,8 @@ template <typename meshClass>
 void CG::Scene<meshClass>::addLight(std::shared_ptr<CG::Light> &light){
     m_lights.emplace_back(light);
 }
+
+template <typename meshClass>
+const std::vector<std::shared_ptr<CG::Light>>& CG::Scene<meshClass>::getLights() const{
+    return m_lights;
+}

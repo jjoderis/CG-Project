@@ -3,6 +3,8 @@
 
 #include <math/math.h>
 #include <math/quaternion/quaternion.h>
+#include <map>
+#include <functional>
 
 namespace CG{
     //base class for an Object in 3D space (Mesh, Camera, etc.)
@@ -26,7 +28,11 @@ namespace CG{
         Matrix4 m_worldMatrix{ createIdentityMatrix() };
         Matrix4 m_worldMatrixInverse{ createIdentityMatrix() };
 
-        void (*m_animationPtr)(Object3D&);
+        std::function<void(Object3D&)> m_animationPtr;
+
+        std::map<const Object3D*, std::function<void(const char*)>> m_eventHandling;
+
+        void triggerCallbacks(const char* event) const;
 
     public:
         bool isAnimated{ false };
@@ -78,8 +84,12 @@ namespace CG{
 
         void animate();
 
-        void setAnimation(void (*animationPtr)(Object3D&));
+        void setAnimation(std::function<void(Object3D&)> const &animationFunction);
         void deleteAnimation();
+
+        //allows registration of callback functions that are called on changes in a Object3d
+        void registerForCallback(const Object3D *registeringObject, std::function<void(const char* event)> const &callback);
+        void unregisterFromCallback(const Object3D *unregisteringObject);
     };
 }
 

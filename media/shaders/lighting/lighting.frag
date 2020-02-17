@@ -37,6 +37,7 @@ in vec4 iPosition;
 void main(void){
     vec3 scatteredLight = vec3(0.0);
     vec3 reflectedLight = vec3(0.0);
+    vec3 Normal = normalize(iNormal);
 
     for (int i = 0; i < numLights; ++i){
         if (!Light[i].isEnabled) {
@@ -66,10 +67,10 @@ void main(void){
             }
         }
 
-        vec3 reflected = normalize(reflect(-lightDirection, iNormal));
+        vec3 reflected = normalize(reflect(-lightDirection, Normal));
 
-        float diffuse = max(0.0, dot(iNormal, lightDirection));
-        float specular = max(0.0, dot(iNormal, reflected));
+        float diffuse = max(0.0, dot(Normal, lightDirection));
+        float specular = max(0.0, dot(Normal, reflected));
 
         if (diffuse == 0.0) {
             specular = 0.0;
