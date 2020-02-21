@@ -1,8 +1,8 @@
 #include "light.h"
 
-CG::Light::Light() : Object3D(){}
+CG::Light::Light() : Camera(){}
 
-CG::Light::Light(const Light &other) : Object3D(other) {
+CG::Light::Light(const Light &other) : Camera(other) {
     *this = other;
 }
 

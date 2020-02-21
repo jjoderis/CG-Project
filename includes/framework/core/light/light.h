@@ -1,12 +1,12 @@
 #ifndef CG_FRAMEWORK_CORE_LIGHT_H
 #define CG_FRAMEWORK_CORE_LIGHT_H
 
-#include <object3D/object3D.h>
+#include <camera/camera.h>
 #include <color/color.h>
 
 namespace CG{
     // a basic light class usable for different kinds of light; default point light
-    class Light : public Object3D{
+    class Light : public Camera{
     protected:
         bool m_isEnabled{ true };
         bool m_isLocal{ true };
@@ -18,7 +18,7 @@ namespace CG{
         CG::Vector4 m_halfVector{ 0.0, 0.0, 0.0, 1.0 };
         CG::Vector4 m_coneDirection{ 0.0, 0.0, -1.0, 1.0 };
         float m_spotCosCutoff{ 0.0 };
-        float m_spotExponent{ 1.0 };
+        float m_spotExponent{ 0.0 };
 
         float m_constantAttenuation{ 1.0 };
         float m_linearAttenuation{ 0.001 };

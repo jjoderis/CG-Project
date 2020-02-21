@@ -40,6 +40,9 @@ struct LightPorperties{
 
     float pad1;
 
+    float lightMatrix[16];
+    float projectionMatrix[16];
+
     float ambient[4];
     float lightColor[4];
     float lightPosition[4];
@@ -74,6 +77,9 @@ void CG::OpenGLScene::updateLightInBuffer(int i) const{
 
         1.0,
 
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+
         light->ambient().at(0), light->ambient().at(1), light->ambient().at(2), light->ambient().at(3),
         light->getColor().at(0), light->getColor().at(1), light->getColor().at(2), light->getColor().at(3),
         light->getPosition().at(0), light->getPosition().at(1), light->getPosition().at(2), 1.0,
@@ -88,6 +94,11 @@ void CG::OpenGLScene::updateLightInBuffer(int i) const{
 
         1.0, 1.0, 1.0
     };
+
+    for (int i = 0; i < 16; ++i) {
+        props.lightMatrix[i] = *(light->getMatrixWorldInverse().data() + i);
+        props.projectionMatrix[i] = *(light->getProjectionMatrix().data() + i);
+    }
 
     glNamedBufferSubData(m_lightInfoUbo, 4 * sizeof(int) + i * sizeof(LightPorperties), sizeof(LightPorperties), &props);
 }

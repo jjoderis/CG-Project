@@ -12,6 +12,7 @@ add_library(CG_Framework_Core
     geometry/sphereGeometry/sphereGeometry.cpp
     light/light.cpp
     light/pointLight/pointLight.cpp
+    light/spotLight/spotLight.cpp
     ./math/math.cpp
     ./math/quaternion/quaternion.cpp
     material/material.cpp

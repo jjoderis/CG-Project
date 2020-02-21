@@ -3,16 +3,15 @@
 layout (location = 0) in vec4 vPosition;
 layout (location = 1) in vec4 vNormal;
 
-uniform mat4 modelViewMatrix;
-uniform mat4 normalMatrix;
-uniform mat4 projectionMatrix;
+uniform mat4 modelMatrix;
+uniform mat4 MVPMatrix;
 
 out vec3 iNormal;
 out vec4 iPosition;
 
 void main(void){
-    iNormal = (normalMatrix * vNormal).xyz;
-    iPosition = modelViewMatrix * vPosition;
+    iNormal = (modelMatrix * vNormal).xyz;
+    iPosition = modelMatrix * vPosition;
 
-    gl_Position = projectionMatrix * iPosition;
+    gl_Position = MVPMatrix * vPosition;
 }

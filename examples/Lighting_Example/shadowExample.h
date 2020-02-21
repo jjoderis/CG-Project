@@ -9,6 +9,7 @@
 #include "geometry/box.h"
 #include "material/phong.h"
 #include <core/light/pointLight/pointLight.h>
+#include <core/light/spotLight/spotLight.h>
 #include <OpenGL/geometry/boxGeometry/OpenGLBoxGeometry.h>
 #include <chrono>
 
@@ -36,7 +37,7 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
         CG::ShaderInfo{ GL_FRAGMENT_SHADER, "../media/shaders/lighting/lighting.frag", true, 0 }
     };
 
-    phong.setShininess(120.0);
+    phong.setShininess(80.0);
 
     CG::OpenGLMaterial plainWhite{
         CG::ShaderInfo{ GL_VERTEX_SHADER, "../media/shaders/lighting/lighting.vert", true, 0 },
@@ -53,12 +54,16 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
     std::shared_ptr<CG::OpenGLMesh> background = std::make_shared<CG::OpenGLMesh>();
     background->setGeometry(boxPtr);
     background->setMaterial(plainWhite);
+    background->getMaterial()->setShininess(1.0);
     background->getMaterial()->setColor(1.0, 1.0, 1.0);
 
     scene.addChild(redSphere);
     scene.addChild(background);
 
-    std::shared_ptr<CG::Light> light2{ new CG::PointLight{CG::Vector4{ 2.0, 0.0, 0.0, 1.0 }} };
+    std::shared_ptr<CG::Light> light2{ new CG::SpotLight{CG::Vector4{ 2.0, 0.0, 0.0, 1.0 }} };
+    light2->coneDirection() = CG::Vector4{-1.0, 0.0, 0.0, 1.0};
+    light2->spotCosCutoff() = 0.9;
+    light2->spotExponent() = 1.0;
     scene.addLight(light2);
 
     light2->setAnimation([](CG::Object3D &light) mutable {
@@ -66,7 +71,7 @@ void setUp(CG::OpenGLScene &scene, CG::Camera &camera, CG::Renderer &renderer){
             std::chrono::system_clock::now().time_since_epoch()
         ).count() % 3000 - 1500;
 
-        light.setPosition(5.0, 5*sin(ms/1500*3.14), 1.4*sin(ms/750*3.14));
+        light.setPosition(5.0, 2*sin(ms/1500*3.14), 1.4*sin(ms/750*3.14));
     });
     light2->isAnimated = true;
 
