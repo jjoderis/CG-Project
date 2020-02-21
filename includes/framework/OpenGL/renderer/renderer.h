@@ -11,29 +11,27 @@
 namespace CG{
     class Renderer;
 
-    void renderScene(Renderer &renderer, OpenGLScene &scene, Camera &camera);
-
     //A class used to render a given scene
     class Renderer{
 
     GLenum m_drawMode{ GL_TRIANGLES };
+    GLuint m_depthTexture{ 0 };
+    GLuint m_depthFBO{ 0 };
 
     std::vector<unsigned int> m_tranformFeedbacks{};
 
     int m_frameCounter{ 0 };
 
-    void(*m_renderFunction)(Renderer &renderer, OpenGLScene &scene, Camera &camera){renderScene};
+    void renderMesh(OpenGLMesh &mesh , Matrix4 &viewMatrix, Matrix4 &viewMatrixInverse, Matrix4 &projectionMatrix);
     
     public:
-        Renderer();
+        Renderer(int width, int height);
 
         //renders the given scene using the given camera
         void render(OpenGLScene &scene, Camera &camera);
 
         void setDrawMode(GLenum drawMode);
         GLenum getDrawMode() const;
-
-        void setRenderFunction(void(*renderFunction)(Renderer &renderer, OpenGLScene &scene, Camera &camera));
 
         std::vector<unsigned int>& getTransformFeedbacks();
 

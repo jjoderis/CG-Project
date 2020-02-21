@@ -59,7 +59,7 @@ int main(){
 
   CG::OpenGLScene scene{};
   CG::Camera camera{ 1.0, 100, 45, WINDOW_WIDTH/WINDOW_HEIGHT };
-  CG::Renderer renderer{};
+  CG::Renderer renderer{ static_cast<int>(WINDOW_WIDTH), static_cast<int>(WINDOW_HEIGHT) };
 
   setUp(scene, camera, renderer);
   setUpInputHandling(window, scene, camera, renderer);
