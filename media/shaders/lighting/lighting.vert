@@ -11,7 +11,7 @@ out vec4 iPosition;
 
 void main(void){
     iNormal = (modelMatrix * vNormal).xyz;
-    iPosition = modelMatrix * vPosition;
+    iPosition = transpose(inverse(modelMatrix)) * vPosition;
 
     gl_Position = MVPMatrix * vPosition;
 }

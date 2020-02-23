@@ -34,6 +34,9 @@ namespace CG{
 
     //sheared denotes index of coordinate to be shear (e.g. 0 = x); shearing denotes axis which does shearing
     Matrix4 createShearingMatrix(int sheared, int shearing, float amount);
+
+    Matrix4 lookAt(const Vector3 &worldPos, const Vector3 &direction, const Vector3 &up);
+    Matrix4 perspective(float fov, float aspect, float near, float far);
 }
 
 #endif

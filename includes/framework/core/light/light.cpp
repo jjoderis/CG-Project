@@ -1,6 +1,6 @@
 #include "light.h"
 
-CG::Light::Light() : Camera(){}
+CG::Light::Light() : Camera(1.0, 25.0, degToRad(90.0), 1.0){}
 
 CG::Light::Light(const Light &other) : Camera(other) {
     *this = other;

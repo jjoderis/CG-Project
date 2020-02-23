@@ -18,6 +18,14 @@ namespace CG{
     GLuint m_depthTexture{ 0 };
     GLuint m_depthFBO{ 0 };
 
+    int m_shadowWidth{ 1024 };
+    int m_shadowHeight{ 1024 };
+
+    int m_screenWidth{ 800 };
+    int m_screenHeight{ 600 };
+
+    GLuint m_shadowProgram{ 0 };
+
     std::vector<unsigned int> m_tranformFeedbacks{};
 
     int m_frameCounter{ 0 };

@@ -24,31 +24,14 @@ CG::Camera::Camera(const Camera &other)
 }
 
 void CG::Camera::updateProjectionMatrix(){
-    float c{ 1.0f/tan(m_fov/2) };
-    m_projectionMatrix = Matrix4{
-        { c/m_aspectRatio, 0.0, 0.0, 0.0},
-        { 0.0, c, 0.0, 0.0},
-        { 0.0, 0.0, -((m_far+m_near)/(m_far-m_near)), -((2*m_far*m_near)/(m_far*m_near))},
-        { 0.0, 0.0, -1.0, 0.0 }
-    };
+    m_projectionMatrix = CG::perspective(m_fov, m_aspectRatio, m_near, m_far);
 }
 
 void CG::Camera::lookAt(CG::Vector3 position){
     Vector3 worldPosition{m_worldMatrix * Vector4{m_position, 1.0}};
-    Vector3 view{(worldPosition - position).normalize()};
-
     Vector3 upWorld{m_worldMatrix * Vector4{ 0.0, 1.0, 0.0, 1.0 }};
 
-    Vector3 right{-(cross(view, upWorld).normalize())};
-
-    upWorld = cross(view, right);
-
-    Matrix4 baseChange{
-        { right.at(0), right.at(1), right.at(2), 0.0 },
-        { upWorld.at(0), upWorld.at(1), upWorld.at(2), 0.0 },
-        { view.at(0), view.at(1), view.at(2), 0.0 },
-        { 0.0, 0.0, 0.0, 1.0 }
-    };
+    Matrix4 baseChange = CG::lookAt(worldPosition, position, upWorld);
 
     float qw = 0.5f * sqrt(baseChange.trace());
     float qx = (baseChange.at(2, 1) - baseChange.at(1, 2)) / (4.0f * qw);

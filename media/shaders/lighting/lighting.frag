@@ -37,6 +37,23 @@ layout (std140) uniform Lights{
 in vec3 iNormal;
 in vec4 iPosition;
 
+uniform float far_plane;
+uniform vec3 lightPos;
+
+layout (binding = 31) uniform samplerCube shadowMap;
+
+float shadowCalculation(vec3 fragPos)
+{
+    vec3 fragToLight = fragPos - lightPos;
+    float closestDepth = texture(shadowMap, fragToLight).r;
+    closestDepth += far_plane;
+    float currentDepth = length(fragToLight);
+    float bias = 0.05;
+    float shadow = (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
+
+    return shadow;
+}
+
 void main(void){
     vec3 scatteredLight = vec3(0.0);
     vec3 reflectedLight = vec3(0.0);
